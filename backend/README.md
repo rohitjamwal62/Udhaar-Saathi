@@ -60,3 +60,5 @@ storage, SMS/WhatsApp/email/FCM providers (OTP sender is a console stub: plug in
 `apps/accounts/otp.py`), `GET /sync/changes` (pulling server changes to a second device), UPI AutoPay mandates, Celery/Redis jobs
 (status refresh is lazy on read; `subscriptions.service.refresh_all()` can be scheduled), per-endpoint OpenAPI request/response
 annotations, production Redis cache for rate limits (the dev cache is per-process). The Dockerfile/compose are untested.
+
+_Deployed automatically by Render from the `dev`, `staging` and `main` branches (see ../DEPLOY_RENDER.md)._

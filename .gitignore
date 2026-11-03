@@ -1,0 +1,23 @@
+# Secrets and local files: NEVER commit these
+.env
+.env.*
+!.env.example
+**/.env
+**/.env.*
+!**/.env.example
+!**/.env.*.example
+
+# Python
+__pycache__/
+*.pyc
+.pytest_cache/
+.venv/
+venv/
+
+# The mobile app is its own project (it has its own .git); deploy this repo = backend + database + Render config
+mobile/
+
+# Editors / OS
+.vscode/
+.idea/
+Thumbs.db

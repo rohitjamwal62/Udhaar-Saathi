@@ -7,6 +7,12 @@ from rest_framework.views import APIView
 from apps.common.db import q1
 
 
+def root(request):
+    """Front page, so opening the bare address shows where things are instead of a 404."""
+    return JsonResponse({"service": "UdhaarSaathi API", "env": settings.APP_ENV, "health": "/health/live",
+                         "database_check": "/health/ready", "docs": "/api/docs/", "api": "/api/v1/"})
+
+
 def live(request):
     return JsonResponse({"status": "ok", "env": settings.APP_ENV})
 

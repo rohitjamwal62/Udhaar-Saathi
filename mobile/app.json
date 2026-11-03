@@ -1,0 +1,63 @@
+{
+  "expo": {
+    "name": "UdhaarSaathi",
+    "slug": "udhaarsaathi",
+    "scheme": "udhaarsaathi",
+    "version": "1.0.0",
+    "orientation": "default",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "platforms": [
+      "android"
+    ],
+    "android": {
+      "package": "com.udhaarsaathi.app",
+      "versionCode": 1,
+      "adaptiveIcon": {
+        "backgroundColor": "#0B6E4F",
+        "foregroundImage": "./assets/android-icon-foreground.png",
+        "backgroundImage": "./assets/android-icon-background.png",
+        "monochromeImage": "./assets/android-icon-monochrome.png"
+      },
+      "predictiveBackGestureEnabled": false,
+      "allowBackup": false,
+      "blockedPermissions": [
+        "android.permission.RECORD_AUDIO",
+        "android.permission.READ_EXTERNAL_STORAGE",
+        "android.permission.WRITE_EXTERNAL_STORAGE"
+      ]
+    },
+    "plugins": [
+      "expo-sqlite",
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "cameraPermission": "UdhaarSaathi uses the camera to photograph bills and receipts you attach to entries.",
+          "photosPermission": "UdhaarSaathi reads photos you choose to attach as bills or receipts."
+        }
+      ],
+      "expo-splash-screen",
+      [
+        "expo-splash-screen",
+        {
+          "image": "./assets/splash-icon.png",
+          "backgroundColor": "#0B6E4F",
+          "imageWidth": 200
+        }
+      ]
+    ],
+    "owner": "rohit62",
+    "extra": {
+      "eas": {
+        "projectId": "cc817678-c8a1-43f2-a661-b234a48e2843"
+      }
+    },
+    "runtimeVersion": {
+      "policy": "appVersion"
+    },
+    "updates": {
+      "url": "https://u.expo.dev/cc817678-c8a1-43f2-a661-b234a48e2843"
+    }
+  }
+}

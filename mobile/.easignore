@@ -1,0 +1,17 @@
+# Files EAS must NOT upload (there is no git repo, so .gitignore is not used).
+# Secrets: tokens and local settings never leave your PC.
+.env
+.env.*
+!.env.example
+!.env.eas.example
+!.env.account.example
+
+# Big / generated / local-only
+node_modules/
+.expo/
+dist/
+android/
+ios/
+*.log
+.git/
+scripts/

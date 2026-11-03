@@ -1,0 +1,47 @@
+{
+  "name": "udhaarsaathi-mobile",
+  "version": "1.0.0",
+  "main": "index.ts",
+  "dependencies": {
+    "@react-navigation/bottom-tabs": "^7.21.0",
+    "@react-navigation/native": "^7.5.1",
+    "@react-navigation/native-stack": "^7.21.0",
+    "@tanstack/react-query": "^5.105.3",
+    "expo": "~58.0.22",
+    "expo-build-properties": "~58.0.12",
+    "expo-constants": "~58.0.14",
+    "expo-crypto": "~58.0.7",
+    "expo-image-picker": "~58.0.10",
+    "expo-network": "~58.0.4",
+    "expo-secure-store": "~58.0.2",
+    "expo-splash-screen": "~58.0.12",
+    "expo-sqlite": "~58.0.15",
+    "expo-status-bar": "~58.0.4",
+    "expo-updates": "~58.0.20",
+    "react": "19.3.0",
+    "react-native": "0.88.1",
+    "react-native-razorpay": "^3.0.0",
+    "react-native-safe-area-context": "~5.10.1",
+    "react-native-screens": "~4.30.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "@types/react": "~19.3.0",
+    "tsx": "^4.23.15",
+    "typescript": "~6.0.3"
+  },
+  "scripts": {
+    "start": "node scripts/start.js",
+    "android": "expo run:android",
+    "typecheck": "tsc --noEmit",
+    "test": "node --import tsx --test src/__tests__/money.test.ts src/__tests__/appUpdate.test.ts src/__tests__/dates.test.ts",
+    "start:dev": "node scripts/start.js --dev-client",
+    "start:tunnel": "node scripts/start.js --tunnel",
+    "start:online": "node scripts/start.js --online",
+    "login": "node scripts/login.js",
+    "start:account": "node scripts/start.js --account",
+    "eas": "node scripts/eas.js",
+    "eas:me": "node scripts/eas.js --me"
+  },
+  "private": true
+}

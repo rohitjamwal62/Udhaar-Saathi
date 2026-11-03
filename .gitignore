@@ -14,8 +14,8 @@ __pycache__/
 .venv/
 venv/
 
-# The mobile app is its own project (it has its own .git); deploy this repo = backend + database + Render config
-mobile/
+# The mobile app is part of this repo now. Its original standalone .git was moved aside and must not be committed:
+mobile/.git-expo-template/
 
 # Editors / OS
 .vscode/

@@ -1,27 +1,38 @@
-# Render Blueprint: Dashboard -> New -> Blueprint -> pick this repo. See DEPLOY_RENDER.md.
+# Render Blueprint: three environments, each deployed automatically from its own Git branch.
+#
+#   git branch   Render service              APP_ENV       Neon database branch   deploys
+#   dev          udhaarsaathi-api-dev        development   development            on every push
+#   staging      udhaarsaathi-api-staging    staging       staging                after GitHub checks (tests) pass
+#   main         udhaarsaathi-api            production    production             after GitHub checks (tests) pass
+#
+# The "test" environment is GitHub Actions (.github/workflows/ci.yml): the test suite runs on every push and pull request.
+# Dashboard -> New -> Blueprint -> pick this repo. See DEPLOY_RENDER.md.
 services:
   - type: web
-    name: udhaarsaathi-api
+    name: udhaarsaathi-api-dev
     runtime: python
-    plan: free                    # free instances sleep after ~15 min idle; the first request then takes ~30-60 s
-    region: singapore             # same region as the Neon database (ap-southeast-1) for the lowest latency
+    plan: free
+    region: singapore
+    branch: dev
     rootDir: backend
     buildCommand: pip install -r requirements.txt
     startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -
     healthCheckPath: /health/ready
     autoDeployTrigger: commit
     envVars:
+      - key: APP_ENV
+        value: development
       - key: PYTHON_VERSION
         value: 3.12.8
       - key: DJANGO_DEBUG
         value: "false"
       - key: DJANGO_SECRET_KEY
-        generateValue: true       # Render creates a strong random key; never commit one
-      - key: DATABASE_URL         # your Neon connection string: paste it in the Render dashboard (kept secret)
+        generateValue: true
+      - key: DATABASE_URL         # paste the development Neon connection string (render-secrets.local.txt)
         sync: false
       - key: PAYMENT_GATEWAY
         value: razorpay
-      - key: RAZORPAY_KEY_ID      # optional until you take real payments
+      - key: RAZORPAY_KEY_ID      # use Razorpay TEST keys here except in production
         sync: false
       - key: RAZORPAY_KEY_SECRET
         sync: false
@@ -29,9 +40,79 @@ services:
         sync: false
       - key: OTP_SENDER
         value: console
-      # TEST DEPLOYMENT ONLY: prints each sign-up OTP in the Render log so you can sign in without an SMS provider.
-      # Anyone who can read your Render logs can read OTPs. Set to "false" (or delete) once a real SMS provider is connected.
-      - key: ALLOW_DEV_OTP_IN_LOGS
+      - key: ALLOW_DEV_OTP_IN_LOGS   # TEST ONLY: OTPs are printed in the Render log (no SMS provider yet)
         value: "true"
+      - key: LOG_LEVEL
+        value: INFO
+  - type: web
+    name: udhaarsaathi-api-staging
+    runtime: python
+    plan: free
+    region: singapore
+    branch: staging
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -
+    healthCheckPath: /health/ready
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: APP_ENV
+        value: staging
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL         # paste the staging Neon connection string (render-secrets.local.txt)
+        sync: false
+      - key: PAYMENT_GATEWAY
+        value: razorpay
+      - key: RAZORPAY_KEY_ID      # use Razorpay TEST keys here except in production
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: OTP_SENDER
+        value: console
+      - key: ALLOW_DEV_OTP_IN_LOGS   # TEST ONLY: OTPs are printed in the Render log (no SMS provider yet)
+        value: "true"
+      - key: LOG_LEVEL
+        value: INFO
+  - type: web
+    name: udhaarsaathi-api
+    runtime: python
+    plan: free
+    region: singapore
+    branch: main
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -
+    healthCheckPath: /health/ready
+    autoDeployTrigger: checksPass
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PYTHON_VERSION
+        value: 3.12.8
+      - key: DJANGO_DEBUG
+        value: "false"
+      - key: DJANGO_SECRET_KEY
+        generateValue: true
+      - key: DATABASE_URL         # paste the production Neon connection string (render-secrets.local.txt)
+        sync: false
+      - key: PAYMENT_GATEWAY
+        value: razorpay
+      - key: RAZORPAY_KEY_ID      # use Razorpay TEST keys here except in production
+        sync: false
+      - key: RAZORPAY_KEY_SECRET
+        sync: false
+      - key: RAZORPAY_WEBHOOK_SECRET
+        sync: false
+      - key: OTP_SENDER
+        value: console
+      - key: ALLOW_DEV_OTP_IN_LOGS   # OFF in production: set to "true" ONLY while testing, until a real SMS provider is connected
+        value: "false"
       - key: LOG_LEVEL
         value: INFO

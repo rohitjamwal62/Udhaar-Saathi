@@ -34,6 +34,7 @@ def _bool(name: str, default: str = "false") -> bool:
     return env(name, default).strip().lower() in ("1", "true", "yes")
 
 
+APP_ENV = env("APP_ENV", "local")  # local | development | staging | production
 DEBUG = _bool("DJANGO_DEBUG")
 SECRET_KEY = env("DJANGO_SECRET_KEY", "")
 if not SECRET_KEY:

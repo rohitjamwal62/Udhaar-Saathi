@@ -1,39 +1,46 @@
-# Deploy the Django backend on Render (free)
+# Deploy the Django backend on Render (dev, staging, production)
 
-The backend runs on Render; the database stays on **Neon**. The code is read from a GitHub repository.
+Code lives on GitHub (`rohitjamwal62/Udhaar-Saathi`). Render deploys it automatically. The database is **Neon**.
 
-## 1. Put the code on GitHub (once)
-```bash
-cd "D:\ROHIT JAMWAL\UDHAAR SAATHI"
-git remote add origin https://github.com/<your-user>/udhaarsaathi-backend.git   # create an EMPTY repo on github.com first
-git push -u origin main
+| Environment | Git branch | Render service | Neon database branch | Deploys |
+|---|---|---|---|---|
+| **dev** | `dev` | `udhaarsaathi-api-dev` | `development` | on every push |
+| **staging** | `staging` | `udhaarsaathi-api-staging` | `staging` | after the tests pass on GitHub |
+| **production** | `main` | `udhaarsaathi-api` | `production` | after the tests pass on GitHub |
+| **test** | any push / pull request | (GitHub Actions) | throw-away database inside the job | runs `pytest` |
+
+Every environment has its own database, so testing can never touch production data.
+
+## Day-to-day flow
 ```
-The repo contains `backend/`, `database/` and `render.yaml` only. Secrets (`.env` files) are ignored by `.gitignore`.
-Make the GitHub repo **private** if you like; Render can read private repos after you connect your GitHub account.
+work on branch dev  ->  push            ->  dev service updates
+merge dev -> staging  -> push           ->  tests run, then staging updates   (try the app here)
+merge staging -> main -> push           ->  tests run, then production updates
+```
+```bash
+git checkout staging && git merge dev && git push      # promote to staging
+git checkout main    && git merge staging && git push  # promote to production
+```
 
-## 2. Create the service on Render
-1. https://dashboard.render.com -> **New +** -> **Blueprint** -> connect GitHub -> choose the repo.
-2. Render reads `render.yaml` and shows the service `udhaarsaathi-api` (plan: Free, region: Singapore).
-3. It asks for the secret values:
-   - `DATABASE_URL`: your Neon connection string (the same as in `backend/.env`).
-   - Razorpay keys: leave empty for now.
-4. Click **Apply**. The first build takes a few minutes.
+## One-time setup in the Render dashboard (needs your login)
+1. Sign in at https://dashboard.render.com (use "Sign in with GitHub" so the accounts are linked).
+2. **New +** -> **Blueprint** -> **Connect GitHub** -> allow Render to access the repo `Udhaar-Saathi` -> select it.
+   This connection is what makes pushes deploy automatically.
+3. Render shows 3 services from `render.yaml`. For each one it asks for `DATABASE_URL` (and optional Razorpay keys).
+   Open `render-secrets.local.txt` (git-ignored, on your PC) and paste the matching connection string:
+   `udhaarsaathi-api-dev` -> development, `udhaarsaathi-api-staging` -> staging, `udhaarsaathi-api` -> production.
+4. **Apply**. The first builds take a few minutes. Then delete `render-secrets.local.txt`.
 
-## 3. Check it
-- `https://<your-service>.onrender.com/health/ready`  ->  `{"status": "ok"}`
-- `https://<your-service>.onrender.com/api/docs/`      ->  Swagger page
-- `https://<your-service>.onrender.com/api/v1/app/config`
-
-## 4. Point the app at it
-Set `EXPO_PUBLIC_API_URL=https://<your-service>.onrender.com/api/v1` (in `mobile/.env` and in the `preview` profile in
-`mobile/eas.json`), and remove `UDHAAR_ALLOW_CLEARTEXT` there (HTTPS needs no cleartext exception). Rebuild the app.
+## Check each environment
+`https://<service>.onrender.com/health/live` shows `{"status": "ok", "env": "staging"}` (the env name tells you which one it is),
+`/health/ready` checks the database, `/api/docs/` is the Swagger page.
 
 ## Good to know (free plan)
-- The service **sleeps after about 15 minutes without requests**; the next request takes roughly 30-60 seconds to wake it.
-  The app handles slow requests, but the first sign-up after a break may feel slow.
-- Neon also pauses when idle; both wake automatically.
-- **OTPs**: there is no SMS provider yet, so `ALLOW_DEV_OTP_IN_LOGS=true` prints each OTP in the Render log
-  (Dashboard -> your service -> **Logs**, search `DEV OTP`). Use this only for testing. Before real users, connect an SMS
-  provider (see `backend/apps/accounts/otp.py`) and set `ALLOW_DEV_OTP_IN_LOGS` to `false`.
-- **Payments** need Razorpay keys. Without them the payment endpoints answer "not configured"; nothing else is affected.
-- The database tables already exist on Neon. A deploy never changes the schema.
+- Free services **sleep after ~15 minutes idle**; the first request afterwards takes ~30-60 s. Free hours are shared across
+  your services (check the limits on Render's pricing page; they can change).
+- **OTPs**: there is no SMS provider yet. In dev and staging each OTP is printed in the Render log (Logs -> search `DEV OTP`).
+  In production that is **off**, so sign-up there answers "OTP delivery is not configured" until you connect an SMS provider
+  (`backend/apps/accounts/otp.py`). Point the test app at **staging** meanwhile.
+- **Payments** need Razorpay keys: use Razorpay *test* keys on dev/staging, live keys only in production.
+- The database tables already exist on all three Neon branches. A deploy never changes the schema.
+- Rotate secrets (Neon password, Razorpay) if they were ever shared in chat.

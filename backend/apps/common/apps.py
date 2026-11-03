@@ -10,5 +10,5 @@ class CommonConfig(AppConfig):
         from django.conf import settings
 
         db = settings.DATABASES["default"]
-        logging.getLogger("startup").info("Database: %s / %s (ssl=%s)", db.get("HOST"), db.get("NAME"),
+        logging.getLogger("startup").info("Environment: %s | Database: %s / %s (ssl=%s)", settings.APP_ENV, db.get("HOST"), db.get("NAME"),
                                           db.get("OPTIONS", {}).get("sslmode", "-"))

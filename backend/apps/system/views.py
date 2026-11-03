@@ -8,7 +8,7 @@ from apps.common.db import q1
 
 
 def live(request):
-    return JsonResponse({"status": "ok"})
+    return JsonResponse({"status": "ok", "env": settings.APP_ENV})
 
 
 def ready(request):

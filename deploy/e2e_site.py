@@ -189,7 +189,8 @@ def purge_user(cur, email: str) -> None:
         print(f"      removed {drive_delete_ids(ids)}/{len(ids)} test file(s) from Google Drive")
     cur.execute("DELETE FROM web_emailotp WHERE email = %s", (email,))
     cur.execute("DELETE FROM web_contactmessage WHERE email = %s", (email,))
-    for table, col in (("web_ledgerentry", "owner_id"), ("web_party", "owner_id"), ("web_document", "owner_id"), ("web_profile", "user_id"), ("auth_user_groups", "user_id"),
+    cur.execute("UPDATE web_party SET customer_id = NULL WHERE customer_id IN (SELECT id FROM auth_user WHERE email = %s)", (email,))
+    for table, col in (("web_document", "owner_id"), ("web_ledgerentry", "owner_id"), ("web_party", "owner_id"), ("web_profile", "user_id"), ("auth_user_groups", "user_id"),
                        ("auth_user_user_permissions", "user_id"), ("django_admin_log", "user_id")):
         cur.execute(f"DELETE FROM {table} WHERE {col} IN (SELECT id FROM auth_user WHERE email = %s)", (email,))
     cur.execute("DELETE FROM auth_user WHERE email = %s", (email,))

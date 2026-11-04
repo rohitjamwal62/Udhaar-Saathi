@@ -31,10 +31,10 @@ class ContactMessageAdmin(admin.ModelAdmin):
 
 @admin.register(Document)
 class DocumentAdmin(admin.ModelAdmin):
-    list_display = ("title", "owner", "category", "size_kb", "open_in_drive", "created_at")
-    list_filter = ("category",)
+    list_display = ("title", "owner", "party", "category", "visible_to_customer", "size_kb", "open_in_drive", "created_at")
+    list_filter = ("category", "visible_to_customer")
     search_fields = ("title", "original_name", "owner__email")
-    readonly_fields = ("owner", "original_name", "mime_type", "size_bytes", "sha256", "drive_file_id", "drive_link", "created_at")
+    readonly_fields = ("owner", "party", "entry", "original_name", "mime_type", "size_bytes", "sha256", "drive_file_id", "drive_link", "created_at")
 
     @admin.display(description="Size (KB)")
     def size_kb(self, obj):
@@ -79,9 +79,11 @@ from .models import LedgerEntry, Party  # noqa: E402
 
 @admin.register(Party)
 class PartyAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "phone", "created_at")
-    search_fields = ("name", "phone", "owner__email")
-    raw_id_fields = ("owner",)
+    list_display = ("name", "owner", "phone", "email", "customer", "link_method", "created_at")
+    list_filter = ("link_method", "link_blocked")
+    search_fields = ("name", "phone", "email", "owner__email", "customer__email")
+    raw_id_fields = ("owner", "customer")
+    readonly_fields = ("link_method", "linked_at")
 
 
 @admin.register(LedgerEntry)

@@ -62,6 +62,11 @@ class Document(models.Model):
     CATEGORIES = [("id_proof", _("ID proof")), ("shop_proof", _("Shop proof / licence")), ("bill", _("Bill or receipt")),
                   ("agreement", _("Agreement")), ("other", _("Other"))]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="documents")
+    party = models.ForeignKey("Party", null=True, blank=True, on_delete=models.CASCADE, related_name="documents",
+                              help_text="Set when a shopkeeper attaches this proof to one customer.")
+    entry = models.ForeignKey("LedgerEntry", null=True, blank=True, on_delete=models.SET_NULL, related_name="documents",
+                              help_text="Optional: the credit or payment this proof belongs to.")
+    visible_to_customer = models.BooleanField(default=True, help_text="Let the linked customer view this proof.")
     title = models.CharField(max_length=160)
     category = models.CharField(max_length=12, choices=CATEGORIES, default="other")
     original_name = models.CharField(max_length=255)
@@ -113,8 +118,25 @@ class Party(models.Model):
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="parties")
     name = models.CharField(max_length=120)
     phone = models.CharField(max_length=20, blank=True)
+    phone_norm = models.CharField(max_length=10, blank=True, db_index=True, editable=False,
+                                  help_text="The 10-digit mobile number, used to find the customer's own account.")
+    email = models.EmailField(blank=True, help_text="The email the customer registered with (most reliable way to link).")
     note = models.CharField(max_length=240, blank=True)
+    customer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name="linked_parties",
+                                 help_text="The customer's own UdhaarSaathi account. Set automatically; the customer sees only their own entries.")
+    link_method = models.CharField(max_length=8, blank=True, editable=False)
+    linked_at = models.DateTimeField(null=True, blank=True, editable=False)
+    link_blocked = models.BooleanField(default=False, help_text="Set when the shopkeeper unlinks the account: stops automatic re-linking.")
     created_at = models.DateTimeField(auto_now_add=True)
+
+    def save(self, *args, **kwargs):
+        from .reminders import normalize_mobile
+        self.phone_norm = normalize_mobile(self.phone) or ""
+        self.email = (self.email or "").strip().lower()
+        fields = kwargs.get("update_fields")
+        if fields is not None:
+            kwargs["update_fields"] = set(fields) | {"phone_norm", "email"}
+        super().save(*args, **kwargs)
 
     class Meta:
         ordering = ["name"]
@@ -133,6 +155,8 @@ class LedgerEntry(models.Model):
     party = models.ForeignKey(Party, on_delete=models.CASCADE, related_name="entries")
     kind = models.CharField(max_length=8, choices=KINDS)
     amount_paise = models.PositiveBigIntegerField()
+    METHODS = [("cash", "Cash"), ("upi", "UPI"), ("bank", "Bank transfer"), ("other", "Other")]
+    method = models.CharField(max_length=8, blank=True, choices=METHODS, help_text="How a payment was made (for money received).")
     note = models.CharField(max_length=240, blank=True)
     entry_date = models.DateField()
     voided = models.BooleanField(default=False)

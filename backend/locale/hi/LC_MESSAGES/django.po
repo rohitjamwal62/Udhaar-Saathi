@@ -23,7 +23,7 @@ msgstr "8 से 128 अक्षर रखें।"
 msgid "Include both letters and numbers."
 msgstr "पासवर्ड में अक्षर और अंक दोनों होने चाहिए।"
 
-#: apps/web/forms.py:47 apps/web/forms.py:152
+#: apps/web/forms.py:47 apps/web/forms.py:157
 msgid "Full name"
 msgstr "पूरा नाम"
 
@@ -31,11 +31,11 @@ msgstr "पूरा नाम"
 msgid "Email address"
 msgstr "ईमेल पता"
 
-#: apps/web/forms.py:49 apps/web/forms.py:133 apps/web/forms.py:153
+#: apps/web/forms.py:49 apps/web/forms.py:133 apps/web/forms.py:158
 msgid "Mobile number (optional)"
 msgstr "मोबाइल नंबर (वैकल्पिक)"
 
-#: apps/web/forms.py:50 apps/web/forms.py:154
+#: apps/web/forms.py:50 apps/web/forms.py:159
 msgid "Shop name (optional)"
 msgstr "दुकान का नाम (वैकल्पिक)"
 
@@ -103,21 +103,45 @@ msgstr "फ़ाइल"
 msgid "Person's name"
 msgstr "व्यक्ति का नाम"
 
-#: apps/web/forms.py:134 apps/web/forms.py:141
+#: apps/web/forms.py:134
+msgid "Customer's email (optional)"
+msgstr "ग्राहक का ईमेल (वैकल्पिक)"
+
+#: apps/web/forms.py:135
+msgid "If the customer has a UdhaarSaathi account with this email or mobile number, it is linked automatically."
+msgstr "अगर ग्राहक का इस ईमेल या मोबाइल नंबर से UdhaarSaathi खाता है, तो वह अपने-आप जुड़ जाता है।"
+
+#: apps/web/forms.py:136 apps/web/forms.py:146
 msgid "Note (optional)"
 msgstr "टिप्पणी (वैकल्पिक)"
 
-#: apps/web/forms.py:138
+#: apps/web/forms.py:140
 msgid "What happened"
 msgstr "क्या हुआ"
 
-#: apps/web/forms.py:139
+#: apps/web/forms.py:141
 msgid "Amount (Rs)"
 msgstr "रकम (Rs)"
 
-#: apps/web/forms.py:140 templates/web/party.html:24 templates/web/party.html:28
+#: apps/web/forms.py:142 templates/web/customer_shop.html:22 templates/web/customer_shop.html:26 templates/web/party.html:35
 msgid "Date"
 msgstr "तारीख़"
+
+#: apps/web/forms.py:143
+msgid "Paid by (for money received)"
+msgstr "भुगतान का तरीका (मिले पैसों के लिए)"
+
+#: apps/web/forms.py:174
+msgid "Not tied to one entry"
+msgstr "किसी एक एंट्री से जुड़ा नहीं"
+
+#: apps/web/forms.py:175
+msgid "Related entry (optional)"
+msgstr "संबंधित एंट्री (वैकल्पिक)"
+
+#: apps/web/forms.py:176 templates/web/party.html:97
+msgid "Let the customer see this proof"
+msgstr "ग्राहक को यह प्रमाण देखने दें"
 
 #: apps/web/forms.py:42
 msgid "Spam detected."
@@ -139,11 +163,11 @@ msgstr "ईमेल में आए 6 अंक लिखें।"
 msgid "The file is empty."
 msgstr "फ़ाइल खाली है।"
 
-#: apps/web/forms.py:147
+#: apps/web/forms.py:152
 msgid "The date cannot be in the future."
 msgstr "तारीख़ आगे की नहीं हो सकती।"
 
-#: apps/web/forms.py:163
+#: apps/web/forms.py:168
 msgid "Enter a valid 10-digit Indian mobile number."
 msgstr "10 अंकों का सही भारतीय मोबाइल नंबर दर्ज करें।"
 
@@ -157,13 +181,29 @@ msgstr "इन प्रकार की फ़ाइलें चलेंग�
 msgid "The file is too large (limit %(mb)s MB)."
 msgstr "फ़ाइल बहुत बड़ी है (सीमा %(mb)s MB)।"
 
-#: apps/web/forms.py:138
+#: apps/web/forms.py:140
 msgid "I gave money (udhaar)"
 msgstr "मैंने पैसे दिए (उधार)"
 
-#: apps/web/forms.py:138
+#: apps/web/forms.py:140
 msgid "I received money back"
 msgstr "मुझे पैसे वापस मिले"
+
+#: apps/web/forms.py:144
+msgid "Not stated"
+msgstr "नहीं बताया"
+
+#: apps/web/forms.py:144
+msgid "Cash"
+msgstr "नकद"
+
+#: apps/web/forms.py:145
+msgid "Bank transfer"
+msgstr "बैंक ट्रांसफर"
+
+#: apps/web/forms.py:145 apps/web/models.py:63
+msgid "Other"
+msgstr "अन्य"
 
 #: apps/web/mailer.py:87
 msgid "Welcome to UdhaarSaathi"
@@ -185,7 +225,7 @@ msgstr "अपना UdhaarSaathi पासवर्ड रीसेट कर�
 msgid "Shopkeeper"
 msgstr "दुकानदार"
 
-#: apps/web/models.py:8
+#: apps/web/models.py:8 templates/web/party.html:56 templates/web/party.html:62
 msgid "Customer"
 msgstr "ग्राहक"
 
@@ -205,15 +245,11 @@ msgstr "बिल या रसीद"
 msgid "Agreement"
 msgstr "समझौता"
 
-#: apps/web/models.py:63
-msgid "Other"
-msgstr "अन्य"
-
-#: apps/web/models.py:131
+#: apps/web/models.py:153
 msgid "Gave (udhaar)"
 msgstr "दिया (उधार)"
 
-#: apps/web/models.py:131
+#: apps/web/models.py:153
 msgid "Received (repayment)"
 msgstr "मिला (वापसी)"
 
@@ -239,112 +275,141 @@ msgstr[1] "नया कोड माँगने से पहले कृप�
 msgid "Too many wrong attempts. Please request a new code."
 msgstr "बहुत ज़्यादा गलत कोशिशें हो गईं। कृपया नया कोड माँगें।"
 
-#: apps/web/views.py:204
+#: apps/web/roles.py:35
+msgid "That page is only for shopkeeper accounts."
+msgstr "यह पेज केवल दुकानदार खातों के लिए है।"
+
+#: apps/web/roles.py:39
+msgid "That page is only for customer accounts."
+msgstr "यह पेज केवल ग्राहक खातों के लिए है।"
+
+#: apps/web/views.py:208
 msgid "You are logged out."
 msgstr "आप लॉग आउट हो गए हैं।"
 
-#: apps/web/views.py:142
+#: apps/web/views.py:463 templates/web/customer_home.html:21 templates/web/customer_home.html:25
+msgid "Shop"
+msgstr "दुकान"
+
+#: apps/web/views.py:145
 msgid "Please register first."
 msgstr "कृपया पहले रजिस्टर करें।"
 
-#: apps/web/views.py:215
+#: apps/web/views.py:219
 msgid "If that email has an account, we sent a code to it."
 msgstr "अगर इस ईमेल से खाता है, तो हमने उस पर कोड भेज दिया है।"
 
-#: apps/web/views.py:261
+#: apps/web/views.py:271
 msgid "Document storage is not connected yet. Please try again later."
 msgstr "दस्तावेज़ रखने की सुविधा अभी जुड़ी नहीं है। कृपया बाद में कोशिश करें।"
 
-#: apps/web/views.py:264
+#: apps/web/views.py:274
 msgid "Upload limit reached. Please try again later."
 msgstr "अपलोड की सीमा पूरी हो गई है। कृपया बाद में कोशिश करें।"
 
-#: apps/web/views.py:280
+#: apps/web/views.py:291
 #, python-format
 msgid "“%(title)s” was uploaded and stored safely."
 msgstr "“%(title)s” अपलोड हो गया और सुरक्षित रख लिया गया है।"
 
-#: apps/web/views.py:333
+#: apps/web/views.py:352
 msgid "You have reached the limit of 2000 people."
 msgstr "आप 2000 लोगों की सीमा तक पहुँच गए हैं।"
 
-#: apps/web/views.py:336
+#: apps/web/views.py:357
 #, python-format
 msgid "%(name)s was added. Now record the money you gave."
 msgstr "%(name)s जुड़ गए हैं। अब जो पैसे दिए हैं वह लिखें।"
 
-#: apps/web/views.py:348
+#: apps/web/views.py:370
 msgid "Entry saved."
 msgstr "एंट्री सेव हो गई।"
 
-#: apps/web/views.py:365
+#: apps/web/views.py:389
 msgid "Entry cancelled. It stays in the history, marked as cancelled."
 msgstr "एंट्री रद्द हो गई। वह इतिहास में \"रद्द\" के निशान के साथ बनी रहेगी।"
 
-#: apps/web/views.py:382
+#: apps/web/views.py:407
 msgid "Your details were saved."
 msgstr "आपकी जानकारी सहेज ली गई।"
 
-#: apps/web/views.py:103
+#: apps/web/views.py:449
+msgid "The customer account was unlinked. They can no longer see this ledger."
+msgstr "ग्राहक का खाता अलग कर दिया गया। अब वे यह बही-खाता नहीं देख सकते।"
+
+#: apps/web/views.py:104
 msgid "Too many messages from this connection. Please try again later."
 msgstr "इस कनेक्शन से बहुत ज़्यादा संदेश भेजे गए हैं। कृपया बाद में फिर कोशिश करें।"
 
-#: apps/web/views.py:147
+#: apps/web/views.py:150
 msgid "Too many attempts. Please wait a few minutes."
 msgstr "बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट रुकें।"
 
-#: apps/web/views.py:173
+#: apps/web/views.py:177
 #, python-format
 msgid "A new code was sent to %(email)s."
 msgstr "नया कोड %(email)s पर भेज दिया गया है।"
 
-#: apps/web/views.py:185
+#: apps/web/views.py:189
 msgid "Too many login attempts. Please try again in a few minutes."
 msgstr "लॉग इन की बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट बाद फिर कोशिश करें।"
 
-#: apps/web/views.py:197
+#: apps/web/views.py:201
 msgid "The email or password is incorrect."
 msgstr "ईमेल या पासवर्ड गलत है।"
 
-#: apps/web/views.py:236
+#: apps/web/views.py:240
 msgid "Your password was changed. Please log in."
 msgstr "आपका पासवर्ड बदल गया है। कृपया लॉग इन करें।"
 
-#: apps/web/views.py:275
+#: apps/web/views.py:285
 msgid "We could not store the file right now. Please try again."
 msgstr "अभी हम फ़ाइल सेव नहीं कर पाए। कृपया फिर कोशिश करें।"
 
-#: apps/web/views.py:290
+#: apps/web/views.py:305
 msgid "The file could not be fetched."
 msgstr "फ़ाइल नहीं मिल सकी।"
 
-#: apps/web/views.py:330 apps/web/views.py:395
+#: apps/web/views.py:349 apps/web/views.py:420
 #, python-format
 msgid "You already have a person called %(name)s."
 msgstr "आपके पास %(name)s नाम का व्यक्ति पहले से है।"
 
-#: apps/web/views.py:399
+#: apps/web/views.py:356
+#, python-format
+msgid "%(name)s has a UdhaarSaathi account, so it is now linked. They can see their own balance."
+msgstr "%(name)s का UdhaarSaathi खाता है, इसलिए वह जोड़ दिया गया है। वे अपना बकाया देख सकते हैं।"
+
+#: apps/web/views.py:425
 msgid "Details saved."
 msgstr "जानकारी सहेज ली गई।"
 
-#: apps/web/views.py:109
+#: apps/web/views.py:454
+msgid "The customer account was found and linked."
+msgstr "ग्राहक का खाता मिल गया और जोड़ दिया गया।"
+
+#: apps/web/views.py:456
+msgid "No matching customer account was found yet. Linking happens automatically when they sign up."
+msgstr "अभी कोई मेल खाता ग्राहक खाता नहीं मिला। जब वे साइन अप करेंगे, खाता अपने-आप जुड़ जाएगा।"
+
+#: apps/web/views.py:110
 msgid "Thank you. Your message was received and we will reply by email."
 msgstr "धन्यवाद। आपका संदेश हमें मिल गया है और हम ईमेल से जवाब देंगे।"
 
-#: apps/web/views.py:134
+#: apps/web/views.py:137
 #, python-format
 msgid "We sent a 6-digit code to %(email)s."
 msgstr "हमने %(email)s पर 6 अंकों का कोड भेजा है।"
 
-#: apps/web/views.py:161
+#: apps/web/views.py:165
 msgid "Your email is verified. Welcome to UdhaarSaathi!"
 msgstr "आपका ईमेल सत्यापित हो गया। UdhaarSaathi में आपका स्वागत है!"
 
-#: apps/web/views.py:160
+#: apps/web/views.py:164
 msgid "there"
 msgstr "आप"
 
-#: apps/web/views.py:192
+#: apps/web/views.py:196
 msgid "Please verify your email first. We sent you a new code."
 msgstr "कृपया पहले अपना ईमेल सत्यापित करें। हमने आपको नया कोड भेजा है।"
 
@@ -1218,6 +1283,189 @@ msgstr "हमसे संपर्क करें | %(site_name)s"
 msgid "Send a message to the %(site_name)s team, or email %(support_email)s. We read every message."
 msgstr "%(site_name)s टीम को संदेश भेजें, या %(support_email)s पर ईमेल करें। हम हर संदेश पढ़ते हैं।"
 
+#: templates/web/customer_home.html:4
+msgid "What you owe each shop, what you have paid, and your full history."
+msgstr "हर दुकान का आपका बकाया, आपका किया भुगतान और पूरा इतिहास।"
+
+#: templates/web/customer_home.html:7
+msgid "My balance"
+msgstr "मेरा बकाया"
+
+#: templates/web/customer_home.html:8
+msgid "Your credit (udhaar) with each shop, what you have already paid, and what is still to pay."
+msgstr "हर दुकान में आपका उधार, अब तक का भुगतान और अभी चुकाना बाकी रकम।"
+
+#: templates/web/customer_home.html:9 templates/web/dashboard.html:9 templates/web/profile.html:2 templates/web/profile.html:7
+msgid "Edit my details"
+msgstr "मेरी जानकारी बदलें"
+
+#: templates/web/customer_home.html:11
+msgid "You owe now"
+msgstr "अभी आपका बकाया"
+
+#: templates/web/customer_home.html:12 templates/web/customer_home.html:21 templates/web/customer_home.html:26 templates/web/customer_shop.html:13
+msgid "Credit taken"
+msgstr "लिया गया उधार"
+
+#: templates/web/customer_home.html:12 templates/web/customer_home.html:13 templates/web/ledger.html:11 templates/web/ledger.html:12
+msgid "all time"
+msgstr "अब तक"
+
+#: templates/web/customer_home.html:13 templates/web/customer_shop.html:14
+msgid "Paid so far"
+msgstr "अब तक चुकाया"
+
+#: templates/web/customer_home.html:18
+msgid "My shops"
+msgstr "मेरी दुकानें"
+
+#: templates/web/customer_home.html:21 templates/web/customer_home.html:27
+msgid "Paid"
+msgstr "चुकाया"
+
+#: templates/web/customer_home.html:21 templates/web/customer_home.html:28
+msgid "Remaining"
+msgstr "बाकी"
+
+#: templates/web/customer_home.html:21 templates/web/ledger.html:20 templates/web/ledger.html:28
+msgid "Open"
+msgstr "खोलें"
+
+#: templates/web/customer_home.html:28 templates/web/customer_shop.html:12 templates/web/ledger.html:27 templates/web/party.html:15
+msgid "Settled"
+msgstr "हिसाब बराबर"
+
+#: templates/web/customer_home.html:29
+msgid "View history"
+msgstr "इतिहास देखें"
+
+#: templates/web/customer_home.html:34
+msgid "No shop has added you yet."
+msgstr "अभी किसी दुकान ने आपको नहीं जोड़ा है।"
+
+#: templates/web/customer_home.html:35
+msgid "You have not added a mobile number yet."
+msgstr "आपने अभी मोबाइल नंबर नहीं जोड़ा है।"
+
+#: templates/web/customer_home.html:35
+msgid "Add it now"
+msgstr "अभी जोड़ें"
+
+#: templates/web/customer_home.html:3
+#, python-format
+msgid "My balance | %(site_name)s"
+msgstr "मेरा बकाया | %(site_name)s"
+
+#: templates/web/customer_home.html:7
+#, python-format
+msgid "Hello, %(name)s"
+msgstr "नमस्ते, %(name)s"
+
+#: templates/web/customer_home.html:11
+#, python-format
+msgid "across %(counter)s shop"
+msgid_plural "across %(counter)s shops"
+msgstr[0] "%(counter)s दुकान में"
+msgstr[1] "%(counter)s दुकानों में"
+
+#: templates/web/customer_home.html:28 templates/web/party.html:15
+#, python-format
+msgid "You owe %(balance)s"
+msgstr "आपको %(balance)s देने हैं"
+
+#: templates/web/customer_home.html:28 templates/web/customer_shop.html:12 templates/web/ledger.html:27
+#, python-format
+msgid "Paid extra %(balance)s"
+msgstr "ज़्यादा चुकाया %(balance)s"
+
+#: templates/web/customer_home.html:34
+#, python-format
+msgid "Ask your shopkeeper to add you with your email (%(email)s) or the mobile number saved in your details. Your account links automatically."
+msgstr "अपने दुकानदार से कहें कि वे आपको आपके ईमेल (%(email)s) या आपकी जानकारी में सहेजे मोबाइल नंबर से जोड़ें। आपका खाता अपने-आप जुड़ जाएगा।"
+
+#: templates/web/customer_home.html:35
+#, python-format
+msgid "Mobile number on your account: %(phone)s"
+msgstr "आपके खाते का मोबाइल नंबर: %(phone)s"
+
+#: templates/web/customer_shop.html:7
+msgid "&larr; Back to my balance"
+msgstr "&larr; मेरे बकाया पर वापस"
+
+#: templates/web/customer_shop.html:9
+msgid "Only you can see this page. It shows exactly what the shopkeeper has recorded for you."
+msgstr "यह पेज केवल आप देख सकते हैं। इसमें वही है जो दुकानदार ने आपके लिए दर्ज किया है।"
+
+#: templates/web/customer_shop.html:11
+msgid "Remaining to pay"
+msgstr "चुकाना बाकी"
+
+#: templates/web/customer_shop.html:19
+msgid "Full history"
+msgstr "पूरा इतिहास"
+
+#: templates/web/customer_shop.html:22 templates/web/customer_shop.html:27 templates/web/party.html:35 templates/web/party.html:40
+msgid "What"
+msgstr "क्या"
+
+#: templates/web/customer_shop.html:22 templates/web/customer_shop.html:28 templates/web/party.html:35 templates/web/party.html:41
+msgid "Amount"
+msgstr "रकम"
+
+#: templates/web/customer_shop.html:22 templates/web/customer_shop.html:29 templates/web/party.html:35 templates/web/party.html:42
+msgid "Paid by"
+msgstr "भुगतान का तरीका"
+
+#: templates/web/customer_shop.html:22 templates/web/customer_shop.html:30 templates/web/party.html:35 templates/web/party.html:43
+msgid "Note"
+msgstr "टिप्पणी"
+
+#: templates/web/customer_shop.html:22 templates/web/customer_shop.html:31
+msgid "Balance after"
+msgstr "इसके बाद बकाया"
+
+#: templates/web/customer_shop.html:27
+msgid "Payment made"
+msgstr "किया गया भुगतान"
+
+#: templates/web/customer_shop.html:27 templates/web/party.html:40
+msgid "Cancelled"
+msgstr "रद्द"
+
+#: templates/web/customer_shop.html:36
+msgid "Nothing has been recorded yet."
+msgstr "अभी कुछ भी दर्ज नहीं हुआ है।"
+
+#: templates/web/customer_shop.html:39
+msgid "Proof shared with you"
+msgstr "आपके साथ साझा किए गए प्रमाण"
+
+#: templates/web/customer_shop.html:42 templates/web/customer_shop.html:46 templates/web/dashboard.html:21 templates/web/dashboard.html:25
+msgid "Document"
+msgstr "दस्तावेज़"
+
+#: templates/web/customer_shop.html:42 templates/web/customer_shop.html:47 templates/web/dashboard.html:21 templates/web/dashboard.html:28
+msgid "Added"
+msgstr "जोड़ा गया"
+
+#: templates/web/customer_shop.html:42 templates/web/customer_shop.html:48 templates/web/dashboard.html:21 templates/web/dashboard.html:29
+msgid "Download"
+msgstr "डाउनलोड करें"
+
+#: templates/web/customer_shop.html:53
+msgid "The shopkeeper has not shared any proof."
+msgstr "दुकानदार ने कोई प्रमाण साझा नहीं किया है।"
+
+#: templates/web/customer_shop.html:3
+#, python-format
+msgid "%(shop)s | My balance | %(site_name)s"
+msgstr "%(shop)s | मेरा बकाया | %(site_name)s"
+
+#: templates/web/customer_shop.html:4
+#, python-format
+msgid "Your credit, payments and remaining balance with %(shop)s."
+msgstr "%(shop)s के साथ आपका उधार, भुगतान और बाकी रकम।"
+
 #: templates/web/dashboard.html:6
 msgid "Welcome"
 msgstr "स्वागत है"
@@ -1225,10 +1473,6 @@ msgstr "स्वागत है"
 #: templates/web/dashboard.html:7
 msgid "Your account, plan and documents in one place."
 msgstr "आपका खाता, प्लान और दस्तावेज़ एक जगह।"
-
-#: templates/web/dashboard.html:9 templates/web/profile.html:2 templates/web/profile.html:7
-msgid "Edit my details"
-msgstr "मेरी जानकारी बदलें"
 
 #: templates/web/dashboard.html:9
 msgid "Open my udhaar ledger"
@@ -1258,10 +1502,6 @@ msgstr "सत्यापित नहीं"
 msgid "Your documents"
 msgstr "आपके दस्तावेज़"
 
-#: templates/web/dashboard.html:21 templates/web/dashboard.html:25
-msgid "Document"
-msgstr "दस्तावेज़"
-
 #: templates/web/dashboard.html:21 templates/web/dashboard.html:26
 msgid "Type"
 msgstr "प्रकार"
@@ -1269,14 +1509,6 @@ msgstr "प्रकार"
 #: templates/web/dashboard.html:21 templates/web/dashboard.html:27
 msgid "Size"
 msgstr "आकार"
-
-#: templates/web/dashboard.html:21 templates/web/dashboard.html:28
-msgid "Added"
-msgstr "जोड़ा गया"
-
-#: templates/web/dashboard.html:21 templates/web/dashboard.html:29
-msgid "Download"
-msgstr "डाउनलोड करें"
 
 #: templates/web/dashboard.html:34
 msgid "No documents yet."
@@ -1294,7 +1526,7 @@ msgstr "दस्तावेज़ अपलोड करें"
 msgid "PDF, PNG, JPG, JPEG, DOCX, XLSX, TXT or CSV. Up to 10 MB."
 msgstr "PDF, PNG, JPG, JPEG, DOCX, XLSX, TXT या CSV। 10 MB तक।"
 
-#: templates/web/dashboard.html:57
+#: templates/web/dashboard.html:57 templates/web/party.html:107
 msgid "Upload"
 msgstr "अपलोड करें"
 
@@ -1888,15 +2120,11 @@ msgstr "आपने किसे पैसे उधार दिए, कित
 msgid "To collect"
 msgstr "वसूली बाकी"
 
-#: templates/web/ledger.html:11 templates/web/party.html:15
+#: templates/web/ledger.html:11 templates/web/party.html:16
 msgid "Total given"
 msgstr "कुल दिया"
 
-#: templates/web/ledger.html:11 templates/web/ledger.html:12
-msgid "all time"
-msgstr "अब तक"
-
-#: templates/web/ledger.html:12 templates/web/party.html:16
+#: templates/web/ledger.html:12 templates/web/party.html:17
 msgid "Total received back"
 msgstr "कुल वापस मिला"
 
@@ -1912,21 +2140,17 @@ msgstr "व्यक्ति"
 msgid "Given"
 msgstr "दिया"
 
-#: templates/web/ledger.html:20 templates/web/ledger.html:26 templates/web/party.html:29
+#: templates/web/ledger.html:20 templates/web/ledger.html:26 templates/web/party.html:40
 msgid "Received"
 msgstr "मिला"
 
-#: templates/web/ledger.html:20 templates/web/ledger.html:27 templates/web/party.html:13
+#: templates/web/ledger.html:20 templates/web/ledger.html:27 templates/web/party.html:14
 msgid "Balance"
 msgstr "बकाया"
 
-#: templates/web/ledger.html:20 templates/web/ledger.html:28
-msgid "Open"
-msgstr "खोलें"
-
-#: templates/web/ledger.html:27 templates/web/party.html:14
-msgid "Settled"
-msgstr "हिसाब बराबर"
+#: templates/web/ledger.html:24 templates/web/party.html:22
+msgid "Linked"
+msgstr "जुड़ा हुआ"
 
 #: templates/web/ledger.html:33
 msgid "No one yet."
@@ -1940,7 +2164,7 @@ msgstr "जिस पहले व्यक्ति को आपने पै�
 msgid "Add a person"
 msgstr "व्यक्ति जोड़ें"
 
-#: templates/web/ledger.html:44
+#: templates/web/ledger.html:45
 msgid "Add person"
 msgstr "व्यक्ति जोड़ें"
 
@@ -1961,70 +2185,121 @@ msgstr[1] "%(counter)s लोगों से"
 msgid "Owes %(balance)s"
 msgstr "बकाया %(balance)s"
 
-#: templates/web/ledger.html:27
-#, python-format
-msgid "Paid extra %(balance)s"
-msgstr "ज़्यादा चुकाया %(balance)s"
-
 #: templates/web/party.html:6
 msgid "Cancel this entry? It will stay in the history, marked as cancelled."
 msgstr "इस एंट्री को रद्द करें? वह इतिहास में \"रद्द\" के निशान के साथ बनी रहेगी।"
 
-#: templates/web/party.html:8
+#: templates/web/party.html:7
+msgid "Unlink this customer account? They will no longer see this ledger."
+msgstr "इस ग्राहक खाते को अलग करें? वे यह बही-खाता नहीं देख पाएँगे।"
+
+#: templates/web/party.html:9
 msgid "&larr; Back to the ledger"
 msgstr "&larr; बही-खाते पर वापस"
 
-#: templates/web/party.html:10 templates/web/party_edit.html:2 templates/web/party_edit.html:7
+#: templates/web/party.html:11 templates/web/party_edit.html:2 templates/web/party_edit.html:7
 msgid "Edit person"
 msgstr "व्यक्ति की जानकारी बदलें"
 
-#: templates/web/party.html:21
+#: templates/web/party.html:20
+msgid "Customer account"
+msgstr "ग्राहक खाता"
+
+#: templates/web/party.html:22
+msgid "Matched by email address."
+msgstr "ईमेल पते से मिलान हुआ।"
+
+#: templates/web/party.html:22
+msgid "Matched by mobile number."
+msgstr "मोबाइल नंबर से मिलान हुआ।"
+
+#: templates/web/party.html:22
+msgid "The customer can see only their own entries with you, and the proofs you allow."
+msgstr "ग्राहक आपके साथ केवल अपनी एंट्री और आपके अनुमति दिए प्रमाण देख सकता है।"
+
+#: templates/web/party.html:23
+msgid "Unlink"
+msgstr "अलग करें"
+
+#: templates/web/party.html:25
+msgid "Not linked yet"
+msgstr "अभी जुड़ा नहीं"
+
+#: templates/web/party.html:25
+msgid "You unlinked this person, so automatic linking is paused."
+msgstr "आपने इस व्यक्ति को अलग किया है, इसलिए अपने-आप जुड़ना रुका हुआ है।"
+
+#: templates/web/party.html:25
+msgid "Add the customer's email or mobile number. When they sign up as a customer with it, their account links automatically and they can see their own balance."
+msgstr "ग्राहक का ईमेल या मोबाइल नंबर जोड़ें। जब वे इससे ग्राहक के रूप में साइन अप करेंगे, उनका खाता अपने-आप जुड़ जाएगा और वे अपना बकाया देख सकेंगे।"
+
+#: templates/web/party.html:26
+msgid "Try linking again"
+msgstr "फिर से जोड़ने की कोशिश करें"
+
+#: templates/web/party.html:32
 msgid "History"
 msgstr "इतिहास"
 
-#: templates/web/party.html:24 templates/web/party.html:29
-msgid "What"
-msgstr "क्या"
-
-#: templates/web/party.html:24 templates/web/party.html:30
-msgid "Amount"
-msgstr "रकम"
-
-#: templates/web/party.html:24 templates/web/party.html:31
-msgid "Note"
-msgstr "टिप्पणी"
-
-#: templates/web/party.html:24 templates/web/party.html:33
+#: templates/web/party.html:35 templates/web/party.html:45
 msgid "Cancel"
 msgstr "रद्द करें"
 
-#: templates/web/party.html:29
+#: templates/web/party.html:40
 msgid "Gave"
 msgstr "दिया"
 
-#: templates/web/party.html:29
-msgid "Cancelled"
-msgstr "रद्द"
-
-#: templates/web/party.html:38
+#: templates/web/party.html:50
 msgid "No entries yet."
 msgstr "अभी कोई एंट्री नहीं।"
 
-#: templates/web/party.html:38
+#: templates/web/party.html:50
 msgid "Record the first amount on the right."
 msgstr "दाईं ओर पहली रकम लिखें।"
 
-#: templates/web/party.html:43
+#: templates/web/party.html:53
+msgid "Documents and proof"
+msgstr "दस्तावेज़ और प्रमाण"
+
+#: templates/web/party.html:56 templates/web/party.html:61
+msgid "Related entry"
+msgstr "संबंधित एंट्री"
+
+#: templates/web/party.html:62
+msgid "Can see"
+msgstr "देख सकता है"
+
+#: templates/web/party.html:62
+msgid "Hidden"
+msgstr "छिपा हुआ"
+
+#: templates/web/party.html:68
+msgid "No proof uploaded for this person yet."
+msgstr "इस व्यक्ति के लिए अभी कोई प्रमाण अपलोड नहीं हुआ है।"
+
+#: templates/web/party.html:74
 msgid "Record money"
 msgstr "पैसे लिखें"
 
-#: templates/web/party.html:51
+#: templates/web/party.html:83
 msgid "Save entry"
 msgstr "एंट्री सेव करें"
 
-#: templates/web/party.html:53
+#: templates/web/party.html:85
 msgid "Entries are never deleted. If you make a mistake, cancel it and add the right one."
 msgstr "एंट्री कभी मिटाई नहीं जाती। गलती हो जाए तो उसे रद्द करें और सही एंट्री जोड़ें।"
+
+#: templates/web/party.html:90
+msgid "Document storage is being connected. Uploads will work soon."
+msgstr "दस्तावेज़ भंडारण जोड़ा जा रहा है। अपलोड जल्द काम करेंगे।"
+
+#: templates/web/party.html:102
+msgid "Drop a file here"
+msgstr "फ़ाइल यहाँ छोड़ें"
+
+#: templates/web/party.html:102
+msgid "or tap to choose"
+msgstr "या चुनने के लिए टैप करें"
 
 #: templates/web/party.html:3
 #, python-format
@@ -2036,15 +2311,22 @@ msgstr "%(name)s | बही-खाता | %(site_name)s"
 msgid "Money lent to and received from %(name)s."
 msgstr "%(name)s को दिए और उनसे मिले पैसे।"
 
-#: templates/web/party.html:14
+#: templates/web/party.html:15
 #, python-format
 msgid "Owes you %(balance)s"
 msgstr "इन पर आपके %(balance)s बाकी हैं"
 
-#: templates/web/party.html:14
+#: templates/web/party.html:17
 #, python-format
-msgid "You owe %(balance)s"
-msgstr "आपको %(balance)s देने हैं"
+msgid "%(counter)s payment"
+msgid_plural "%(counter)s payments"
+msgstr[0] "%(counter)s भुगतान"
+msgstr[1] "%(counter)s भुगतान"
+
+#: templates/web/party.html:89
+#, python-format
+msgid "Upload proof for %(name)s"
+msgstr "%(name)s के लिए प्रमाण अपलोड करें"
 
 #: templates/web/party_edit.html:3
 msgid "Change the name, mobile number or note of a person in your ledger."
@@ -2054,7 +2336,7 @@ msgstr "अपने बही-खाते में किसी व्यक�
 msgid "Changing the name does not change any money entries."
 msgstr "नाम बदलने से पैसों की कोई एंट्री नहीं बदलती।"
 
-#: templates/web/party_edit.html:17 templates/web/profile.html:17
+#: templates/web/party_edit.html:18 templates/web/profile.html:17
 msgid "Save"
 msgstr "सहेजें"
 

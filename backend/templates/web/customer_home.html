@@ -1,0 +1,39 @@
+{% extends 'base.html' %}{% load i18n %}
+{% load money %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}My balance | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% trans "What you owe each shop, what you have paid, and your full history." %}{% endblock %}
+{% block content %}
+<div class="container dash-head">
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{% if user.first_name %}{% blocktrans trimmed with name=user.first_name %}Hello, {{ name }}{% endblocktrans %}{% else %}{% trans "My balance" %}{% endif %}</h1>
+  <p class="muted">{% trans "Your credit (udhaar) with each shop, what you have already paid, and what is still to pay." %}</p>
+  <p><a class="btn btn-ghost btn-sm" href="{% url 'profile_edit' %}">{% trans "Edit my details" %}</a></p>
+  <div class="stats">
+    <div class="card stat"><div class="k">{% trans "You owe now" %}</div><div class="v owes">{{ owed|rupees }}</div><div class="s">{% blocktrans trimmed count counter=shops|length %}across {{ counter }} shop{% plural %}across {{ counter }} shops{% endblocktrans %}</div></div>
+    <div class="card stat"><div class="k">{% trans "Credit taken" %}</div><div class="v">{{ credit_taken|rupees }}</div><div class="s">{% trans "all time" %}</div></div>
+    <div class="card stat"><div class="k">{% trans "Paid so far" %}</div><div class="v paid">{{ paid|rupees }}</div><div class="s">{% trans "all time" %}</div></div>
+  </div>
+</div>
+<div class="container" style="padding-bottom:64px">
+  <section class="card" aria-labelledby="shops-h">
+    <h2 id="shops-h" style="font-size:1.3rem">{% trans "My shops" %}<span class="chip info">{{ shops|length }}</span></h2>
+    {% if shops %}
+    <div class="tbl-wrap"><table class="docs">
+      <thead><tr><th scope="col">{% trans "Shop" %}</th><th scope="col">{% trans "Credit taken" %}</th><th scope="col">{% trans "Paid" %}</th><th scope="col">{% trans "Remaining" %}</th><th scope="col"><span class="sr-only">{% trans "Open" %}</span></th></tr></thead>
+      <tbody>
+      {% for s in shops %}
+        <tr>
+          <td data-label="{% trans 'Shop' %}"><span class="t">{{ s.shop }}</span></td>
+          <td data-label="{% trans 'Credit taken' %}">{{ s.gave|rupees }}</td>
+          <td data-label="{% trans 'Paid' %}">{{ s.got|rupees }}</td>
+          <td data-label="{% trans 'Remaining' %}">{% if s.balance > 0 %}<span class="chip bad">{% blocktrans trimmed with balance=s.balance|rupees %}You owe {{ balance }}{% endblocktrans %}</span>{% elif s.balance < 0 %}<span class="chip info">{% blocktrans trimmed with balance=s.balance|absval|rupees %}Paid extra {{ balance }}{% endblocktrans %}</span>{% else %}<span class="chip">{% trans "Settled" %}</span>{% endif %}</td>
+          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'customer_shop' s.pk %}">{% trans "View history" %}</a></td>
+        </tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+    <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>{% trans "No shop has added you yet." %}</strong><br>{% blocktrans trimmed with email=user.email %}Ask your shopkeeper to add you with your email ({{ email }}) or the mobile number saved in your details. Your account links automatically.{% endblocktrans %}</p>
+      <p class="muted">{% if profile.phone %}{% blocktrans trimmed with phone=profile.phone %}Mobile number on your account: {{ phone }}{% endblocktrans %}{% else %}{% trans "You have not added a mobile number yet." %} <a href="{% url 'profile_edit' %}">{% trans "Add it now" %}</a>{% endif %}</p></div>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

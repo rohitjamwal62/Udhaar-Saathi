@@ -131,6 +131,8 @@ class DocumentForm(forms.Form):
 class PartyForm(forms.Form):
     name = forms.CharField(max_length=120, label=gettext_lazy("Person's name"))
     phone = forms.CharField(max_length=20, required=False, label=gettext_lazy("Mobile number (optional)"))
+    email = forms.EmailField(required=False, label=gettext_lazy("Customer's email (optional)"),
+                             help_text=gettext_lazy("If the customer has a UdhaarSaathi account with this email or mobile number, it is linked automatically."))
     note = forms.CharField(max_length=240, required=False, label=gettext_lazy("Note (optional)"))
 
 
@@ -138,6 +140,9 @@ class EntryForm(forms.Form):
     kind = forms.ChoiceField(choices=[("gave", gettext_lazy("I gave money (udhaar)")), ("received", gettext_lazy("I received money back"))], label=gettext_lazy("What happened"))
     amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0.01, max_value=10000000, label=gettext_lazy("Amount (Rs)"))
     entry_date = forms.DateField(label=gettext_lazy("Date"), widget=forms.DateInput(attrs={"type": "date"}))
+    method = forms.ChoiceField(required=False, label=gettext_lazy("Paid by (for money received)"),
+                               choices=[("", gettext_lazy("Not stated")), ("cash", gettext_lazy("Cash")), ("upi", "UPI"),
+                                        ("bank", gettext_lazy("Bank transfer")), ("other", gettext_lazy("Other"))])
     note = forms.CharField(max_length=240, required=False, label=gettext_lazy("Note (optional)"))
 
     def clean_entry_date(self):
@@ -162,3 +167,15 @@ class ProfileForm(forms.Form):
         if not m:
             raise forms.ValidationError(_("Enter a valid 10-digit Indian mobile number."))
         return "+91" + m
+
+
+class PartyDocumentForm(DocumentForm):
+    """A proof attached to one customer, and optionally to one of that customer's entries."""
+    entry = forms.ModelChoiceField(queryset=None, required=False, empty_label=gettext_lazy("Not tied to one entry"),
+                                   label=gettext_lazy("Related entry (optional)"))
+    visible_to_customer = forms.BooleanField(required=False, initial=True, label=gettext_lazy("Let the customer see this proof"))
+
+    def __init__(self, party, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["entry"].queryset = party.entries.all()
+        self.fields["entry"].label_from_instance = lambda e: f"{e.entry_date:%d %b %Y} - {e.get_kind_display()} - {e.amount_paise / 100:,.2f}"

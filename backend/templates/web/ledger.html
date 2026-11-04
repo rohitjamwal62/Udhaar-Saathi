@@ -21,7 +21,7 @@
       <tbody>
       {% for p in people %}
         <tr>
-          <td data-label="{% trans 'Person' %}"><span><span class="t">{{ p.name }}</span>{% if p.phone %}<br><span class="f">{{ p.phone }}</span>{% endif %}</span></td>
+          <td data-label="{% trans 'Person' %}"><span><span class="t">{{ p.name }}</span>{% if p.phone %}<br><span class="f">{{ p.phone }}</span>{% endif %}{% if p.customer_id %}<br><span class="chip">{% trans "Linked" %}</span>{% endif %}</span></td>
           <td data-label="{% trans 'Given' %}">{{ p.gave|rupees }}</td>
           <td data-label="{% trans 'Received' %}">{{ p.got|rupees }}</td>
           <td data-label="{% trans 'Balance' %}">{% if p.balance > 0 %}<span class="chip bad">{% blocktrans trimmed with balance=p.balance|rupees %}Owes {{ balance }}{% endblocktrans %}</span>{% elif p.balance < 0 %}<span class="chip info">{% blocktrans trimmed with balance=p.balance|absval|rupees %}Paid extra {{ balance }}{% endblocktrans %}</span>{% else %}<span class="chip">{% trans "Settled" %}</span>{% endif %}</td>
@@ -40,6 +40,7 @@
       {% csrf_token %}
       {% with field=form.name %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.phone %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.email %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.note %}{% include "partials/field.html" %}{% endwith %}
       <button class="btn btn-block" type="submit">{% trans "Add person" %}</button>
     </form>

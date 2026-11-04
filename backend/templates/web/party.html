@@ -4,16 +4,27 @@
 {% block description %}{% blocktrans trimmed with name=party.name %}Money lent to and received from {{ name }}.{% endblocktrans %}{% endblock %}
 {% block content %}
 {% trans "Cancel this entry? It will stay in the history, marked as cancelled." as cancel_confirm %}
+{% trans "Unlink this customer account? They will no longer see this ledger." as unlink_confirm %}
 <div class="container dash-head">
   <p><a href="{% url 'ledger' %}">{% trans "&larr; Back to the ledger" %}</a></p>
   <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{{ party.name }}</h1>
   <p><a class="btn btn-ghost btn-sm" href="{% url 'party_edit' party.pk %}">{% trans "Edit person" %}</a></p>
-  <p class="muted">{% if party.phone %}{{ party.phone }}{% endif %}{% if party.phone and party.note %} &middot; {% endif %}{{ party.note }}</p>
+  <p class="muted">{% if party.phone %}{{ party.phone }}{% endif %}{% if party.phone and party.email %} &middot; {% endif %}{{ party.email }}{% if party.note %} &middot; {{ party.note }}{% endif %}</p>
   <div class="stats">
     <div class="card stat"><div class="k">{% trans "Balance" %}</div>
       <div class="v {% if balance > 0 %}owes{% endif %}">{% if balance > 0 %}{% blocktrans trimmed with balance=balance|rupees %}Owes you {{ balance }}{% endblocktrans %}{% elif balance < 0 %}{% blocktrans trimmed with balance=balance|absval|rupees %}You owe {{ balance }}{% endblocktrans %}{% else %}{% trans "Settled" %}{% endif %}</div></div>
     <div class="card stat"><div class="k">{% trans "Total given" %}</div><div class="v">{{ gave|rupees }}</div></div>
-    <div class="card stat"><div class="k">{% trans "Total received back" %}</div><div class="v paid">{{ got|rupees }}</div></div>
+    <div class="card stat"><div class="k">{% trans "Total received back" %}</div><div class="v paid">{{ got|rupees }}</div><div class="s">{% blocktrans trimmed count counter=payments|length %}{{ counter }} payment{% plural %}{{ counter }} payments{% endblocktrans %}</div></div>
+  </div>
+  <div class="card" style="margin-top:8px">
+    <h2 style="font-size:1.1rem">{% trans "Customer account" %}</h2>
+    {% if party.customer %}
+      <p><span class="chip">{% trans "Linked" %}</span> {% if party.link_method == "email" %}{% trans "Matched by email address." %}{% else %}{% trans "Matched by mobile number." %}{% endif %} {% trans "The customer can see only their own entries with you, and the proofs you allow." %}</p>
+      <form method="post" action="{% url 'party_link' party.pk %}" onsubmit="return confirm('{{ unlink_confirm|escapejs }}');">{% csrf_token %}<input type="hidden" name="action" value="unlink"><button class="btn btn-ghost btn-sm" type="submit">{% trans "Unlink" %}</button></form>
+    {% else %}
+      <p><span class="chip warn">{% trans "Not linked yet" %}</span> {% if party.link_blocked %}{% trans "You unlinked this person, so automatic linking is paused." %}{% else %}{% trans "Add the customer's email or mobile number. When they sign up as a customer with it, their account links automatically and they can see their own balance." %}{% endif %}</p>
+      <form method="post" action="{% url 'party_link' party.pk %}">{% csrf_token %}<input type="hidden" name="action" value="retry"><button class="btn btn-ghost btn-sm" type="submit">{% trans "Try linking again" %}</button></form>
+    {% endif %}
   </div>
 </div>
 <div class="container dash-grid">
@@ -21,13 +32,14 @@
     <h2 id="hist-h" style="font-size:1.3rem">{% trans "History" %}<span class="chip info">{{ entries|length }}</span></h2>
     {% if entries %}
     <div class="tbl-wrap"><table class="docs">
-      <thead><tr><th scope="col">{% trans "Date" %}</th><th scope="col">{% trans "What" %}</th><th scope="col">{% trans "Amount" %}</th><th scope="col">{% trans "Note" %}</th><th scope="col"><span class="sr-only">{% trans "Cancel" %}</span></th></tr></thead>
+      <thead><tr><th scope="col">{% trans "Date" %}</th><th scope="col">{% trans "What" %}</th><th scope="col">{% trans "Amount" %}</th><th scope="col">{% trans "Paid by" %}</th><th scope="col">{% trans "Note" %}</th><th scope="col"><span class="sr-only">{% trans "Cancel" %}</span></th></tr></thead>
       <tbody>
       {% for e in entries %}
         <tr{% if e.voided %} style="opacity:.55;text-decoration:line-through"{% endif %}>
           <td data-label="{% trans 'Date' %}">{{ e.entry_date|date:"j M Y" }}</td>
           <td data-label="{% trans 'What' %}">{% if e.kind == "gave" %}<span class="chip bad">{% trans "Gave" %}</span>{% else %}<span class="chip">{% trans "Received" %}</span>{% endif %}{% if e.voided %} <span class="chip warn">{% trans "Cancelled" %}</span>{% endif %}</td>
           <td data-label="{% trans 'Amount' %}">{{ e.amount_paise|rupees }}</td>
+          <td data-label="{% trans 'Paid by' %}">{% if e.method %}{{ e.get_method_display }}{% else %}-{% endif %}</td>
           <td data-label="{% trans 'Note' %}">{{ e.note|default:"-" }}</td>
           <td data-label="">{% if not e.voided %}
             <form method="post" action="{% url 'entry_void' e.pk %}" onsubmit="return confirm('{{ cancel_confirm|escapejs }}');">{% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">{% trans "Cancel" %}</button></form>{% endif %}</td>
@@ -37,8 +49,27 @@
     {% else %}
     <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>{% trans "No entries yet." %}</strong><br>{% trans "Record the first amount on the right." %}</p></div>
     {% endif %}
+
+    <h2 id="docs-h" style="font-size:1.3rem;margin-top:1.6em">{% trans "Documents and proof" %}<span class="chip info">{{ documents|length }}</span></h2>
+    {% if documents %}
+    <div class="tbl-wrap"><table class="docs">
+      <thead><tr><th scope="col">{% trans "Document" %}</th><th scope="col">{% trans "Related entry" %}</th><th scope="col">{% trans "Customer" %}</th><th scope="col"><span class="sr-only">{% trans "Download" %}</span></th></tr></thead>
+      <tbody>
+      {% for d in documents %}
+        <tr>
+          <td data-label="{% trans 'Document' %}"><span><span class="t">{{ d.title }}</span><br><span class="f">{{ d.get_category_display }} &middot; {{ d.created_at|date:"j M Y" }}</span></span></td>
+          <td data-label="{% trans 'Related entry' %}">{% if d.entry %}{{ d.entry.entry_date|date:"j M Y" }} &middot; {{ d.entry.amount_paise|rupees }}{% else %}-{% endif %}</td>
+          <td data-label="{% trans 'Customer' %}">{% if d.visible_to_customer %}<span class="chip">{% trans "Can see" %}</span>{% else %}<span class="chip warn">{% trans "Hidden" %}</span>{% endif %}</td>
+          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'document_download' d.pk %}">{% trans "Download" %}</a></td>
+        </tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+    <p class="muted">{% trans "No proof uploaded for this person yet." %}</p>
+    {% endif %}
   </section>
 
+  <div>
   <section class="card" aria-labelledby="entry-h">
     <h2 id="entry-h" style="font-size:1.3rem">{% trans "Record money" %}</h2>
     <form method="post" novalidate>
@@ -47,10 +78,36 @@
       {% with field=form.kind %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.amount %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.entry_date %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.method %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.note %}{% include "partials/field.html" %}{% endwith %}
       <button class="btn btn-block" type="submit">{% trans "Save entry" %}</button>
     </form>
     <p class="help" style="margin-top:12px">{% trans "Entries are never deleted. If you make a mistake, cancel it and add the right one." %}</p>
   </section>
+
+  <section class="card" aria-labelledby="up-h" style="margin-top:24px">
+    <h2 id="up-h" style="font-size:1.3rem">{% blocktrans trimmed with name=party.name %}Upload proof for {{ name }}{% endblocktrans %}</h2>
+    {% if not drive_ready %}<div class="note warn" role="status">{% trans "Document storage is being connected. Uploads will work soon." %}</div>{% endif %}
+    <form method="post" action="{% url 'party_document_upload' party.pk %}" enctype="multipart/form-data" novalidate>
+      {% csrf_token %}
+      <fieldset{% if not drive_ready %} disabled{% endif %} style="border:0;padding:0;margin:0;min-width:0">
+        {% with field=doc_form.title %}{% include "partials/field.html" %}{% endwith %}
+        {% with field=doc_form.category %}{% include "partials/field.html" %}{% endwith %}
+        {% with field=doc_form.entry %}{% include "partials/field.html" %}{% endwith %}
+        <div class="field"><label><input type="checkbox" name="visible_to_customer" value="on" checked> {% trans "Let the customer see this proof" %}</label></div>
+        <div class="field">
+          <span class="lbl">{{ doc_form.file.label }}</span>
+          <div class="drop">
+            <svg viewBox="0 0 48 48" class="st" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M24 32V10M15 18l9-9 9 9M8 32v6a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-6"/></svg>
+            <div><strong>{% trans "Drop a file here" %}</strong> {% trans "or tap to choose" %}</div>
+            <div class="fname" aria-live="polite"></div>
+            {{ doc_form.file }}
+          </div>
+        </div>
+        <button class="btn btn-block" type="submit"{% if not drive_ready %} disabled{% endif %}>{% trans "Upload" %}</button>
+      </fieldset>
+    </form>
+  </section>
+  </div>
 </div>
 {% endblock %}

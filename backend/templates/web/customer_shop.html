@@ -1,0 +1,57 @@
+{% extends 'base.html' %}{% load i18n %}
+{% load money %}
+{% block title %}{% blocktrans trimmed with shop=shop site_name=SITE_NAME %}{{ shop }} | My balance | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% blocktrans trimmed with shop=shop %}Your credit, payments and remaining balance with {{ shop }}.{% endblocktrans %}{% endblock %}
+{% block content %}
+<div class="container dash-head">
+  <p><a href="{% url 'customer_home' %}">{% trans "&larr; Back to my balance" %}</a></p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{{ shop }}</h1>
+  <p class="muted">{% trans "Only you can see this page. It shows exactly what the shopkeeper has recorded for you." %}</p>
+  <div class="stats">
+    <div class="card stat"><div class="k">{% trans "Remaining to pay" %}</div>
+      <div class="v {% if balance > 0 %}owes{% endif %}">{% if balance > 0 %}{{ balance|rupees }}{% elif balance < 0 %}{% blocktrans trimmed with balance=balance|absval|rupees %}Paid extra {{ balance }}{% endblocktrans %}{% else %}{% trans "Settled" %}{% endif %}</div></div>
+    <div class="card stat"><div class="k">{% trans "Credit taken" %}</div><div class="v">{{ gave|rupees }}</div></div>
+    <div class="card stat"><div class="k">{% trans "Paid so far" %}</div><div class="v paid">{{ got|rupees }}</div></div>
+  </div>
+</div>
+<div class="container" style="padding-bottom:64px">
+  <section class="card" aria-labelledby="hist-h">
+    <h2 id="hist-h" style="font-size:1.3rem">{% trans "Full history" %}<span class="chip info">{{ rows|length }}</span></h2>
+    {% if rows %}
+    <div class="tbl-wrap"><table class="docs">
+      <thead><tr><th scope="col">{% trans "Date" %}</th><th scope="col">{% trans "What" %}</th><th scope="col">{% trans "Amount" %}</th><th scope="col">{% trans "Paid by" %}</th><th scope="col">{% trans "Note" %}</th><th scope="col">{% trans "Balance after" %}</th></tr></thead>
+      <tbody>
+      {% for r in rows %}
+        <tr{% if r.e.voided %} style="opacity:.55;text-decoration:line-through"{% endif %}>
+          <td data-label="{% trans 'Date' %}">{{ r.e.entry_date|date:"j M Y" }}</td>
+          <td data-label="{% trans 'What' %}">{% if r.e.kind == "gave" %}<span class="chip bad">{% trans "Credit taken" %}</span>{% else %}<span class="chip">{% trans "Payment made" %}</span>{% endif %}{% if r.e.voided %} <span class="chip warn">{% trans "Cancelled" %}</span>{% endif %}</td>
+          <td data-label="{% trans 'Amount' %}">{{ r.e.amount_paise|rupees }}</td>
+          <td data-label="{% trans 'Paid by' %}">{% if r.e.method %}{{ r.e.get_method_display }}{% else %}-{% endif %}</td>
+          <td data-label="{% trans 'Note' %}">{{ r.e.note|default:"-" }}</td>
+          <td data-label="{% trans 'Balance after' %}">{{ r.after|rupees }}</td>
+        </tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+    <p class="muted">{% trans "Nothing has been recorded yet." %}</p>
+    {% endif %}
+
+    <h2 id="docs-h" style="font-size:1.3rem;margin-top:1.6em">{% trans "Proof shared with you" %}<span class="chip info">{{ documents|length }}</span></h2>
+    {% if documents %}
+    <div class="tbl-wrap"><table class="docs">
+      <thead><tr><th scope="col">{% trans "Document" %}</th><th scope="col">{% trans "Added" %}</th><th scope="col"><span class="sr-only">{% trans "Download" %}</span></th></tr></thead>
+      <tbody>
+      {% for d in documents %}
+        <tr>
+          <td data-label="{% trans 'Document' %}"><span><span class="t">{{ d.title }}</span><br><span class="f">{{ d.get_category_display }}</span></span></td>
+          <td data-label="{% trans 'Added' %}">{{ d.created_at|date:"j M Y" }}</td>
+          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'document_download' d.pk %}">{% trans "Download" %}</a></td>
+        </tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+    <p class="muted">{% trans "The shopkeeper has not shared any proof." %}</p>
+    {% endif %}
+  </section>
+</div>
+{% endblock %}

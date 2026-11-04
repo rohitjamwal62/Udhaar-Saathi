@@ -13,6 +13,7 @@
       {% csrf_token %}
       {% with field=form.name %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.phone %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.email %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.note %}{% include "partials/field.html" %}{% endwith %}
       <button class="btn btn-block" type="submit">{% trans "Save" %}</button>
     </form>

@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block title %}Verify your email | {{ SITE_NAME }}{% endblock %}
+{% block description %}Enter the 6-digit code we emailed you to verify your {{ SITE_NAME }} account.{% endblock %}
+{% block content %}
+<section class="auth"><div class="container auth-wrap">
+  <div class="auth-card">
+    <h1>Check your email</h1>
+    <p class="sub">We sent a 6-digit code to <strong>{{ email }}</strong>. It expires soon and works only once.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "partials/nonfield.html" %}
+      <div class="field otp{% if form.code.errors %} has-error{% endif %}">
+        <label for="{{ form.code.id_for_label }}">{{ form.code.label }}</label>
+        {{ form.code }}
+        {% if form.code.errors %}<ul class="errs" role="alert">{% for e in form.code.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      <button class="btn btn-block" type="submit">Verify</button>
+    </form>
+    <div class="resend">
+      <form method="post" action="{% url 'resend_otp' %}">{% csrf_token %}
+        <button class="btn btn-ghost btn-sm" type="submit" id="resend-btn" data-wait="{{ resend_in|default:0 }}"{% if resend_in %} disabled{% endif %}>Resend code</button>
+      </form>
+      <span class="muted" id="resend-msg" role="status">{% if resend_in %}You can request a new code in {{ resend_in }}s.{% else %}Did not get the email? Check spam, then request a new code.{% endif %}</span>
+    </div>
+  </div>
+  <div class="auth-art">{% include "partials/art_auth_otp.html" %}<p>Codes only travel by email, so you need internet for this step.</p></div>
+</div></section>
+{% endblock %}

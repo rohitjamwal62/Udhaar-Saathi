@@ -49,8 +49,12 @@ if env("RENDER_EXTERNAL_HOSTNAME"):
     ALLOWED_HOSTS.append(env("RENDER_EXTERNAL_HOSTNAME"))
 
 INSTALLED_APPS = [
-    "django.contrib.auth",          # only for the password hashers; no tables are used
+    "django.contrib.admin",
+    "django.contrib.auth",
     "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
     "rest_framework",
     "drf_spectacular",
     "apps.common",
@@ -59,18 +63,36 @@ INSTALLED_APPS = [
     "apps.sync",
     "apps.subscriptions",
     "apps.system",
+    "apps.legacy",   # unmanaged models over the tables created by database/create_tables.py (for Django admin)
+    "apps.web",      # the public website, email-OTP sign-up/login, documents on Google Drive
 ]
 
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
+    "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
+    "django.middleware.csrf.CsrfViewMiddleware",
+    "django.contrib.auth.middleware.AuthenticationMiddleware",
+    "django.contrib.messages.middleware.MessageMiddleware",
     "apps.common.middleware.RequestIdMiddleware",
+    "apps.web.middleware.AdminLoginThrottleMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
 WSGI_APPLICATION = "config.wsgi.application"
 ASGI_APPLICATION = "config.asgi.application"
-TEMPLATES = [{"BACKEND": "django.template.backends.django.DjangoTemplates", "APP_DIRS": True, "OPTIONS": {"context_processors": []}}]
+TEMPLATES = [{
+    "BACKEND": "django.template.backends.django.DjangoTemplates",
+    "DIRS": [BASE_DIR / "templates"],
+    "APP_DIRS": True,
+    "OPTIONS": {"context_processors": [
+        "django.template.context_processors.request",
+        "django.contrib.auth.context_processors.auth",
+        "django.contrib.messages.context_processors.messages",
+        "apps.web.context_processors.site",
+    ]},
+}]
 
 def _database_from_env() -> dict:
     """The live database is Neon (hosted PostgreSQL), given as DATABASE_URL.
@@ -194,3 +216,48 @@ LOGGING = {
     "handlers": {"console": {"class": "logging.StreamHandler", "formatter": "plain"}},
     "root": {"handlers": ["console"], "level": env("LOG_LEVEL", "INFO")},
 }
+
+
+# ───────────── Website: static files, sessions, auth ─────────────
+STATIC_URL = "/static/"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+STATICFILES_DIRS = [BASE_DIR / "static"]
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {"BACKEND": "whitenoise.storage.CompressedStaticFilesStorage"},
+}
+AUTHENTICATION_BACKENDS = ["apps.web.auth_backends.EmailOrUsernameBackend", "django.contrib.auth.backends.ModelBackend"]
+LOGIN_URL = "/login/"
+LOGIN_REDIRECT_URL = "/dashboard/"
+LOGOUT_REDIRECT_URL = "/"
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
+SESSION_COOKIE_HTTPONLY = True
+SITE_NAME = "UdhaarSaathi"
+SITE_URL = env("SITE_URL") or env("RENDER_EXTERNAL_URL") or "http://localhost:8000"
+SUPPORT_EMAIL = env("SUPPORT_EMAIL", "rohitjamwal62@gmail.com")
+CSRF_TRUSTED_ORIGINS = [o.strip() for o in env("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]
+if env("RENDER_EXTERNAL_URL"):
+    CSRF_TRUSTED_ORIGINS.append(env("RENDER_EXTERNAL_URL"))
+ADMIN_LOGIN_MAX_ATTEMPTS = int(env("ADMIN_LOGIN_MAX_ATTEMPTS", "10"))   # per IP per 15 minutes
+
+# ───────────── Email (SMTP first, Gmail API over HTTPS as the fallback) ─────────────
+# Render's free web services block outbound SMTP ports (25, 465, 587), so on Render the Gmail API is used instead.
+EMAIL_BACKEND = env("EMAIL_BACKEND", "apps.web.mailer.FallbackEmailBackend")
+EMAIL_HOST = env("EMAIL_HOST", "smtp.gmail.com")
+EMAIL_PORT = int(env("EMAIL_PORT", "587"))
+EMAIL_USE_TLS = _bool("EMAIL_USE_TLS", "true")
+EMAIL_HOST_USER = env("EMAIL_HOST_USER", "")
+EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", "").replace(" ", "")   # Gmail shows app passwords in groups of 4
+EMAIL_TIMEOUT = int(env("EMAIL_TIMEOUT", "10"))
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "UdhaarSaathi <%s>" % (env("EMAIL_HOST_USER", "no-reply@localhost") or "no-reply@localhost"))
+EMAIL_OTP_TTL_SECONDS = 600
+EMAIL_OTP_MAX_ATTEMPTS = 5
+EMAIL_OTP_RESEND_SECONDS = int(env("EMAIL_OTP_RESEND_SECONDS", "45"))
+
+# ───────────── Google (Drive documents + Gmail API fallback) ─────────────
+GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", "")
+GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", "")
+GOOGLE_REFRESH_TOKEN = env("GOOGLE_REFRESH_TOKEN", "")
+GOOGLE_DRIVE_FOLDER_ID = env("GOOGLE_DRIVE_FOLDER_ID", "")
+DOCUMENT_MAX_BYTES = 10 * 1024 * 1024
+DOCUMENT_ALLOWED_EXTENSIONS = ("pdf", "png", "jpg", "jpeg", "docx", "xlsx", "txt", "csv")

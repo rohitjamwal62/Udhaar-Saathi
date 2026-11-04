@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% block title %}Features: khata, offline entries and sales tracking | {{ SITE_NAME }}{% endblock %}
+{% block description %}Digital khata, offline-first entries, itemised bills, reminders, honest records and sales tracking for small shops. See everything {{ SITE_NAME }} does.{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow">Features</span><h1>Built for the way small shops really work</h1><p class="lead">A digital khata for udhaar, plus sales tracking for the counter. All in one simple app.</p></div></section>
+
+<section class="section"><div class="container split two">
+  <div class="reveal"><div class="icon-tile">{% include "partials/icon_ledger.html" %}</div><h2>Digital khata for shopkeepers</h2>
+    <p>Keep your whole credit ledger in one place and always know who owes what.</p>
+    <ul class="ticks"><li>Add customers and record goods sold on credit, itemised or as a total.</li><li>Record full or partial payments.</li><li>See total receivable and each customer's balance.</li><li>Attach bill photos to entries.</li><li>Send reminders, view reports and export your records.</li></ul></div>
+  <div class="reveal d1">{% include "partials/art_hero.html" %}</div>
+</div></section>
+
+<section class="section alt"><div class="container split two flip">
+  <div class="reveal"><div class="icon-tile">{% include "partials/icon_offline.html" %}</div><h2>Offline-first, sync once</h2>
+    <p>Shops do not always have internet. The app saves every entry on the phone and syncs it exactly once when you are back online.</p>
+    <ul class="ticks"><li>Add entries and payments without a connection.</li><li>No duplicates when the connection drops and returns.</li><li>Messages, one-time codes and confirmation links need internet.</li></ul></div>
+  <div class="reveal d1">{% include "partials/art_sync.html" %}</div>
+</div></section>
+
+<section class="section"><div class="container split two">
+  <div class="reveal"><div class="icon-tile">{% include "partials/icon_shield.html" %}</div><h2>Honest on both sides</h2>
+    <p>Customers get a verified account that can link to many shops, but only after the customer approves each link.</p>
+    <ul class="ticks"><li>Customers see their own entries, the balance per shop and the combined balance.</li><li>A customer can dispute a wrong entry.</li><li>A shopkeeper can never mark an entry as confirmed.</li><li>Corrections are reversals or adjustments with a reason. Never silent edits or deletes.</li><li>Amounts are exact. They are stored in paise, so there are no rounding errors.</li><li>Everything has an audit trail.</li></ul>
+    <p class="muted" style="font-size:.9rem">Confirmations are an acknowledgement and evidence trail, not guaranteed legal proof.</p></div>
+  <div class="reveal d1">{% include "partials/art_two_sided.html" %}</div>
+</div></section>
+
+<section class="section alt"><div class="container">
+  <div class="section-head reveal"><div class="icon-tile" style="margin-inline:auto">{% include "partials/icon_chart.html" %}</div><h2>Sales tracking at the counter</h2><p>Know what you sold today, this month or any period you choose.</p></div>
+  <div class="grid c3">
+    <article class="card reveal"><h3>Quick or itemised sales</h3><p>Type one total for a fast sale, or list items when you need detail.</p></article>
+    <article class="card reveal d1"><h3>Split payments</h3><p>Take part in cash, part by UPI and part by card in the same sale.</p></article>
+    <article class="card reveal d2"><h3>Credit sales linked to the khata</h3><p>A sale on credit goes straight into the customer's khata.</p></article>
+    <article class="card reveal"><h3>Discounts, returns and refunds</h3><p>Record them properly so your numbers stay right.</p></article>
+    <article class="card reveal d1"><h3>Daily, monthly and custom reports</h3><p>Pick any date range to see your sales.</p></article>
+    <article class="card reveal d2"><h3>No double counting</h3><p>When a customer pays an old due, it is a collection, not a new sale. It is not counted as sales.</p></article>
+  </div>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="section-head reveal"><h2>Also good to know</h2></div>
+  <div class="grid c2">
+    <article class="card reveal"><div class="icon-tile">{% include "partials/icon_receipt.html" %}</div><h3>Bills and photos</h3><p>Attach a bill photo so you can show proof of what was sold.</p></article>
+    <article class="card reveal d1"><div class="icon-tile">{% include "partials/icon_bell.html" %}</div><h3>Reminders</h3><p>Send a reminder for a pending due when you have internet.</p></article>
+  </div>
+  <div class="note reveal" style="margin-top:24px;max-width:800px;margin-inline:auto"><strong>What {{ SITE_NAME }} is not.</strong> It is not a bank, lender, credit bureau or debt-collection agency, and it is not a GST billing or full POS product. Languages: English today. Hindi and Punjabi are planned.</div>
+</div></section>
+{% include "partials/cta.html" %}
+{% endblock %}

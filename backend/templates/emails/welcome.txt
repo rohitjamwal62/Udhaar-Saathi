@@ -1,0 +1,8 @@
+Hi {{ name }},
+
+Your email is verified and your {{ site_name }} account is ready.
+Sign in: {{ site_url }}/login/
+
+You can upload your documents safely from your dashboard.
+
+The {{ site_name }} team

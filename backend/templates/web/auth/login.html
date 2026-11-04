@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Log in | {{ SITE_NAME }}{% endblock %}
+{% block description %}Log in to your {{ SITE_NAME }} account.{% endblock %}
+{% block content %}
+<section class="auth"><div class="container auth-wrap">
+  <div class="auth-card">
+    <h1>Welcome back</h1>
+    <p class="sub">Log in to your {{ SITE_NAME }} account.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "partials/nonfield.html" %}
+      {% with field=form.identifier %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.password %}{% include "partials/field.html" %}{% endwith %}
+      <button class="btn btn-block" type="submit">Log in</button>
+    </form>
+    <div class="form-links"><a href="{% url 'forgot_password' %}">Forgot your password?</a><a href="{% url 'register' %}">Create an account</a></div>
+  </div>
+  <div class="auth-art">{% include "partials/art_auth_shop.html" %}<p>Your khata, wherever you are.</p></div>
+</div></section>
+{% endblock %}

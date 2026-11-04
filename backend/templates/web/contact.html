@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Contact us | {{ SITE_NAME }}{% endblock %}
+{% block description %}Send a message to the {{ SITE_NAME }} team, or email {{ SUPPORT_EMAIL }}. We read every message.{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow">Contact</span><h1>We'd like to hear from you</h1><p class="lead">Questions, feedback or a problem? Send us a note.</p></div></section>
+<section class="section" style="padding-top:24px"><div class="container contact-grid">
+  <div class="card reveal">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "partials/nonfield.html" %}
+      {% include "partials/honeypot.html" %}
+      {% with field=form.name %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.email %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.phone %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.subject %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.message %}{% include "partials/field.html" %}{% endwith %}
+      <button class="btn btn-block" type="submit">Send message</button>
+    </form>
+  </div>
+  <aside class="reveal d1">
+    <div class="card"><h2 style="font-size:1.3rem">Email</h2><p><a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a></p>
+      <h2 style="font-size:1.3rem;margin-top:1.2em">What to expect</h2>
+      <p class="muted">We send an acknowledgement to your email address when your message arrives, then reply as soon as we can. Please do not send passwords or one-time codes.</p></div>
+  </aside>
+</div></section>
+{% endblock %}

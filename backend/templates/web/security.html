@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block title %}Security and privacy of your records | {{ SITE_NAME }}{% endblock %}
+{% block description %}How {{ SITE_NAME }} protects your records: HTTPS, hashed passwords, expiring one-time codes, rate limiting, isolated shop data, private storage and audit logs.{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow">Security</span><h1>How we look after your records</h1><p class="lead">No system is perfect, and we do not claim otherwise. Here is what we do.</p></div></section>
+
+<section class="section"><div class="container split two">
+  <div class="reveal">
+    <ul class="ticks">
+      <li><strong>HTTPS.</strong> Data moves between your phone, this website and our servers over an encrypted connection.</li>
+      <li><strong>Hashed passwords.</strong> We never store your password as plain text.</li>
+      <li><strong>One-time codes.</strong> They expire and can be used only once.</li>
+      <li><strong>Rate limiting.</strong> Repeated attempts are slowed down to make guessing harder.</li>
+      <li><strong>Data isolation.</strong> Each shop's data is kept separate from every other shop.</li>
+      <li><strong>Private storage.</strong> Bills and documents are kept in private storage, not on public links.</li>
+      <li><strong>Audit logs.</strong> Changes are recorded so there is a trail.</li>
+    </ul>
+  </div>
+  <div class="reveal d1">{% include "partials/art_security.html" %}</div>
+</div></section>
+
+<section class="section alt"><div class="container">
+  <div class="grid c3">
+    <article class="card reveal"><div class="icon-tile">{% include "partials/icon_shield.html" %}</div><h3>Records you can trust</h3><p>Corrections are reversals or adjustments with a reason. Entries are not silently edited or deleted.</p></article>
+    <article class="card reveal d1"><div class="icon-tile">{% include "partials/icon_receipt.html" %}</div><h3>Exact amounts</h3><p>Money is stored in paise, so there are no rounding errors.</p></article>
+    <article class="card reveal d2"><div class="icon-tile">{% include "partials/icon_ledger.html" %}</div><h3>No card details kept</h3><p>When payments launch, they go through a payment gateway. {{ SITE_NAME }} does not store card or UPI details.</p></article>
+  </div>
+  <div class="note warn reveal" style="margin-top:24px;max-width:800px;margin-inline:auto">A customer's confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof. Found a problem? Write to <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a>.</div>
+  <p class="center" style="margin-top:24px"><a href="{% url 'privacy' %}">Read the privacy notice</a></p>
+</div></section>
+{% include "partials/cta.html" %}
+{% endblock %}

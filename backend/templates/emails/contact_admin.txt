@@ -1,0 +1,7 @@
+New contact message
+
+From: {{ name }} <{{ email }}>
+Phone: {{ phone|default:'-' }}
+Subject: {{ subject }}
+
+{{ message }}

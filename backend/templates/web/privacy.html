@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% block title %}Privacy notice | {{ SITE_NAME }}{% endblock %}
+{% block description %}What {{ SITE_NAME }} collects, why, how long we keep it, and your rights to access, correct and delete your data.{% endblock %}
+{% block content %}
+<section class="section"><div class="container prose">
+  <div class="draft-banner" role="note">Draft: to be reviewed by legal counsel before launch</div>
+  <h1>Privacy notice</h1>
+  <p class="muted">Last updated: {{ YEAR }}. This is plain-language draft text and may change before launch.</p>
+
+  <h2>What we collect</h2>
+  <ul>
+    <li><strong>Account details:</strong> your name, email address, optional mobile number, optional shop name and your role (shopkeeper or customer).</li>
+    <li><strong>Your password:</strong> stored hashed, never as plain text.</li>
+    <li><strong>Khata and sales records:</strong> customers, entries, payments, items and amounts that you or your customers record.</li>
+    <li><strong>Documents and bill photos</strong> that you upload.</li>
+    <li><strong>Messages</strong> you send us through the contact form.</li>
+    <li><strong>Technical data</strong> needed to run and protect the service, such as security and audit logs.</li>
+  </ul>
+
+  <h2>Why we use it</h2>
+  <ul>
+    <li>To create your account and keep it secure.</li>
+    <li>To run the khata, sales tracking and reminders you ask for.</li>
+    <li>To show a customer their own entries and let them confirm or dispute.</li>
+    <li>To reply to you and to prevent misuse.</li>
+  </ul>
+  <p>We do not sell your data.</p>
+
+  <h2>Email one-time codes</h2>
+  <p>We email you a one-time code to verify your address and to reset your password. The code expires and works only once. We also send a welcome email and replies to your contact messages.</p>
+
+  <h2>Documents in Google Drive</h2>
+  <p>Documents you upload are stored in private storage on Google Drive that we control. They are not public. You can download your own documents from your dashboard. Google processes them as our storage provider.</p>
+
+  <h2>Who can see your data</h2>
+  <p>Each shop's data is kept separate from other shops. A customer sees their own entries. A shopkeeper sees entries for their own shop. A customer's account is linked to a shop only after the customer approves.</p>
+
+  <h2>How long we keep it</h2>
+  <p>We keep your account and records while your account is active. If paid features become read-only, your records and exports are still kept. Audit logs are kept to protect everyone's records. When you ask us to delete your account, we delete or anonymise personal data, except what we must keep for law or to protect other users' records.</p>
+
+  <h2>Your rights</h2>
+  <p>You can ask to see the personal data we hold about you, to correct it, or to delete it. Write to <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a> from your registered email address. We will reply as soon as we can.</p>
+
+  <h2>Payments</h2>
+  <p>When payments are available they will go through a payment gateway. {{ SITE_NAME }} does not store card or UPI details.</p>
+
+  <h2>Security</h2>
+  <p>We use HTTPS, hashed passwords, expiring one-time codes, rate limiting and audit logs. No system is perfectly secure. See our <a href="{% url 'security' %}">Security page</a>.</p>
+
+  <h2>Contact</h2>
+  <p>Privacy questions: <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a>. See also our <a href="{% url 'terms' %}">Terms</a>.</p>
+</div></section>
+{% endblock %}

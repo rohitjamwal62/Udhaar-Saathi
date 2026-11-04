@@ -1,0 +1,25 @@
+from django.urls import path
+
+from . import views
+
+urlpatterns = [
+    path("", views.home, name="home"),
+    path("features/", views.features, name="features"),
+    path("how-it-works/", views.how_it_works, name="how_it_works"),
+    path("pricing/", views.pricing, name="pricing"),
+    path("security/", views.security, name="security"),
+    path("faq/", views.faq, name="faq"),
+    path("contact/", views.contact, name="contact"),
+    path("terms/", views.terms, name="terms"),
+    path("privacy/", views.privacy, name="privacy"),
+    path("register/", views.register, name="register"),
+    path("verify/", views.verify_otp, name="verify_otp"),
+    path("verify/resend/", views.resend_otp, name="resend_otp"),
+    path("login/", views.login_view, name="login"),
+    path("logout/", views.logout_view, name="logout"),
+    path("forgot-password/", views.forgot_password, name="forgot_password"),
+    path("reset-password/", views.reset_password, name="reset_password"),
+    path("dashboard/", views.dashboard, name="dashboard"),
+    path("dashboard/documents/upload/", views.document_upload, name="document_upload"),
+    path("dashboard/documents/<int:pk>/download/", views.document_download, name="document_download"),
+]

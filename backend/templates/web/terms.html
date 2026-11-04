@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+{% block title %}Terms of use | {{ SITE_NAME }}{% endblock %}
+{% block description %}The draft terms for using {{ SITE_NAME }}, in plain language.{% endblock %}
+{% block content %}
+<section class="section"><div class="container prose">
+  <div class="draft-banner" role="note">Draft: to be reviewed by legal counsel before launch</div>
+  <h1>Terms of use</h1>
+  <p class="muted">Last updated: {{ YEAR }}. This is plain-language draft text and may change before launch.</p>
+
+  <h2>1. What {{ SITE_NAME }} is</h2>
+  <p>{{ SITE_NAME }} is a digital khata (credit ledger) and sales tracking tool for small shops in India. It has an Android app and this website. It helps you record what was sold, what was paid and what is still due.</p>
+  <p>{{ SITE_NAME }} is not a bank, lender, credit bureau or debt-collection agency. It is not a GST billing or full point-of-sale product.</p>
+
+  <h2>2. Your account</h2>
+  <ul>
+    <li>Give true details and keep your password private. You are responsible for activity on your account.</li>
+    <li>We verify your email with a one-time code. Codes expire and can be used once.</li>
+    <li>A customer account can link to a shop only after the customer approves.</li>
+  </ul>
+
+  <h2>3. Entries and confirmations</h2>
+  <ul>
+    <li>Shopkeepers record entries. A shopkeeper cannot mark an entry as confirmed. Only the customer can confirm or dispute it.</li>
+    <li>Corrections are made by reversal or adjustment with a reason. Entries are not silently edited or deleted.</li>
+    <li>A confirmation is an acknowledgement and part of an evidence trail. We do not promise that it is legal proof. You should take your own legal advice where needed.</li>
+    <li>You are responsible for the accuracy of what you record.</li>
+  </ul>
+
+  <h2>4. Price and payment</h2>
+  <ul>
+    <li>Registration is free. Each shop gets one {{ PLAN.trial_months }}-month free trial.</li>
+    <li>After that the plan costs Rs {{ PLAN.amount_rupees }} per month. Taxes and gateway charges are shown before you pay. You can cancel any time.</li>
+    <li>If a renewal fails, you have a {{ PLAN.grace_days }}-day grace period. After that, paid features become read-only. Your records and exports are not deleted.</li>
+    <li>Payments are planned through a payment gateway (UPI, cards, net banking). We do not store card or UPI details.</li>
+  </ul>
+
+  <h2>5. Acceptable use</h2>
+  <p>Do not use the service to cheat, harass or threaten anyone, to record false entries, to break the law, or to attack or overload our systems.</p>
+
+  <h2>6. Availability</h2>
+  <p>We try to keep the service running, but we cannot promise it will always be available. The app saves entries on your phone when offline. Messages, one-time codes and confirmation links need internet.</p>
+
+  <h2>7. Limits of responsibility</h2>
+  <p>We provide the service as it is. To the extent the law allows, we are not responsible for losses from wrong entries, unpaid dues, or events outside our control. Nothing here limits rights you have under the law.</p>
+
+  <h2>8. Ending your account</h2>
+  <p>You may stop using {{ SITE_NAME }} at any time. We may suspend accounts that break these terms.</p>
+
+  <h2>9. Contact</h2>
+  <p>Questions about these terms: <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a>. See also our <a href="{% url 'privacy' %}">Privacy notice</a>.</p>
+</div></section>
+{% endblock %}

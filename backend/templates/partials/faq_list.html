@@ -1,0 +1,4 @@
+<div class="faq-list">
+{% for f in faqs %}<details class="q"><summary>{{ f.question }}</summary><div class="ans">{{ f.answer|linebreaks }}</div></details>
+{% empty %}<p class="center muted">Questions and answers will appear here soon. Meanwhile, write to <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a>.</p>{% endfor %}
+</div>

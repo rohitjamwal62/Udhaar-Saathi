@@ -1,0 +1,6 @@
+<div style="font-family:Arial,Helvetica,sans-serif;max-width:480px;margin:auto;padding:24px;color:#17211c">
+<h2 style="color:#0B6E4F;margin:0 0 12px">{{ site_name }}</h2>
+<p>{% if purpose == 'reset' %}Use this code to reset your password:{% else %}Use this code to verify your email address:{% endif %}</p>
+<p style="font-size:34px;letter-spacing:8px;font-weight:700;background:#E3F3EC;color:#084C37;padding:14px 18px;border-radius:10px;text-align:center">{{ code }}</p>
+<p>It works for <b>{{ minutes }} minutes</b> and can be used once. If you did not ask for it, you can safely ignore this email.</p>
+<p style="color:#5B6761;font-size:13px">{{ site_name }} will never ask you for this code by phone or chat.</p></div>

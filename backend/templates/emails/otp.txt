@@ -1,0 +1,7 @@
+{% if purpose == 'reset' %}Use this code to reset your {{ site_name }} password:{% else %}Use this code to verify your email for {{ site_name }}:{% endif %}
+
+    {{ code }}
+
+It works for {{ minutes }} minutes and can be used once. If you did not ask for it, you can ignore this email: nobody can use the code without access to your inbox.
+
+{{ site_name }} will never ask you for this code by phone or chat.

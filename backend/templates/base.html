@@ -1,0 +1,77 @@
+{% load static %}<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
+<meta name="description" content="{% block description %}UdhaarSaathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start.{% endblock %}">
+<meta name="theme-color" content="#0B6E4F">
+<meta property="og:site_name" content="{{ SITE_NAME }}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="{% block og_title %}{{ SITE_NAME }}: digital khata for small shops{% endblock %}">
+<meta property="og:description" content="{% block og_description %}Record udhaar, track sales and keep honest accounts with your customers. Offline-first Android app.{% endblock %}">
+<meta property="og:image" content="{% static 'img/logo.png' %}">
+<link rel="icon" href="{% static 'img/favicon.png' %}">
+<link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
+<script>document.documentElement.className+=' js';</script>
+<link rel="stylesheet" href="{% static 'css/site.css' %}">
+{% block head %}{% endblock %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+<a class="skip" href="#main">Skip to main content</a>
+{% if APP_ENV and APP_ENV != "production" and APP_ENV != "local" %}<div class="ribbon" role="note">{{ APP_ENV }} environment: not the live site</div>{% endif %}
+{% with u=request.resolver_match.url_name %}
+<header class="site-header">
+  <div class="container bar">
+    <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="" width="36" height="36"><span>{{ SITE_NAME }}</span></a>
+    <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="Open menu"><span class="bars"></span></button>
+    <nav class="nav" id="site-nav" aria-label="Main">
+      <a href="{% url 'features' %}"{% if u == 'features' %} aria-current="page"{% endif %}>Features</a>
+      <a href="{% url 'how_it_works' %}"{% if u == 'how_it_works' %} aria-current="page"{% endif %}>How it works</a>
+      <a href="{% url 'pricing' %}"{% if u == 'pricing' %} aria-current="page"{% endif %}>Pricing</a>
+      <a href="{% url 'security' %}"{% if u == 'security' %} aria-current="page"{% endif %}>Security</a>
+      <a href="{% url 'faq' %}"{% if u == 'faq' %} aria-current="page"{% endif %}>FAQ</a>
+      <a href="{% url 'contact' %}"{% if u == 'contact' %} aria-current="page"{% endif %}>Contact</a>
+      <div class="nav-actions">
+        {% if user.is_authenticated %}
+        <a class="btn btn-sm" href="{% url 'dashboard' %}">Dashboard</a>
+        <form method="post" action="{% url 'logout' %}">{% csrf_token %}<button class="btn btn-sm btn-ghost" type="submit">Log out</button></form>
+        {% else %}
+        <a class="btn btn-sm btn-ghost" href="{% url 'login' %}">Log in</a>
+        <a class="btn btn-sm" href="{% url 'register' %}">Start free</a>
+        {% endif %}
+      </div>
+    </nav>
+  </div>
+</header>
+{% endwith %}
+{% if messages %}
+<div class="toasts" role="region" aria-label="Notifications">
+  {% for m in messages %}<div class="toast toast-{{ m.tags|default:'info' }}" role="{% if m.tags == 'error' or m.tags == 'warning' %}alert{% else %}status{% endif %}"><p>{{ m }}</p><button type="button" hidden aria-label="Dismiss message">&times;</button></div>{% endfor %}
+</div>
+{% endif %}
+<main id="main">{% block content %}{% endblock %}</main>
+<footer class="site-footer">
+  <div class="container">
+    <div class="foot-grid">
+      <div class="about">
+        <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="" width="36" height="36"><span>{{ SITE_NAME }}</span></a>
+        <p class="muted" style="margin-top:8px;max-width:34ch">A digital khata and sales tracker for small shops in India. Not a bank, lender or debt-collection agency.</p>
+      </div>
+      <nav aria-label="Product"><h2>Product</h2><ul>
+        <li><a href="{% url 'features' %}">Features</a></li><li><a href="{% url 'how_it_works' %}">How it works</a></li>
+        <li><a href="{% url 'pricing' %}">Pricing</a></li><li><a href="{% url 'security' %}">Security</a></li></ul></nav>
+      <nav aria-label="Company"><h2>Company</h2><ul>
+        <li><a href="{% url 'faq' %}">FAQ</a></li><li><a href="{% url 'contact' %}">Contact</a></li>
+        <li><a href="{% url 'register' %}">Start free</a></li><li><a href="{% url 'login' %}">Log in</a></li></ul></nav>
+      <nav aria-label="Legal"><h2>Legal</h2><ul>
+        <li><a href="{% url 'terms' %}">Terms</a></li><li><a href="{% url 'privacy' %}">Privacy</a></li></ul></nav>
+      <div><h2>Contact</h2><ul><li><a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a></li></ul></div>
+    </div>
+    <p class="foot-bottom">&copy; {{ YEAR }} {{ SITE_NAME }}. Confirmations in the app are an acknowledgement and evidence trail, not guaranteed legal proof.</p>
+  </div>
+</footer>
+<script src="{% static 'js/site.js' %}" defer></script>
+{% block scripts %}{% endblock %}
+</body>
+</html>

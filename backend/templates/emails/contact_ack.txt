@@ -1,0 +1,5 @@
+Hi {{ name }},
+
+Thanks for writing to {{ site_name }}. We received your message about "{{ subject }}" and will reply by email.
+
+The {{ site_name }} team

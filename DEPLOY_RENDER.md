@@ -44,3 +44,30 @@ git checkout main    && git merge staging && git push  # promote to production
 - **Payments** need Razorpay keys: use Razorpay *test* keys on dev/staging, live keys only in production.
 - The database tables already exist on all three Neon branches. A deploy never changes the schema.
 - Rotate secrets (Neon password, Razorpay) if they were ever shared in chat.
+
+## The website (Django templates + admin) on the same services
+The same Django project serves the API (`/api/...`) **and** the website (`/`, `/features/`, `/pricing/`, `/register/`, `/login/`,
+`/dashboard/`, ...) plus Django admin at **`/admin/`**. Each deploy runs `collectstatic` (build) and `migrate` (start).
+
+| What | Where |
+|---|---|
+| Website pages | `https://<service>.onrender.com/` |
+| Django admin (manage every table) | `https://<service>.onrender.com/admin/` |
+| API docs | `/api/docs/` |
+
+**Email.** Render's free web services block SMTP ports (25, 465, 587), so Gmail SMTP cannot be used there. The site tries SMTP
+first and automatically falls back to the **Gmail API over HTTPS**, which needs the one-time Google connection below.
+
+**Google (Drive documents + Gmail API).** One-time consent, then the refresh token is stored as `GOOGLE_REFRESH_TOKEN`:
+```bash
+cd backend
+python manage.py google_consent --redirect https://www.google.com/            # prints the Google page to open
+python manage.py google_consent --redirect https://www.google.com/ --code <code=...>   # saves GOOGLE_REFRESH_TOKEN in backend/.env
+python deploy/render_update.py                                                  # pushes the settings to Render
+```
+The redirect address must be listed under *Authorized redirect URIs* of the OAuth client in Google Cloud Console, and the
+**Google Drive API** and **Gmail API** must be enabled in that project. Google refresh tokens of apps in "Testing" status expire
+after 7 days: publish the OAuth consent screen ("In production") to avoid that.
+
+**Admin user.** `ADMIN_PASSWORD=... python manage.py create_site_admin --username Rohit --email you@example.com` (run once per
+environment database). Change the password after the first login.

@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+{% block title %}Pricing: free to start, Rs {{ plan.amount_rupees }} a month | {{ SITE_NAME }}{% endblock %}
+{% block description %}Free registration, a {{ plan.trial_months }}-month free trial per shop, then Rs {{ plan.amount_rupees }} per month. One simple plan. Cancel any time.{% endblock %}
+{% block content %}
+<section class="page-hero"><div class="container"><span class="eyebrow">Pricing</span><h1>One simple plan</h1><p class="lead">Free to register. Free for {{ plan.trial_months }} months. Then Rs {{ plan.amount_rupees }} a month.</p></div></section>
+
+<section class="section" style="padding-top:24px"><div class="container">
+  <div class="card price-card reveal">
+    {% include "partials/art_coin.html" %}
+    <h2 style="margin-bottom:4px">{{ plan.name }}</h2>
+    <div class="price"><small>Rs</small> {{ plan.amount_rupees }}<small> / month</small></div>
+    <p class="muted" style="margin-top:8px">after {{ plan.trial_months }} months free</p>
+    <ul class="ticks">
+      <li>Registration is free</li>
+      <li>One {{ plan.trial_months }}-month free trial per shop</li>
+      <li>Digital khata, sales tracking, reports and export</li>
+      <li>Offline-first Android app and this website</li>
+      <li>Taxes and gateway charges are shown before you pay</li>
+      <li>Cancel any time</li>
+    </ul>
+    <a class="btn btn-block" href="{% url 'register' %}">Start free</a>
+  </div>
+</div></section>
+
+<section class="section alt"><div class="container">
+  <div class="section-head reveal"><h2>What happens when the trial ends</h2></div>
+  <div class="grid c3">
+    <article class="card reveal"><h3>Trial</h3><p>Use everything free for {{ plan.trial_months }} months. It is one trial per shop.</p></article>
+    <article class="card reveal d1"><h3>If a renewal fails</h3><p>You get a {{ plan.grace_days }}-day grace period to fix the payment.</p></article>
+    <article class="card reveal d2"><h3>After the grace period</h3><p>Paid features become read-only. Your records and exports are never deleted.</p></article>
+  </div>
+  <div class="note reveal" style="margin-top:24px;max-width:800px;margin-inline:auto"><strong>Payment methods (planned):</strong> UPI, cards and net banking through a payment gateway. {{ SITE_NAME }} never stores your card or UPI details.</div>
+</div></section>
+
+<section class="section"><div class="container">
+  <div class="section-head reveal"><h2>Pricing questions</h2></div>
+  {% include "partials/faq_list.html" %}
+</div></section>
+{% include "partials/cta.html" %}
+{% endblock %}

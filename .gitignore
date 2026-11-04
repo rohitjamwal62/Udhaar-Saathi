@@ -25,3 +25,6 @@ Thumbs.db
 # Secrets prepared for pasting into the Render dashboard (never commit)
 render-secrets.local.txt
 *.local.txt
+
+# collectstatic output (built on the server)
+backend/staticfiles/

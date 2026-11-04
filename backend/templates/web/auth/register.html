@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% block title %}Create your free account | {{ SITE_NAME }}{% endblock %}
+{% block description %}Register for {{ SITE_NAME }} for free. Shopkeepers get a {{ PLAN.trial_months }}-month free trial. Customers can link to many shops.{% endblock %}
+{% block content %}
+<section class="auth"><div class="container auth-wrap">
+  <div class="auth-card">
+    <h1>Create your free account</h1>
+    <p class="sub">Registration is free. We will email you a code to verify your address.</p>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% include "partials/nonfield.html" %}
+      {% include "partials/honeypot.html" %}
+      <div class="field{% if form.role.errors %} has-error{% endif %}">
+        <span class="lbl" id="role-lbl">{{ form.role.label }}</span>
+        <div class="roles" role="radiogroup" aria-labelledby="role-lbl">
+          {% for value, label in form.role.field.choices %}<label><input type="radio" name="{{ form.role.html_name }}" value="{{ value }}"{% if form.role.value == value or not form.role.value and forloop.first %} checked{% endif %}><span>{{ label }}</span></label>{% endfor %}
+        </div>
+        {% if form.role.errors %}<ul class="errs" role="alert">{% for e in form.role.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      {% with field=form.full_name %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.email %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.phone %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.shop_name %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.password1 %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.password2 %}{% include "partials/field.html" %}{% endwith %}
+      <div class="field{% if form.accept_terms.errors %} has-error{% endif %}">
+        <div class="check">{{ form.accept_terms }}<label for="{{ form.accept_terms.id_for_label }}">I accept the <a href="{% url 'terms' %}" target="_blank" rel="noopener">Terms</a> and the <a href="{% url 'privacy' %}" target="_blank" rel="noopener">Privacy Notice</a></label></div>
+        {% if form.accept_terms.errors %}<ul class="errs" role="alert">{% for e in form.accept_terms.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
+      </div>
+      <button class="btn btn-block" type="submit">Create account</button>
+    </form>
+    <div class="form-links"><span>Already registered? <a href="{% url 'login' %}">Log in</a></span></div>
+  </div>
+  <div class="auth-art">{% include "partials/art_auth_shop.html" %}<p>{{ PLAN.trial_months }} months free for your shop. Then Rs {{ PLAN.amount_rupees }} a month.</p></div>
+</div></section>
+{% endblock %}

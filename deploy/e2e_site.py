@@ -151,8 +151,26 @@ def main(env: str) -> int:
     return finish(env, email)
 
 
+def drive_delete_ids(ids: list[str]) -> int:
+    """Delete the test files the run put into Google Drive (token from backend/.env)."""
+    if not ids:
+        return 0
+    env = dict(re.findall(r"^([A-Z_]+)=(.*)$", (ROOT / "backend" / ".env").read_text(encoding="utf-8"), re.M))
+    tok = requests.post("https://oauth2.googleapis.com/token", data={"client_id": env["GOOGLE_CLIENT_ID"], "client_secret": env["GOOGLE_CLIENT_SECRET"],
+                        "refresh_token": env["GOOGLE_REFRESH_TOKEN"], "grant_type": "refresh_token"}, timeout=30).json()["access_token"]
+    done = 0
+    for fid in ids:
+        r = requests.delete(f"https://www.googleapis.com/drive/v3/files/{fid}", params={"supportsAllDrives": "true"}, headers={"Authorization": "Bearer " + tok}, timeout=30)
+        done += r.status_code in (200, 204)
+    return done
+
+
 def purge_user(cur, email: str) -> None:
     """Delete a test user and everything that points at it, children first."""
+    cur.execute("SELECT drive_file_id FROM web_document WHERE owner_id IN (SELECT id FROM auth_user WHERE email = %s)", (email,))
+    ids = [r[0] for r in cur.fetchall()]
+    if ids:
+        print(f"      removed {drive_delete_ids(ids)}/{len(ids)} test file(s) from Google Drive")
     cur.execute("DELETE FROM web_emailotp WHERE email = %s", (email,))
     cur.execute("DELETE FROM web_contactmessage WHERE email = %s", (email,))
     for table, col in (("web_document", "owner_id"), ("web_profile", "user_id"), ("auth_user_groups", "user_id"),

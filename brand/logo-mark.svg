@@ -1,10 +1,8 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-label="UdhaarSaathi">
   <title>UdhaarSaathi</title>
   <rect width="140" height="140" rx="32" fill="#0B6E4F"/>
-  <g fill="#FFF8E7">
-    <rect x="32" y="30" width="11" height="80" rx="5.5"/><rect x="52" y="30" width="11" height="80" rx="5.5"/>
-    <rect x="72" y="30" width="11" height="80" rx="5.5"/><rect x="92" y="30" width="11" height="80" rx="5.5"/>
+  <g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M45 30 H67 C94 30 94 74 62 74 M41 30 H97" stroke="#FFF8E7"/>
+    <path d="M41 54 H97 M62 74 L94 112" stroke="#F2A900"/>
   </g>
-  <path d="M20 98 L120 42" stroke="#0B6E4F" stroke-width="17" stroke-linecap="round"/>
-  <path d="M20 98 L120 42" stroke="#F2A900" stroke-width="11" stroke-linecap="round"/>
 </svg>

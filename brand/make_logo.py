@@ -11,44 +11,51 @@ from PIL import Image, ImageChops, ImageDraw, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 GREEN, CREAM, GOLD, GOLD_DARK = (11, 110, 79), (255, 248, 231), (242, 169, 0), (196, 130, 0)
-BARS = [(32, 30, 43, 110), (52, 30, 63, 110), (72, 30, 83, 110), (92, 30, 103, 110)]   # x0, y0, x1, y1
-SLASH = ((20, 98), (120, 42), 11)                                                        # p0, p1, width
-HALO = 3                                                                                 # gap between slash and bars
+# The mark: a rupee sign built from thick rounded strokes. Two cream bars (the tally strokes that make the rupee's top),
+# a cream bowl, and a gold leg: the stroke that settles the account. All coordinates are on the 140 grid, stroke 11.
+STROKE = 12
+BARS = [((41, 30), (97, 30)), ((41, 54), (97, 54))]
+BOWL = [(45, 30), (67, 30), (94, 30), (94, 74), (62, 74)]            # H then a cubic bezier: P0 .. P3 = (67,30) (94,30) (94,74) (62,74)
+LEG = ((62, 74), (94, 112))
 SS = 4
 
 
-def mark_layer(size: int, u: float, bar_rgb, slash_rgb, knockout=True) -> Image.Image:
+def _bezier(p0, p1, p2, p3, n=40):
+    return [tuple((1 - t) ** 3 * p0[i] + 3 * (1 - t) ** 2 * t * p1[i] + 3 * (1 - t) * t ** 2 * p2[i] + t ** 3 * p3[i] for i in (0, 1))
+            for t in [j / n for j in range(n + 1)]]
+
+
+def mark_layer(size: int, u: float, cream, gold) -> Image.Image:
     """The mark centred on a transparent size x size canvas. u = pixels per grid unit."""
     s = size * SS
     k = u * SS
-    c = s / 2 - 70 * k                                   # offset so grid point (70, 70) lands on the canvas centre
+    c = s / 2 - 70 * k                                   # grid point (70, 70) lands on the canvas centre
+    w = STROKE * k
+    img = Image.new("RGBA", (s, s), (0, 0, 0, 0))
+    d = ImageDraw.Draw(img)
 
-    def P(x, y):
-        return (c + x * k, c + y * k)
+    def P(pt):
+        return (c + pt[0] * k, c + pt[1] * k)
 
-    def stroke(draw, fill, extra=0):
-        (x0, y0), (x1, y1), w = SLASH
-        w = (w + extra) * k
-        a, b = P(x0, y0), P(x1, y1)
-        draw.line([a, b], fill=fill, width=int(w))
-        for cx, cy in (a, b):
-            draw.ellipse([cx - w / 2, cy - w / 2, cx + w / 2, cy + w / 2], fill=fill)
+    def path(points, rgb):
+        pts = [P(q) for q in points]
+        d.line(pts, fill=rgb + (255,), width=int(w), joint="curve")
+        for x, y in (pts[0], pts[-1]):
+            d.ellipse([x - w / 2, y - w / 2, x + w / 2, y + w / 2], fill=rgb + (255,))
 
-    bars = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    d = ImageDraw.Draw(bars)
-    for x0, y0, x1, y1 in BARS:
-        d.rounded_rectangle([*P(x0, y0), *P(x1, y1)], radius=(x1 - x0) / 2 * k, fill=bar_rgb + (255,))
-    if knockout:                                         # cut a clean gap around the slash (works on any background)
-        halo = Image.new("L", (s, s), 0)
-        stroke(ImageDraw.Draw(halo), 255, HALO * 2)
-        bars.putalpha(ImageChops.multiply(bars.getchannel("A"), ImageChops.invert(halo)))
-    slash = Image.new("RGBA", (s, s), (0, 0, 0, 0))
-    stroke(ImageDraw.Draw(slash), slash_rgb + (255,))
-    bars.alpha_composite(slash)
-    return bars.resize((size, size), Image.LANCZOS)
+    path(list(BARS[1]), gold)                                  # the lower bar is gold, like the leg: what has been settled
+    path([BOWL[0], BOWL[1]] + _bezier(BOWL[1], BOWL[2], BOWL[3], BOWL[4]), cream)
+    path(list(BARS[0]), cream)
+    path(list(LEG), gold)
+    return img.resize((size, size), Image.LANCZOS)
 
 
-def tile(size: int, rounded=True, u_ratio=0.9) -> Image.Image:
+def mark_layer_mono(size: int, u: float) -> Image.Image:
+    """Single-colour version for Android themed icons."""
+    return mark_layer(size, u, (255, 255, 255), (255, 255, 255))
+
+
+def tile(size: int, rounded=True, u_ratio=1.15) -> Image.Image:
     """Green app tile with the mark. u_ratio scales the mark relative to the tile."""
     s = size * SS
     base = Image.new("RGBA", (s, s), (0, 0, 0, 0))
@@ -83,23 +90,19 @@ def horizontal(height: int = 160) -> Image.Image:
 SVG_MARK = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 140 140" role="img" aria-label="UdhaarSaathi">
   <title>UdhaarSaathi</title>
   <rect width="140" height="140" rx="32" fill="#0B6E4F"/>
-  <g fill="#FFF8E7">
-    <rect x="32" y="30" width="11" height="80" rx="5.5"/><rect x="52" y="30" width="11" height="80" rx="5.5"/>
-    <rect x="72" y="30" width="11" height="80" rx="5.5"/><rect x="92" y="30" width="11" height="80" rx="5.5"/>
+  <g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M45 30 H67 C94 30 94 74 62 74 M41 30 H97" stroke="#FFF8E7"/>
+    <path d="M41 54 H97 M62 74 L94 112" stroke="#F2A900"/>
   </g>
-  <path d="M20 98 L120 42" stroke="#0B6E4F" stroke-width="17" stroke-linecap="round"/>
-  <path d="M20 98 L120 42" stroke="#F2A900" stroke-width="11" stroke-linecap="round"/>
 </svg>
 """
 SVG_HORIZONTAL = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" role="img" aria-label="UdhaarSaathi">
   <title>UdhaarSaathi</title>
   <rect width="140" height="140" rx="32" fill="#0B6E4F"/>
-  <g fill="#FFF8E7">
-    <rect x="32" y="30" width="11" height="80" rx="5.5"/><rect x="52" y="30" width="11" height="80" rx="5.5"/>
-    <rect x="72" y="30" width="11" height="80" rx="5.5"/><rect x="92" y="30" width="11" height="80" rx="5.5"/>
+  <g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M45 30 H67 C94 30 94 74 62 74 M41 30 H97" stroke="#FFF8E7"/>
+    <path d="M41 54 H97 M62 74 L94 112" stroke="#F2A900"/>
   </g>
-  <path d="M20 98 L120 42" stroke="#0B6E4F" stroke-width="17" stroke-linecap="round"/>
-  <path d="M20 98 L120 42" stroke="#F2A900" stroke-width="11" stroke-linecap="round"/>
   <text x="170" y="92" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-size="68" font-weight="700"><tspan fill="#0B6E4F">Udhaar</tspan><tspan fill="#C48200">Saathi</tspan></text>
 </svg>
 """
@@ -107,11 +110,11 @@ SVG_HORIZONTAL = """<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140
 
 def main() -> None:
     # phone app
-    save(tile(1024, rounded=False, u_ratio=0.88).convert("RGBA"), "mobile/assets/icon.png")
+    save(tile(1024, rounded=False, u_ratio=1.15).convert("RGBA"), "mobile/assets/icon.png")
     save(Image.new("RGBA", (1024, 1024), GREEN + (255,)), "mobile/assets/android-icon-background.png")
-    save(mark_layer(1024, 4.8, CREAM, GOLD), "mobile/assets/android-icon-foreground.png")        # inside Android's safe circle
-    save(mark_layer(1024, 4.8, (255, 255, 255), (255, 255, 255)), "mobile/assets/android-icon-monochrome.png")
-    save(mark_layer(1024, 6.0, CREAM, GOLD), "mobile/assets/splash-icon.png")
+    save(mark_layer(1024, 5.0, CREAM, GOLD), "mobile/assets/android-icon-foreground.png")        # inside Android's safe circle
+    save(mark_layer_mono(1024, 5.0), "mobile/assets/android-icon-monochrome.png")
+    save(mark_layer(1024, 6.2, CREAM, GOLD), "mobile/assets/splash-icon.png")
     save(tile(48), "mobile/assets/favicon.png")
     # website
     save(tile(512), "backend/static/img/logo.png")

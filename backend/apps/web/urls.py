@@ -22,4 +22,8 @@ urlpatterns = [
     path("dashboard/", views.dashboard, name="dashboard"),
     path("dashboard/documents/upload/", views.document_upload, name="document_upload"),
     path("dashboard/documents/<int:pk>/download/", views.document_download, name="document_download"),
+    path("ledger/", views.ledger, name="ledger"),
+    path("ledger/people/add/", views.party_add, name="party_add"),
+    path("ledger/people/<int:pk>/", views.party_detail, name="party_detail"),
+    path("ledger/entries/<int:pk>/cancel/", views.entry_void, name="entry_void"),
 ]

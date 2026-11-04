@@ -109,6 +109,22 @@ def main(env: str) -> int:
     else:
         check("not connected yet" in dash or "could not store" in dash, "document upload: Google Drive not connected yet (clear message shown, nothing saved)")
 
+    # 3b udhaar ledger: add a person, lend, get repaid, cancel
+    tokl = token(base + "/ledger/")
+    r = s.post(base + "/ledger/people/add/", data={"csrfmiddlewaretoken": tokl, "name": "E2E Ramesh", "phone": "9876543210"},
+               headers={"Referer": base + "/ledger/"}, timeout=120)
+    m = re.search(r"/ledger/people/(\d+)/", r.url)
+    check(bool(m), "ledger: a person can be added")
+    if m:
+        pu = base + m.group(0)
+        today = __import__("datetime").date.today().isoformat()
+        for kind, amt in (("gave", "2500.50"), ("received", "1000")):
+            s.post(pu, data={"csrfmiddlewaretoken": token(pu), "kind": kind, "amount": amt, "entry_date": today, "note": "e2e"},
+                   headers={"Referer": pu}, timeout=120)
+        page = s.get(pu, timeout=120).text
+        check("Owes you Rs 1,500.50" in page, "ledger: lending then repayment gives the right balance (Rs 1,500.50)")
+        check("Rs 1,500.50" in s.get(base + "/ledger/", timeout=120).text, "ledger: the list shows what is still to collect")
+
     # 4 logout / login / wrong password
     post("/logout/", {}, tok_page="/dashboard/")
     check(s.get(base + "/dashboard/", allow_redirects=False).status_code == 302, "logout works")
@@ -173,7 +189,7 @@ def purge_user(cur, email: str) -> None:
         print(f"      removed {drive_delete_ids(ids)}/{len(ids)} test file(s) from Google Drive")
     cur.execute("DELETE FROM web_emailotp WHERE email = %s", (email,))
     cur.execute("DELETE FROM web_contactmessage WHERE email = %s", (email,))
-    for table, col in (("web_document", "owner_id"), ("web_profile", "user_id"), ("auth_user_groups", "user_id"),
+    for table, col in (("web_ledgerentry", "owner_id"), ("web_party", "owner_id"), ("web_document", "owner_id"), ("web_profile", "user_id"), ("auth_user_groups", "user_id"),
                        ("auth_user_user_permissions", "user_id"), ("django_admin_log", "user_id")):
         cur.execute(f"DELETE FROM {table} WHERE {col} IN (SELECT id FROM auth_user WHERE email = %s)", (email,))
     cur.execute("DELETE FROM auth_user WHERE email = %s", (email,))

@@ -455,3 +455,77 @@ def test_email_check_page_is_superuser_only_and_reports_the_network():
     assert "password" not in {k for k in data if k.endswith("_password")} - {"smtp_password_configured"}
     out = a.get("/admin/email-check/?send=x@example.com").json()
     assert out["test_email"]["sent"] == 1 and mail.outbox[-1].to == ["x@example.com"]
+
+
+# ───────────── ledger ─────────────
+def _add_person(c, name="Ramesh"):
+    r = c.post(reverse("party_add"), {"name": name, "phone": "9876543210"})
+    from apps.web.models import Party
+    return Party.objects.get(name=name)
+
+
+def _entry(c, party, kind, amount, d=None):
+    return c.post(reverse("party_detail", args=[party.pk]),
+                  {"kind": kind, "amount": amount, "entry_date": (d or timezone.localdate()).isoformat(), "note": "test"})
+
+
+def test_ledger_requires_login():
+    assert Client().get(reverse("ledger")).status_code == 302
+
+
+def test_lend_and_repay_updates_balances_in_paise():
+    c = verified_client()
+    p = _add_person(c)
+    assert _entry(c, p, "gave", "1500.50").status_code == 302
+    assert _entry(c, p, "gave", "500").status_code == 302
+    assert _entry(c, p, "received", "700.25").status_code == 302
+    from apps.web.models import LedgerEntry
+    assert sorted(LedgerEntry.objects.values_list("amount_paise", flat=True)) == [50000, 70025, 150050]
+    page = c.get(reverse("ledger")).content.decode()
+    assert "Rs 1,300.25" in page and "Ramesh" in page          # 2000.50 - 700.25 still to collect
+    detail = c.get(reverse("party_detail", args=[p.pk])).content.decode()
+    assert "Owes you Rs 1,300.25" in detail
+
+
+def test_invalid_amounts_and_future_dates_are_refused():
+    c = verified_client()
+    p = _add_person(c)
+    from apps.web.models import LedgerEntry
+    for bad in ("0", "-5", "abc", "99999999999"):
+        _entry(c, p, "gave", bad)
+    _entry(c, p, "gave", "10", timezone.localdate() + timedelta(days=2))
+    assert LedgerEntry.objects.count() == 0
+
+
+def test_cancelling_an_entry_keeps_history_but_removes_it_from_the_balance():
+    c = verified_client()
+    p = _add_person(c)
+    _entry(c, p, "gave", "1000")
+    from apps.web.models import LedgerEntry
+    e = LedgerEntry.objects.get()
+    assert c.post(reverse("entry_void", args=[e.pk])).status_code == 302
+    e.refresh_from_db()
+    assert e.voided and LedgerEntry.objects.count() == 1
+    assert "Settled" in c.get(reverse("party_detail", args=[p.pk])).content.decode()
+
+
+def test_people_and_entries_are_private_to_their_owner():
+    a = verified_client("a@example.com")
+    p = _add_person(a)
+    _entry(a, p, "gave", "250")
+    b = verified_client("b@example.com")
+    assert b.get(reverse("party_detail", args=[p.pk])).status_code == 404
+    from apps.web.models import LedgerEntry
+    e = LedgerEntry.objects.get()
+    assert b.post(reverse("entry_void", args=[e.pk])).status_code == 404
+    assert "Ramesh" not in b.get(reverse("ledger")).content.decode()
+
+
+def test_duplicate_person_names_are_refused_and_rupee_formatting_is_indian():
+    c = verified_client()
+    _add_person(c)
+    c.post(reverse("party_add"), {"name": "ramesh"})
+    from apps.web.models import Party
+    assert Party.objects.count() == 1
+    from apps.web.templatetags.money import rupees
+    assert rupees(12345678) == "Rs 1,23,456.78" and rupees(5) == "Rs 0.05" and rupees(-10000) == "-Rs 100.00"

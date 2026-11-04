@@ -124,3 +124,23 @@ class DocumentForm(forms.Form):
         if f.size == 0:
             raise forms.ValidationError("The file is empty.")
         return f
+
+
+class PartyForm(forms.Form):
+    name = forms.CharField(max_length=120, label="Person's name")
+    phone = forms.CharField(max_length=20, required=False, label="Mobile number (optional)")
+    note = forms.CharField(max_length=240, required=False, label="Note (optional)")
+
+
+class EntryForm(forms.Form):
+    kind = forms.ChoiceField(choices=[("gave", "I gave money (udhaar)"), ("received", "I received money back")], label="What happened")
+    amount = forms.DecimalField(max_digits=12, decimal_places=2, min_value=0.01, max_value=10000000, label="Amount (Rs)")
+    entry_date = forms.DateField(label="Date", widget=forms.DateInput(attrs={"type": "date"}))
+    note = forms.CharField(max_length=240, required=False, label="Note (optional)")
+
+    def clean_entry_date(self):
+        from django.utils import timezone
+        d = self.cleaned_data["entry_date"]
+        if d > timezone.localdate():
+            raise forms.ValidationError("The date cannot be in the future.")
+        return d

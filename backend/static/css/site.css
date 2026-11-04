@@ -351,3 +351,7 @@ svg [class*="a-"] { transform-box: fill-box; transform-origin: center; }
 }
 @media print { .site-header, .site-footer, .toasts, .ribbon { display: none; } }
 .f-on { fill: var(--on-primary); }
+
+/* ledger */
+.stat .v.owes { color: var(--danger); }
+.stat .v.paid { color: var(--primary); }

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% load money %}
+{% block title %}{{ party.name }} | Ledger | {{ SITE_NAME }}{% endblock %}
+{% block description %}Money lent to and received from {{ party.name }}.{% endblock %}
+{% block content %}
+<div class="container dash-head">
+  <p><a href="{% url 'ledger' %}">&larr; Back to the ledger</a></p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{{ party.name }}</h1>
+  <p class="muted">{% if party.phone %}{{ party.phone }}{% endif %}{% if party.phone and party.note %} &middot; {% endif %}{{ party.note }}</p>
+  <div class="stats">
+    <div class="card stat"><div class="k">Balance</div>
+      <div class="v {% if balance > 0 %}owes{% endif %}">{% if balance > 0 %}Owes you {{ balance|rupees }}{% elif balance < 0 %}You owe {{ balance|absval|rupees }}{% else %}Settled{% endif %}</div></div>
+    <div class="card stat"><div class="k">Total given</div><div class="v">{{ gave|rupees }}</div></div>
+    <div class="card stat"><div class="k">Total received back</div><div class="v paid">{{ got|rupees }}</div></div>
+  </div>
+</div>
+<div class="container dash-grid">
+  <section class="card" aria-labelledby="hist-h">
+    <h2 id="hist-h" style="font-size:1.3rem">History <span class="chip info">{{ entries|length }}</span></h2>
+    {% if entries %}
+    <div class="tbl-wrap"><table class="docs">
+      <thead><tr><th scope="col">Date</th><th scope="col">What</th><th scope="col">Amount</th><th scope="col">Note</th><th scope="col"><span class="sr-only">Cancel</span></th></tr></thead>
+      <tbody>
+      {% for e in entries %}
+        <tr{% if e.voided %} style="opacity:.55;text-decoration:line-through"{% endif %}>
+          <td data-label="Date">{{ e.entry_date|date:"j M Y" }}</td>
+          <td data-label="What">{% if e.kind == "gave" %}<span class="chip bad">Gave</span>{% else %}<span class="chip">Received</span>{% endif %}{% if e.voided %} <span class="chip warn">Cancelled</span>{% endif %}</td>
+          <td data-label="Amount">{{ e.amount_paise|rupees }}</td>
+          <td data-label="Note">{{ e.note|default:"-" }}</td>
+          <td data-label="">{% if not e.voided %}
+            <form method="post" action="{% url 'entry_void' e.pk %}" onsubmit="return confirm('Cancel this entry? It will stay in the history, marked as cancelled.');">{% csrf_token %}<button class="btn btn-ghost btn-sm" type="submit">Cancel</button></form>{% endif %}</td>
+        </tr>
+      {% endfor %}
+      </tbody></table></div>
+    {% else %}
+    <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>No entries yet.</strong><br>Record the first amount on the right.</p></div>
+    {% endif %}
+  </section>
+
+  <section class="card" aria-labelledby="entry-h">
+    <h2 id="entry-h" style="font-size:1.3rem">Record money</h2>
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% if form.non_field_errors %}<div class="form-error" role="alert"><ul>{% for e in form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
+      {% with field=form.kind %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.amount %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.entry_date %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.note %}{% include "partials/field.html" %}{% endwith %}
+      <button class="btn btn-block" type="submit">Save entry</button>
+    </form>
+    <p class="help" style="margin-top:12px">Entries are never deleted. If you make a mistake, cancel it and add the right one.</p>
+  </section>
+</div>
+{% endblock %}

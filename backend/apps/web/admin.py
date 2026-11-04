@@ -66,3 +66,32 @@ class FAQAdmin(admin.ModelAdmin):
     list_display = ("question", "order", "published")
     list_editable = ("order", "published")
     search_fields = ("question", "answer")
+
+
+from .models import LedgerEntry, Party  # noqa: E402
+
+
+@admin.register(Party)
+class PartyAdmin(admin.ModelAdmin):
+    list_display = ("name", "owner", "phone", "created_at")
+    search_fields = ("name", "phone", "owner__email")
+    raw_id_fields = ("owner",)
+
+
+@admin.register(LedgerEntry)
+class LedgerEntryAdmin(admin.ModelAdmin):
+    """Read-only history: money entries are never edited or deleted, only cancelled by their owner."""
+    list_display = ("entry_date", "party", "owner", "kind", "rupees", "voided")
+    list_filter = ("kind", "voided")
+    search_fields = ("party__name", "owner__email", "note")
+    readonly_fields = [f.name for f in LedgerEntry._meta.fields]
+
+    @admin.display(description="Amount (Rs)")
+    def rupees(self, obj):
+        return f"{obj.amount_paise / 100:,.2f}"
+
+    def has_add_permission(self, request):
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        return False

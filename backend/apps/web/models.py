@@ -91,3 +91,43 @@ class FAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+
+class Party(models.Model):
+    """A person the signed-in user lends money to (a customer on credit)."""
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="parties")
+    name = models.CharField(max_length=120)
+    phone = models.CharField(max_length=20, blank=True)
+    note = models.CharField(max_length=240, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["name"]
+        verbose_name = "person"
+        verbose_name_plural = "people (ledger)"
+
+    def __str__(self):
+        return self.name
+
+
+class LedgerEntry(models.Model):
+    """Money lent to a person (gave) or paid back by them (received). Amounts are whole paise.
+    Entries are never edited or deleted: a mistake is cancelled (voided), so the history stays honest."""
+    KINDS = [("gave", "Gave (udhaar)"), ("received", "Received (repayment)")]
+    owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ledger_entries")
+    party = models.ForeignKey(Party, on_delete=models.CASCADE, related_name="entries")
+    kind = models.CharField(max_length=8, choices=KINDS)
+    amount_paise = models.PositiveBigIntegerField()
+    note = models.CharField(max_length=240, blank=True)
+    entry_date = models.DateField()
+    voided = models.BooleanField(default=False)
+    voided_at = models.DateTimeField(null=True, blank=True)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    class Meta:
+        ordering = ["-entry_date", "-id"]
+        verbose_name = "ledger entry"
+        verbose_name_plural = "ledger entries"
+
+    def __str__(self):
+        return f"{self.get_kind_display()} {self.amount_paise / 100:.2f} - {self.party}"

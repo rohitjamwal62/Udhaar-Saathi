@@ -8,6 +8,7 @@ from django.contrib import messages
 from django.contrib.auth import get_user_model, login, logout
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.db.models import BigIntegerField, Q, Sum
 from django.http import Http404, HttpResponse
 from django.shortcuts import get_object_or_404, redirect, render
 from django.utils import timezone
@@ -16,8 +17,8 @@ from django.views.decorators.http import require_POST
 from apps.common.ratelimit import hit
 
 from . import google, mailer, otp
-from .forms import ContactForm, DocumentForm, EmailForm, LoginForm, OTPForm, RegisterForm, ResetForm
-from .models import FAQ, ContactMessage, Document, Profile
+from .forms import ContactForm, DocumentForm, EmailForm, EntryForm, LoginForm, OTPForm, PartyForm, RegisterForm, ResetForm
+from .models import FAQ, ContactMessage, Document, LedgerEntry, Party, Profile
 from .context_processors import current_plan
 
 log = logging.getLogger("web")
@@ -279,3 +280,75 @@ def document_download(request, pk: int):
     resp["Content-Disposition"] = 'attachment; filename="%s"' % re.sub(r'[^A-Za-z0-9._ -]', "_", doc.original_name)
     resp["X-Content-Type-Options"] = "nosniff"
     return resp
+
+
+# ───────────────────────────── ledger: who owes me how much ─────────────────────────────
+def _balances(user):
+    gave = Sum("entries__amount_paise", filter=Q(entries__kind="gave", entries__voided=False), output_field=BigIntegerField())
+    got = Sum("entries__amount_paise", filter=Q(entries__kind="received", entries__voided=False), output_field=BigIntegerField())
+    people = list(Party.objects.filter(owner=user).annotate(gave=gave, got=got))
+    for p in people:
+        p.gave, p.got = p.gave or 0, p.got or 0
+        p.balance = p.gave - p.got
+    return people
+
+
+@login_required
+def ledger(request):
+    people = _balances(request.user)
+    return render(request, "web/ledger.html", {
+        "people": sorted(people, key=lambda p: (-p.balance, p.name.lower())),
+        "to_collect": sum(p.balance for p in people if p.balance > 0),
+        "total_given": sum(p.gave for p in people), "total_received": sum(p.got for p in people),
+        "owing_count": sum(1 for p in people if p.balance > 0), "form": PartyForm()})
+
+
+@login_required
+@require_POST
+def party_add(request):
+    form = PartyForm(request.POST)
+    if not form.is_valid():
+        for errs in form.errors.values():
+            for e in errs:
+                messages.error(request, e)
+        return redirect("ledger")
+    d = form.cleaned_data
+    name = d["name"].strip()
+    if Party.objects.filter(owner=request.user, name__iexact=name).exists():
+        messages.error(request, f"You already have a person called {name}.")
+        return redirect("ledger")
+    if Party.objects.filter(owner=request.user).count() >= 2000:
+        messages.error(request, "You have reached the limit of 2000 people.")
+        return redirect("ledger")
+    p = Party.objects.create(owner=request.user, name=name, phone=d["phone"].strip(), note=d["note"].strip())
+    messages.success(request, f"{p.name} was added. Now record the money you gave.")
+    return redirect("party_detail", pk=p.pk)
+
+
+@login_required
+def party_detail(request, pk: int):
+    party = get_object_or_404(Party, pk=pk, owner=request.user)          # only the owner can see a person
+    form = EntryForm(request.POST or None, initial={"kind": "gave", "entry_date": timezone.localdate()})
+    if request.method == "POST" and form.is_valid():
+        d = form.cleaned_data
+        LedgerEntry.objects.create(owner=request.user, party=party, kind=d["kind"], amount_paise=int(d["amount"] * 100),
+                                   note=d["note"].strip(), entry_date=d["entry_date"])
+        messages.success(request, "Entry saved.")
+        return redirect("party_detail", pk=party.pk)
+    entries = list(party.entries.all())
+    live = [e for e in entries if not e.voided]
+    gave = sum(e.amount_paise for e in live if e.kind == "gave")
+    got = sum(e.amount_paise for e in live if e.kind == "received")
+    return render(request, "web/party.html", {"party": party, "entries": entries, "gave": gave, "got": got,
+                                              "balance": gave - got, "form": form})
+
+
+@login_required
+@require_POST
+def entry_void(request, pk: int):
+    e = get_object_or_404(LedgerEntry, pk=pk, owner=request.user)
+    if not e.voided:
+        e.voided, e.voided_at = True, timezone.now()
+        e.save(update_fields=["voided", "voided_at"])
+        messages.success(request, "Entry cancelled. It stays in the history, marked as cancelled.")
+    return redirect("party_detail", pk=e.party_id)

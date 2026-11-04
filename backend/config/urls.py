@@ -3,8 +3,10 @@ from django.urls import include, path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from apps.system import views as system_views
+from apps.web.diagnostics import email_check
 
 urlpatterns = [
+    path("admin/email-check/", email_check),         # superuser-only email diagnostics
     path("admin/", admin.site.urls),
     path("api/", system_views.root),                 # API landing page (JSON)
     path("live", system_views.live),                 # short aliases of /health/live and /health/ready

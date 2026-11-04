@@ -439,3 +439,19 @@ def test_verify_page_does_not_claim_a_code_was_sent_when_the_email_failed():
     c.post(reverse("resend_otp"))                                              # email works now
     html = c.get(reverse("verify_otp")).content.decode()
     assert "We sent a 6-digit code" in html and "We could not email" not in html
+
+
+def test_email_check_page_is_superuser_only_and_reports_the_network():
+    verified_client()
+    anon = Client()
+    assert anon.get("/admin/email-check/").status_code == 302
+    normal = Client(); normal.login(username="asha@example.com", password=PW)
+    assert normal.get("/admin/email-check/").status_code == 302           # not staff
+    get_user_model().objects.create_superuser("Rohit", "boss@example.com", "Test-Admin-Pass-1")
+    a = Client(); a.login(username="Rohit", password="Test-Admin-Pass-1")
+    with mock.patch("apps.web.diagnostics.socket.create_connection", side_effect=OSError("blocked")):
+        data = a.get("/admin/email-check/").json()
+    assert data["smtp_possible_here"] is False and len(data["network"]) == 3
+    assert "password" not in {k for k in data if k.endswith("_password")} - {"smtp_password_configured"}
+    out = a.get("/admin/email-check/?send=x@example.com").json()
+    assert out["test_email"]["sent"] == 1 and mail.outbox[-1].to == ["x@example.com"]

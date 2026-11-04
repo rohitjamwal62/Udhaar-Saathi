@@ -25,6 +25,19 @@ def normalize_phone(value: str) -> str:
     raise forms.ValidationError(_("Enter a valid mobile number, for example 98765 43210."))
 
 
+def clean_required_mobile(value: str, exclude_user_id=None) -> str:
+    """A mobile number is mandatory for every account. It must be valid and not used by another account."""
+    number = normalize_phone(value)
+    if not number:
+        raise forms.ValidationError(_("Please enter your mobile number."))
+    taken = Profile.objects.filter(phone=number)
+    if exclude_user_id:
+        taken = taken.exclude(user_id=exclude_user_id)
+    if taken.exists():
+        raise forms.ValidationError(_("This mobile number is already used by another account."))
+    return number
+
+
 def check_password_rules(pw: str) -> str:
     if len(pw) < 8 or len(pw) > 128:
         raise forms.ValidationError(_("Use 8 to 128 characters."))
@@ -46,7 +59,7 @@ class HoneypotMixin(forms.Form):
 class RegisterForm(HoneypotMixin):
     full_name = forms.CharField(max_length=120, label=gettext_lazy("Full name"))
     email = forms.EmailField(label=gettext_lazy("Email address"))
-    phone = forms.CharField(max_length=20, required=False, label=gettext_lazy("Mobile number (optional)"))
+    phone = forms.CharField(max_length=20, label=gettext_lazy("Mobile number"))
     shop_name = forms.CharField(max_length=160, required=False, label=gettext_lazy("Shop name (optional)"))
     role = forms.ChoiceField(choices=Profile.ROLES, initial="shopkeeper", label=gettext_lazy("I am a"))
     password1 = forms.CharField(widget=forms.PasswordInput, label=gettext_lazy("Password"), strip=False)
@@ -60,7 +73,10 @@ class RegisterForm(HoneypotMixin):
         return email
 
     def clean_phone(self):
-        return normalize_phone(self.cleaned_data.get("phone", ""))
+        # An earlier, unverified attempt with the same email may be reused, so it does not count as "another account".
+        email = (self.data.get("email") or "").strip().lower()
+        same = User.objects.filter(email__iexact=email).values_list("pk", flat=True).first() if email else None
+        return clean_required_mobile(self.cleaned_data.get("phone", ""), exclude_user_id=same)
 
     def clean_password1(self):
         return check_password_rules(self.cleaned_data["password1"])
@@ -155,18 +171,15 @@ class EntryForm(forms.Form):
 
 class ProfileForm(forms.Form):
     full_name = forms.CharField(max_length=120, label=gettext_lazy("Full name"))
-    phone = forms.CharField(max_length=20, required=False, label=gettext_lazy("Mobile number (optional)"))
+    phone = forms.CharField(max_length=20, label=gettext_lazy("Mobile number"))
     shop_name = forms.CharField(max_length=160, required=False, label=gettext_lazy("Shop name (optional)"))
 
+    def __init__(self, *args, user=None, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+
     def clean_phone(self):
-        from .reminders import normalize_mobile
-        raw = self.cleaned_data["phone"].strip()
-        if not raw:
-            return ""
-        m = normalize_mobile(raw)
-        if not m:
-            raise forms.ValidationError(_("Enter a valid 10-digit Indian mobile number."))
-        return "+91" + m
+        return clean_required_mobile(self.cleaned_data.get("phone", ""), exclude_user_id=getattr(self.user, "pk", None))
 
 
 class PartyDocumentForm(DocumentForm):

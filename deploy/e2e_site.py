@@ -78,7 +78,7 @@ def main(env: str) -> int:
     check(s.get(base + "/health/ready", timeout=120).json().get("status") == "ok", "server and database are ready")
 
     # 1 register
-    r = post("/register/", {"full_name": "E2E Tester", "email": email, "phone": "9876543210", "shop_name": "E2E Kirana", "role": "shopkeeper",
+    r = post("/register/", {"full_name": "E2E Tester", "email": email, "phone": "9" + stamp.rjust(9, "4"), "shop_name": "E2E Kirana", "role": "shopkeeper",
                             "password1": pw1, "password2": pw1, "accept_terms": "on", "website": ""})
     check(r.url.endswith("/verify/"), "registration accepted and the code page is shown")
     check(s.get(base + "/dashboard/", allow_redirects=False).status_code == 302, "dashboard is locked before the email is verified")

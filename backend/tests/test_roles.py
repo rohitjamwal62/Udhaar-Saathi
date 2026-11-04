@@ -19,9 +19,14 @@ PW = "Sup3rSecret"
 
 
 # ───────────── helpers ─────────────
+def _phone_for(email: str) -> str:
+    import zlib
+    return "9" + str(zlib.crc32(email.lower().encode()) % 10**9).zfill(9)
+
+
 def _register(c, email, role, phone="", name="Test User"):
     return c.post(reverse("register"), {
-        "full_name": name, "email": email, "phone": phone, "shop_name": "Kirana" if role == "shopkeeper" else "", "role": role,
+        "full_name": name, "email": email, "phone": phone or _phone_for(email), "shop_name": "Kirana" if role == "shopkeeper" else "", "role": role,
         "password1": PW, "password2": PW, "accept_terms": "on", "website": ""})
 
 
@@ -131,9 +136,11 @@ def test_adding_a_customer_by_mobile_number_links_when_exactly_one_account_has_i
     assert p.customer.email == "cust@example.com" and p.link_method == "phone"
 
 
-def test_a_mobile_number_shared_by_two_customer_accounts_is_never_linked_automatically():
-    signed_in("a@example.com", "customer", "9876500002")
-    signed_in("b@example.com", "customer", "9876500002")
+def test_a_number_that_two_old_accounts_share_is_never_linked_automatically():
+    """Accounts from before the one-number-per-account rule may share a number: linking must stay safe for them."""
+    signed_in("a@example.com", "customer")
+    signed_in("b@example.com", "customer")
+    Profile.objects.filter(user__email__in=["a@example.com", "b@example.com"]).update(phone="+919876500002")   # legacy data
     shop = signed_in("shop@example.com", "shopkeeper")
     p = add_person(shop, "Twin", phone="9876500002")
     p.refresh_from_db()

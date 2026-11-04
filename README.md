@@ -20,7 +20,7 @@ The free Render plan sleeps after about 15 minutes idle, so the first request af
 
 **Website** (Django templates, responsive, animated vector art)
 - Public pages: home, features, how it works, pricing (read live from the database), security, FAQ (editable in admin), contact, terms, privacy.
-- Sign up with an **email OTP** (6 digits, hashed, 10-minute expiry, 5 attempts, resend cooldown, rate limits), login, logout, password reset by email code.
+- A **mobile number is mandatory** for every account (one number per account); older accounts without one are asked to add it. Sign up with an **email OTP** (6 digits, hashed, 10-minute expiry, 5 attempts, resend cooldown, rate limits), login, logout, password reset by email code.
 - **Udhaar ledger** at `/ledger/`: add people, record money you gave and money you got back, see each person's balance and the total still to collect. Entries are never edited or deleted; a mistake is cancelled and stays in the history.
 - **Documents** on the dashboard: upload ID/shop proof/bills to a private **Google Drive** folder. Only a reference is kept in the database, and only the owner can download.
 - **English / हिन्दी switch** in the header and footer. English is the default; Hindi appears only after the visitor picks it.

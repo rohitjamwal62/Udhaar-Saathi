@@ -15,193 +15,201 @@ msgstr ""
 msgid "Enter a valid mobile number, for example 98765 43210."
 msgstr "सही मोबाइल नंबर लिखें, जैसे 98765 43210।"
 
-#: apps/web/forms.py:30
+#: apps/web/forms.py:32
+msgid "Please enter your mobile number."
+msgstr "कृपया अपना मोबाइल नंबर दर्ज करें।"
+
+#: apps/web/forms.py:37
+msgid "This mobile number is already used by another account."
+msgstr "यह मोबाइल नंबर किसी दूसरे खाते में पहले से इस्तेमाल हो रहा है।"
+
+#: apps/web/forms.py:43
 msgid "Use 8 to 128 characters."
 msgstr "8 से 128 अक्षर रखें।"
 
-#: apps/web/forms.py:32
+#: apps/web/forms.py:45
 msgid "Include both letters and numbers."
 msgstr "पासवर्ड में अक्षर और अंक दोनों होने चाहिए।"
 
-#: apps/web/forms.py:47 apps/web/forms.py:157
+#: apps/web/forms.py:60 apps/web/forms.py:173
 msgid "Full name"
 msgstr "पूरा नाम"
 
-#: apps/web/forms.py:48 apps/web/forms.py:86 apps/web/forms.py:105
+#: apps/web/forms.py:61 apps/web/forms.py:102 apps/web/forms.py:121
 msgid "Email address"
 msgstr "ईमेल पता"
 
-#: apps/web/forms.py:49 apps/web/forms.py:133 apps/web/forms.py:158
-msgid "Mobile number (optional)"
-msgstr "मोबाइल नंबर (वैकल्पिक)"
+#: apps/web/forms.py:62 apps/web/forms.py:174
+msgid "Mobile number"
+msgstr "मोबाइल नंबर"
 
-#: apps/web/forms.py:50 apps/web/forms.py:159
+#: apps/web/forms.py:63 apps/web/forms.py:175
 msgid "Shop name (optional)"
 msgstr "दुकान का नाम (वैकल्पिक)"
 
-#: apps/web/forms.py:51
+#: apps/web/forms.py:64
 msgid "I am a"
 msgstr "मैं हूँ"
 
-#: apps/web/forms.py:52 apps/web/forms.py:82
+#: apps/web/forms.py:65 apps/web/forms.py:98
 msgid "Password"
 msgstr "पासवर्ड"
 
-#: apps/web/forms.py:53
+#: apps/web/forms.py:66
 msgid "Confirm password"
 msgstr "पासवर्ड दोबारा लिखें"
 
-#: apps/web/forms.py:54
+#: apps/web/forms.py:67
 msgid "I accept the Terms and the Privacy Notice"
 msgstr "मैं नियम व शर्तें और गोपनीयता सूचना स्वीकार करता/करती हूँ"
 
-#: apps/web/forms.py:76
+#: apps/web/forms.py:92
 msgid "6-digit code"
 msgstr "6 अंकों का कोड"
 
-#: apps/web/forms.py:81
+#: apps/web/forms.py:97
 msgid "Email or username"
 msgstr "ईमेल या यूज़रनेम"
 
-#: apps/web/forms.py:90
+#: apps/web/forms.py:106
 msgid "New password"
 msgstr "नया पासवर्ड"
 
-#: apps/web/forms.py:91
+#: apps/web/forms.py:107
 msgid "Confirm new password"
 msgstr "नया पासवर्ड दोबारा लिखें"
 
-#: apps/web/forms.py:104
+#: apps/web/forms.py:120
 msgid "Your name"
 msgstr "आपका नाम"
 
-#: apps/web/forms.py:106
+#: apps/web/forms.py:122
 msgid "Phone (optional)"
 msgstr "फ़ोन (वैकल्पिक)"
 
-#: apps/web/forms.py:107
+#: apps/web/forms.py:123
 msgid "Subject"
 msgstr "विषय"
 
-#: apps/web/forms.py:108
+#: apps/web/forms.py:124
 msgid "Message"
 msgstr "संदेश"
 
-#: apps/web/forms.py:115
+#: apps/web/forms.py:131
 msgid "Document title"
 msgstr "दस्तावेज़ का नाम"
 
-#: apps/web/forms.py:116
+#: apps/web/forms.py:132
 msgid "Type of document"
 msgstr "दस्तावेज़ का प्रकार"
 
-#: apps/web/forms.py:117
+#: apps/web/forms.py:133
 msgid "File"
 msgstr "फ़ाइल"
 
-#: apps/web/forms.py:132
+#: apps/web/forms.py:148
 msgid "Person's name"
 msgstr "व्यक्ति का नाम"
 
-#: apps/web/forms.py:134
+#: apps/web/forms.py:149
+msgid "Mobile number (optional)"
+msgstr "मोबाइल नंबर (वैकल्पिक)"
+
+#: apps/web/forms.py:150
 msgid "Customer's email (optional)"
 msgstr "ग्राहक का ईमेल (वैकल्पिक)"
 
-#: apps/web/forms.py:135
+#: apps/web/forms.py:151
 msgid "If the customer has a UdhaarSaathi account with this email or mobile number, it is linked automatically."
 msgstr "अगर ग्राहक का इस ईमेल या मोबाइल नंबर से UdhaarSaathi खाता है, तो वह अपने-आप जुड़ जाता है।"
 
-#: apps/web/forms.py:136 apps/web/forms.py:146
+#: apps/web/forms.py:152 apps/web/forms.py:162
 msgid "Note (optional)"
 msgstr "टिप्पणी (वैकल्पिक)"
 
-#: apps/web/forms.py:140
+#: apps/web/forms.py:156
 msgid "What happened"
 msgstr "क्या हुआ"
 
-#: apps/web/forms.py:141
+#: apps/web/forms.py:157
 msgid "Amount (Rs)"
 msgstr "रकम (Rs)"
 
-#: apps/web/forms.py:142 templates/web/customer_shop.html:22 templates/web/customer_shop.html:26 templates/web/party.html:35
+#: apps/web/forms.py:158 templates/web/customer_shop.html:22 templates/web/customer_shop.html:26 templates/web/party.html:35
 msgid "Date"
 msgstr "तारीख़"
 
-#: apps/web/forms.py:143
+#: apps/web/forms.py:159
 msgid "Paid by (for money received)"
 msgstr "भुगतान का तरीका (मिले पैसों के लिए)"
 
-#: apps/web/forms.py:174
+#: apps/web/forms.py:187
 msgid "Not tied to one entry"
 msgstr "किसी एक एंट्री से जुड़ा नहीं"
 
-#: apps/web/forms.py:175
+#: apps/web/forms.py:188
 msgid "Related entry (optional)"
 msgstr "संबंधित एंट्री (वैकल्पिक)"
 
-#: apps/web/forms.py:176 templates/web/party.html:97
+#: apps/web/forms.py:189 templates/web/party.html:97
 msgid "Let the customer see this proof"
 msgstr "ग्राहक को यह प्रमाण देखने दें"
 
-#: apps/web/forms.py:42
+#: apps/web/forms.py:55
 msgid "Spam detected."
 msgstr "स्पैम का शक है।"
 
-#: apps/web/forms.py:59
+#: apps/web/forms.py:72
 msgid "An account with this email already exists. Please log in instead."
 msgstr "इस ईमेल से खाता पहले से बना हुआ है। कृपया लॉग इन करें।"
 
-#: apps/web/forms.py:71 apps/web/forms.py:99
+#: apps/web/forms.py:87 apps/web/forms.py:115
 msgid "The two passwords do not match."
 msgstr "दोनों पासवर्ड मेल नहीं खाते।"
 
-#: apps/web/forms.py:76
+#: apps/web/forms.py:92
 msgid "Enter the 6 digits from the email."
 msgstr "ईमेल में आए 6 अंक लिखें।"
 
-#: apps/web/forms.py:127
+#: apps/web/forms.py:143
 msgid "The file is empty."
 msgstr "फ़ाइल खाली है।"
 
-#: apps/web/forms.py:152
+#: apps/web/forms.py:168
 msgid "The date cannot be in the future."
 msgstr "तारीख़ आगे की नहीं हो सकती।"
 
-#: apps/web/forms.py:168
-msgid "Enter a valid 10-digit Indian mobile number."
-msgstr "10 अंकों का सही भारतीय मोबाइल नंबर दर्ज करें।"
-
-#: apps/web/forms.py:123
+#: apps/web/forms.py:139
 #, python-format
 msgid "Allowed file types: %(types)s."
 msgstr "इन प्रकार की फ़ाइलें चलेंगी: %(types)s।"
 
-#: apps/web/forms.py:125
+#: apps/web/forms.py:141
 #, python-format
 msgid "The file is too large (limit %(mb)s MB)."
 msgstr "फ़ाइल बहुत बड़ी है (सीमा %(mb)s MB)।"
 
-#: apps/web/forms.py:140
+#: apps/web/forms.py:156
 msgid "I gave money (udhaar)"
 msgstr "मैंने पैसे दिए (उधार)"
 
-#: apps/web/forms.py:140
+#: apps/web/forms.py:156
 msgid "I received money back"
 msgstr "मुझे पैसे वापस मिले"
 
-#: apps/web/forms.py:144
+#: apps/web/forms.py:160
 msgid "Not stated"
 msgstr "नहीं बताया"
 
-#: apps/web/forms.py:144
+#: apps/web/forms.py:160
 msgid "Cash"
 msgstr "नकद"
 
-#: apps/web/forms.py:145
+#: apps/web/forms.py:161
 msgid "Bank transfer"
 msgstr "बैंक ट्रांसफर"
 
-#: apps/web/forms.py:145 apps/web/models.py:63
+#: apps/web/forms.py:161 apps/web/models.py:63
 msgid "Other"
 msgstr "अन्य"
 
@@ -275,19 +283,23 @@ msgstr[1] "नया कोड माँगने से पहले कृप�
 msgid "Too many wrong attempts. Please request a new code."
 msgstr "बहुत ज़्यादा गलत कोशिशें हो गईं। कृपया नया कोड माँगें।"
 
-#: apps/web/roles.py:35
+#: apps/web/roles.py:44
 msgid "That page is only for shopkeeper accounts."
 msgstr "यह पेज केवल दुकानदार खातों के लिए है।"
 
-#: apps/web/roles.py:39
+#: apps/web/roles.py:48
 msgid "That page is only for customer accounts."
 msgstr "यह पेज केवल ग्राहक खातों के लिए है।"
+
+#: apps/web/roles.py:33 apps/web/views.py:250
+msgid "Please add your mobile number to continue. It is required for every account."
+msgstr "आगे बढ़ने के लिए कृपया अपना मोबाइल नंबर जोड़ें। हर खाते के लिए यह ज़रूरी है।"
 
 #: apps/web/views.py:208
 msgid "You are logged out."
 msgstr "आप लॉग आउट हो गए हैं।"
 
-#: apps/web/views.py:463 templates/web/customer_home.html:21 templates/web/customer_home.html:25
+#: apps/web/views.py:466 templates/web/customer_home.html:21 templates/web/customer_home.html:25
 msgid "Shop"
 msgstr "दुकान"
 
@@ -299,41 +311,41 @@ msgstr "कृपया पहले रजिस्टर करें।"
 msgid "If that email has an account, we sent a code to it."
 msgstr "अगर इस ईमेल से खाता है, तो हमने उस पर कोड भेज दिया है।"
 
-#: apps/web/views.py:271
+#: apps/web/views.py:274
 msgid "Document storage is not connected yet. Please try again later."
 msgstr "दस्तावेज़ रखने की सुविधा अभी जुड़ी नहीं है। कृपया बाद में कोशिश करें।"
 
-#: apps/web/views.py:274
+#: apps/web/views.py:277
 msgid "Upload limit reached. Please try again later."
 msgstr "अपलोड की सीमा पूरी हो गई है। कृपया बाद में कोशिश करें।"
 
-#: apps/web/views.py:291
+#: apps/web/views.py:294
 #, python-format
 msgid "“%(title)s” was uploaded and stored safely."
 msgstr "“%(title)s” अपलोड हो गया और सुरक्षित रख लिया गया है।"
 
-#: apps/web/views.py:352
+#: apps/web/views.py:355
 msgid "You have reached the limit of 2000 people."
 msgstr "आप 2000 लोगों की सीमा तक पहुँच गए हैं।"
 
-#: apps/web/views.py:357
+#: apps/web/views.py:360
 #, python-format
 msgid "%(name)s was added. Now record the money you gave."
 msgstr "%(name)s जुड़ गए हैं। अब जो पैसे दिए हैं वह लिखें।"
 
-#: apps/web/views.py:370
+#: apps/web/views.py:373
 msgid "Entry saved."
 msgstr "एंट्री सेव हो गई।"
 
-#: apps/web/views.py:389
+#: apps/web/views.py:392
 msgid "Entry cancelled. It stays in the history, marked as cancelled."
 msgstr "एंट्री रद्द हो गई। वह इतिहास में \"रद्द\" के निशान के साथ बनी रहेगी।"
 
-#: apps/web/views.py:407
+#: apps/web/views.py:410
 msgid "Your details were saved."
 msgstr "आपकी जानकारी सहेज ली गई।"
 
-#: apps/web/views.py:449
+#: apps/web/views.py:452
 msgid "The customer account was unlinked. They can no longer see this ledger."
 msgstr "ग्राहक का खाता अलग कर दिया गया। अब वे यह बही-खाता नहीं देख सकते।"
 
@@ -362,33 +374,33 @@ msgstr "ईमेल या पासवर्ड गलत है।"
 msgid "Your password was changed. Please log in."
 msgstr "आपका पासवर्ड बदल गया है। कृपया लॉग इन करें।"
 
-#: apps/web/views.py:285
+#: apps/web/views.py:288
 msgid "We could not store the file right now. Please try again."
 msgstr "अभी हम फ़ाइल सेव नहीं कर पाए। कृपया फिर कोशिश करें।"
 
-#: apps/web/views.py:305
+#: apps/web/views.py:308
 msgid "The file could not be fetched."
 msgstr "फ़ाइल नहीं मिल सकी।"
 
-#: apps/web/views.py:349 apps/web/views.py:420
+#: apps/web/views.py:352 apps/web/views.py:423
 #, python-format
 msgid "You already have a person called %(name)s."
 msgstr "आपके पास %(name)s नाम का व्यक्ति पहले से है।"
 
-#: apps/web/views.py:356
+#: apps/web/views.py:359
 #, python-format
 msgid "%(name)s has a UdhaarSaathi account, so it is now linked. They can see their own balance."
 msgstr "%(name)s का UdhaarSaathi खाता है, इसलिए वह जोड़ दिया गया है। वे अपना बकाया देख सकते हैं।"
 
-#: apps/web/views.py:425
+#: apps/web/views.py:428
 msgid "Details saved."
 msgstr "जानकारी सहेज ली गई।"
 
-#: apps/web/views.py:454
+#: apps/web/views.py:457
 msgid "The customer account was found and linked."
 msgstr "ग्राहक का खाता मिल गया और जोड़ दिया गया।"
 
-#: apps/web/views.py:456
+#: apps/web/views.py:459
 msgid "No matching customer account was found yet. Linking happens automatically when they sign up."
 msgstr "अभी कोई मेल खाता ग्राहक खाता नहीं मिला। जब वे साइन अप करेंगे, खाता अपने-आप जुड़ जाएगा।"
 

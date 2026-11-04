@@ -246,6 +246,9 @@ def reset_password(request):
 @login_required
 def dashboard(request):
     profile, _created = Profile.objects.get_or_create(user=request.user)
+    if not profile.phone:
+        messages.info(request, _("Please add your mobile number to continue. It is required for every account."))
+        return redirect("profile_edit")
     if profile.role == CUSTOMER:
         return redirect("customer_home")
     docs = Document.objects.filter(owner=request.user)
@@ -395,7 +398,7 @@ def entry_void(request, pk: int):
 def profile_edit(request):
     profile, _created = Profile.objects.get_or_create(user=request.user)
     initial = {"full_name": request.user.first_name, "phone": profile.phone, "shop_name": profile.shop_name}
-    form = ProfileForm(request.POST or None, initial=initial)
+    form = ProfileForm(request.POST or None, initial=initial, user=request.user)
     if request.method == "POST" and form.is_valid():
         d = form.cleaned_data
         with transaction.atomic():

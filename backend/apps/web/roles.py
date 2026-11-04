@@ -18,11 +18,20 @@ def role_of(user) -> str:
     return profile.role if profile else SHOPKEEPER
 
 
+def needs_mobile(user) -> bool:
+    """True for a website account (with a profile) that has no mobile number yet: such accounts predate the rule."""
+    profile = getattr(user, "profile", None) if getattr(user, "is_authenticated", False) else None
+    return bool(profile) and not profile.phone
+
+
 def _guard(required: str, message: str):
     def deco(view):
         @wraps(view)
         @login_required
         def wrapper(request, *args, **kwargs):
+            if needs_mobile(request.user):
+                messages.info(request, _("Please add your mobile number to continue. It is required for every account."))
+                return redirect("profile_edit")
             if role_of(request.user) != required:
                 messages.warning(request, message)
                 return redirect("dashboard")          # the dashboard sends each role to its own home

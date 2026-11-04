@@ -18,8 +18,14 @@ User = get_user_model()
 PW = "Sup3rSecret"
 
 
+def phone_for(email: str) -> str:
+    """A different valid mobile number for every email, because a mobile number belongs to exactly one account."""
+    import zlib
+    return "9" + str(zlib.crc32(email.lower().encode()) % 10**9).zfill(9)
+
+
 def register(c: Client, email="asha@example.com", **extra):
-    data = {"full_name": "Asha Verma", "email": email, "phone": "98765 43210", "shop_name": "Asha Kirana", "role": "shopkeeper",
+    data = {"full_name": "Asha Verma", "email": email, "phone": phone_for(email), "shop_name": "Asha Kirana", "role": "shopkeeper",
             "password1": PW, "password2": PW, "accept_terms": "on", "website": "", **extra}
     return c.post(reverse("register"), data)
 
@@ -66,7 +72,7 @@ def test_dashboard_requires_login():
 # ───────────────────────── registration + OTP ─────────────────────────
 def test_register_sends_otp_then_verification_activates_and_logs_in():
     c = Client()
-    r = register(c)
+    r = register(c, phone="98765 43210")
     assert r.status_code == 302 and r["Location"] == reverse("verify_otp")
     u = User.objects.get(email="asha@example.com")
     assert u.is_active is False and u.username == "asha@example.com"       # not usable until verified
@@ -774,7 +780,7 @@ def test_profile_edit_saves_to_the_database():
 def test_profile_edit_rejects_a_bad_mobile_number():
     c = verified_client()
     r = c.post(reverse("profile_edit"), {"full_name": "Asha", "phone": "12345", "shop_name": ""})
-    assert r.status_code == 200 and "valid 10-digit" in r.content.decode()
+    assert r.status_code == 200 and "valid mobile number" in r.content.decode()
     assert Profile.objects.get(user__email="asha@example.com").phone != "+9112345"
 
 
@@ -854,3 +860,57 @@ def test_admin_can_manage_the_new_content_but_cannot_add_a_second_settings_row()
     for url in ("/admin/web/sitesetting/", "/admin/web/legalpage/", "/admin/web/party/", "/admin/web/ledgerentry/"):
         assert a.get(url).status_code == 200, url
     assert a.get("/admin/web/sitesetting/add/").status_code == 403
+
+
+# ───────────── the mobile number is mandatory and belongs to one account ─────────────
+def test_registration_requires_a_valid_mobile_number():
+    for bad in ("", "   ", "12345", "abcdefghij"):
+        c = Client()
+        r = register(c, f"x{abs(hash(bad)) % 9999}@example.com", phone=bad)
+        assert r.status_code == 200 and not User.objects.filter(email__startswith="x").exists(), bad
+    assert len(mail.outbox) == 0                                             # no code is sent for a rejected sign-up
+
+
+def test_a_mobile_number_cannot_be_used_by_two_accounts():
+    verified_client("one@example.com")
+    shared = Profile.objects.get(user__email="one@example.com").phone
+    c = Client()
+    r = register(c, "two@example.com", phone=shared)
+    assert r.status_code == 200 and "already used by another account" in r.content.decode()
+    assert not User.objects.filter(email="two@example.com").exists()
+
+
+def test_an_unverified_sign_up_can_be_retried_with_the_same_mobile_number():
+    c = Client()
+    register(c, "retry@example.com", phone="9876511111")
+    assert register(Client(), "retry@example.com", phone="9876511111").status_code == 302      # same person, same number: fine
+    assert Profile.objects.filter(phone="+919876511111").count() == 1
+
+
+def test_profile_edit_cannot_clear_or_steal_a_mobile_number():
+    a = verified_client("a@example.com")
+    verified_client("b@example.com")
+    theirs = Profile.objects.get(user__email="b@example.com").phone
+    mine = Profile.objects.get(user__email="a@example.com").phone
+    r = a.post(reverse("profile_edit"), {"full_name": "A", "phone": "", "shop_name": ""})
+    assert r.status_code == 200 and "required" in r.content.decode().lower()
+    r = a.post(reverse("profile_edit"), {"full_name": "A", "phone": theirs, "shop_name": ""})
+    assert r.status_code == 200 and "already used by another account" in r.content.decode()
+    assert Profile.objects.get(user__email="a@example.com").phone == mine
+    assert a.post(reverse("profile_edit"), {"full_name": "A", "phone": mine, "shop_name": ""}).status_code == 302   # keeping your own is fine
+
+
+def test_an_older_account_without_a_mobile_number_is_asked_to_add_one():
+    c = verified_client("old@example.com")
+    Profile.objects.filter(user__email="old@example.com").update(phone="")          # an account from before the rule
+    for name in ("dashboard", "ledger"):
+        r = c.get(reverse(name))
+        assert r.status_code == 302 and r["Location"] == reverse("profile_edit"), name
+    assert c.get(reverse("profile_edit")).status_code == 200                         # the page to fix it is reachable
+    c.post(reverse("profile_edit"), {"full_name": "Old", "phone": "9876522222", "shop_name": ""})
+    assert c.get(reverse("dashboard")).status_code == 200
+
+
+def test_the_sign_up_form_marks_the_mobile_number_as_required():
+    html = Client().get(reverse("register")).content.decode()
+    assert "Mobile number" in html and "Mobile number (optional)" not in html

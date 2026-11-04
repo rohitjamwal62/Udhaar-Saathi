@@ -61,7 +61,7 @@ def main(env: str) -> int:
     check(shop.get("/health/ready").json().get("status") == "ok", "server and database are ready")
 
     # 1 sign up both accounts
-    if not check(sign_up(shop, owner, service, shop_email, "shopkeeper", "9876500000", "E2E Shopkeeper", "E2E Store"), "shopkeeper registers and verifies by email code"):
+    if not check(sign_up(shop, owner, service, shop_email, "shopkeeper", "9" + stamp.rjust(9, "5"), "E2E Shopkeeper", "E2E Store"), "shopkeeper registers and verifies by email code"):
         return finish(env, [shop_email, cust_email])
     if not check(sign_up(cust, owner, service, cust_email, "customer", cust_phone, "E2E Customer", ""), "customer registers and verifies by email code"):
         return finish(env, [shop_email, cust_email])

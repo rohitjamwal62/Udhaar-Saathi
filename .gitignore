@@ -28,3 +28,6 @@ render-secrets.local.txt
 
 # collectstatic output (built on the server)
 backend/staticfiles/
+
+# admin password used only by the live end-to-end test
+backend/.env.admin.local

@@ -192,6 +192,15 @@ OTP_MAX_PER_HOUR = 6
 LOGIN_MAX_FAILURES = int(env("LOGIN_MAX_FAILURES", "10"))        # per mobile, per 15 minutes
 # 'console' prints the OTP to this server's stdout (development only, needs DEBUG).
 # Production must plug in a real SMS provider (DLT registered); see apps/accounts/otp.py.
+# Which ledger the WEBSITE reads and writes (see docs/UNIFY_LEDGER_PLAN.md):
+#   legacy  = the website's own tables (web_party / web_ledgerentry): today's behaviour.
+#   unified = the app's ledger (shops / customers / ledger_events), so app and website share one truth.
+# The switch exists so the migration can be rehearsed and rolled back. 'unified' is not implemented yet.
+LEDGER_BACKEND = env("LEDGER_BACKEND", "legacy")
+if LEDGER_BACKEND not in ("legacy", "unified"):
+    from django.core.exceptions import ImproperlyConfigured
+    raise ImproperlyConfigured("LEDGER_BACKEND must be 'legacy' or 'unified'")
+
 OTP_SENDER = env("OTP_SENDER", "console")
 # TEST DEPLOYMENTS ONLY: lets the 'console' sender print OTPs into the server log when DEBUG is off (for example
 # on Render before an SMS provider exists). Anyone who can read the log can read the OTPs. Turn it OFF for real users.

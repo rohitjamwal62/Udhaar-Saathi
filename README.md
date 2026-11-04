@@ -42,6 +42,7 @@ The free Render plan sleeps after about 15 minutes idle, so the first request af
 backend/    Django project (API + website + admin). Start here: backend/README.md
   apps/web        the website: pages, email OTP, ledger, documents, Google Drive/Gmail, i18n
   apps/accounts, shops, sync, subscriptions, system, common   the REST API
+  apps/ledger     the ledger rules in one place (shops, customers, ledger events); used by the app's sync and the REST reads
   apps/legacy     read-mostly admin models for the app tables (inspectdb)
   locale/hi       Hindi translations (django.po, compiled django.mo is committed)
   templates/, static/   website HTML, CSS, JS, SVG art
@@ -97,6 +98,7 @@ settings. Only the `*.example` files are committed. Main variables:
 | Google | `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `GOOGLE_REFRESH_TOKEN`, `GOOGLE_DRIVE_FOLDER_ID` |
 | Automatic SMS (optional) | `SMS_PROVIDER`, `FAST2SMS_API_KEY`, `FAST2SMS_SENDER_ID`, `FAST2SMS_TEMPLATE_EN/HI/BOTH` |
 | Payments | Razorpay key id and secret (test mode until live keys are added) |
+| Ledger | `LEDGER_BACKEND` = `legacy` (default; the website's own tables) or `unified` (shared app ledger, planned; see `docs/UNIFY_LEDGER_PLAN.md`) |
 
 **Email on Render.** Render blocks outbound SMTP ports (25, 465, 587) on the free plan, so the server tries SMTP first and
 falls back to the **Gmail API over HTTPS**, which needs a Google token with the Drive and Gmail-send permissions. Run

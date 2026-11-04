@@ -7,6 +7,7 @@ from rest_framework.views import APIView
 
 from apps.common.db import q, q1
 from apps.common.errors import ApiProblem
+from apps.ledger import service as ledger
 
 from .access import shop_for_user
 
@@ -32,11 +33,7 @@ class ShopDetailView(APIView):
 class CustomersView(APIView):
     def get(self, request, shop_id):
         shop = shop_for_user(request.user.id, shop_id)
-        search = f"%{request.query_params.get('search', '').strip().lower()}%"
-        rows = q("""SELECT b.customer_id, b.name, b.balance_paise, b.last_activity_at, c.mobile_e164
-                      FROM customer_balances b JOIN customers c ON c.id = b.customer_id
-                     WHERE b.shop_id = %s AND (LOWER(b.name) LIKE %s OR COALESCE(c.mobile_e164,'') LIKE %s)
-                     ORDER BY b.balance_paise DESC, b.name LIMIT 500""", [shop["id"], search, search])
+        rows = ledger.list_customers(shop["id"], request.query_params.get("search", ""))
         return Response({"results": [{"id": str(r["customer_id"]), "name": r["name"], "mobile": r["mobile_e164"],
                                       "balance_paise": r["balance_paise"], "last_activity_at": r["last_activity_at"]}
                                      for r in rows]})
@@ -45,24 +42,10 @@ class CustomersView(APIView):
 class LedgerView(APIView):
     def get(self, request, shop_id, customer_id):
         shop = shop_for_user(request.user.id, shop_id)
-        cust = q1("SELECT id, name FROM customers WHERE id = %s AND shop_id = %s", [customer_id, shop["id"]])
-        if not cust:
+        data = ledger.customer_ledger(shop["id"], customer_id)
+        if data is None:
             raise ApiProblem("Customer not found.", "not_found", 404)
-        events = q("""SELECT id, type, amount_paise, delta_paise, occurred_at, note, payment_method, reason,
-                             reversal_of_id, sale_id, confirmation_status,
-                             (SUM(delta_paise) OVER (ORDER BY occurred_at, server_created_at, id))::bigint AS running_balance_paise
-                        FROM ledger_events WHERE shop_id = %s AND customer_id = %s
-                       ORDER BY occurred_at, server_created_at, id""", [shop["id"], cust["id"]])
-        items = q("""SELECT t.ledger_event_id, t.item_name, t.quantity_milli, t.unit, t.unit_price_paise, t.line_total_paise
-                       FROM transaction_items t JOIN ledger_events e ON e.id = t.ledger_event_id
-                      WHERE e.shop_id = %s AND e.customer_id = %s""", [shop["id"], cust["id"]])
-        by_event: dict = {}
-        for i in items:
-            by_event.setdefault(str(i["ledger_event_id"]), []).append({k: v for k, v in i.items() if k != "ledger_event_id"})
-        out = [{**{k: (str(v) if k in ("id", "reversal_of_id", "sale_id") and v else v) for k, v in e.items()},
-                "items": by_event.get(str(e["id"]), [])} for e in events]
-        balance = out[-1]["running_balance_paise"] if out else 0
-        return Response({"customer": {"id": str(cust["id"]), "name": cust["name"]}, "balance_paise": balance, "events": out})
+        return Response(data)
 
 
 def _sales_between(shop_id, start, end) -> dict:
@@ -87,20 +70,13 @@ class DashboardView(APIView):
     def get(self, request, shop_id):
         shop = shop_for_user(request.user.id, shop_id)
         sid = shop["id"]
-        bal = q("SELECT balance_paise FROM customer_balances WHERE shop_id = %s", [sid])
-        status = q("""SELECT confirmation_status AS s, SUM(amount_paise)::bigint AS t FROM ledger_events e
-                       WHERE shop_id = %s AND type = 'credit'
-                         AND NOT EXISTS (SELECT 1 FROM ledger_events r WHERE r.reversal_of_id = e.id)
-                       GROUP BY confirmation_status""", [sid])
         tz = ZoneInfo(shop["timezone"])
         now = timezone.now().astimezone(tz)
         day = now.replace(hour=0, minute=0, second=0, microsecond=0)
         month = day.replace(day=1)
         end = day + timedelta(days=1)
         return Response({
-            "khata": {"total_receivable_paise": sum(b["balance_paise"] for b in bal if b["balance_paise"] > 0),
-                      "customers_with_balance": sum(1 for b in bal if b["balance_paise"] > 0),
-                      "credit_by_status": {r["s"]: r["t"] for r in status}},
+            "khata": ledger.khata_summary(sid),
             "sales_today": _sales_between(sid, day, end),
             "sales_month": _sales_between(sid, month, end),
         })
@@ -109,8 +85,7 @@ class DashboardView(APIView):
 class ReceivablesReportView(APIView):
     def get(self, request, shop_id):
         shop = shop_for_user(request.user.id, shop_id)
-        rows = q("""SELECT customer_id, name, balance_paise, last_activity_at FROM customer_balances
-                     WHERE shop_id = %s AND balance_paise > 0 ORDER BY balance_paise DESC""", [shop["id"]])
+        rows = ledger.receivables(shop["id"])
         return Response({"generated_at": timezone.now(), "total_paise": sum(r["balance_paise"] for r in rows),
                          "note": "Amounts are as recorded by the shopkeeper unless marked customer confirmed.",
                          "results": [{**r, "customer_id": str(r["customer_id"])} for r in rows]})

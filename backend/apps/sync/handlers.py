@@ -16,23 +16,15 @@ from django.utils import timezone
 from django.utils.dateparse import parse_datetime
 
 from apps.common.db import atomic, q, q1, x
+from apps.ledger import service as ledger
+from apps.ledger.errors import Conflict, Duplicate, Reject
+from apps.ledger.service import LEDGER_TYPES, MAX_PAISE, PAY_METHODS
 from apps.subscriptions import service as subs
 
 log = logging.getLogger("sync")
 
-MAX_PAISE = 10_000_000_000  # Rs 10 crore: anything above is certainly a client bug
-LEDGER_TYPES = {"opening", "credit", "payment", "adjustment", "reversal"}
-PAY_METHODS = {"cash", "upi", "card", "bank", "other"}
 SALE_METHODS = PAY_METHODS | {"credit"}
 REFUND_METHODS = PAY_METHODS | {"khata"}
-
-
-class Reject(Exception):
-    """The item is invalid. The app marks it failed (and shows the message)."""
-
-
-class Conflict(Exception):
-    """The item clashes with existing server data and needs a human decision."""
 
 
 # ── validation helpers ──────────────────────────────────────────────────────
@@ -80,60 +72,34 @@ def _key(v) -> str:
 
 
 def _own_customer(shop_id: str, customer_id: str) -> dict:
-    row = q1("SELECT id, status FROM customers WHERE id = %s AND shop_id = %s", [customer_id, shop_id])
-    if not row:
-        raise Reject("Customer not found in this shop")
-    return row
+    return ledger.own_customer(shop_id, customer_id)
 
 
-# ── handlers: each returns the server id of the stored entity ───────────────
+# ── handlers: each parses the app's JSON, then calls apps.ledger.service; returns the server id ──
 def create_shop(ctx: dict, p: dict) -> str:
     sid = _uuid(p.get("id"), "shop id")
-    existing = q1("SELECT owner_user_id FROM shops WHERE id = %s", [sid])
-    if existing:
-        if str(existing["owner_user_id"]) == ctx["user_id"]:
-            raise Duplicate(sid)
-        raise Reject("Shop id is not available")
-    if q1("SELECT 1 AS x FROM shops WHERE owner_user_id = %s", [ctx["user_id"]]):
-        raise Conflict("This account already has a shop")
     name = _text(p.get("name"), "name", 160, required=True)
-    x("""INSERT INTO shops(id, owner_user_id, name, category, address, timezone, language)
-         VALUES (%s,%s,%s,%s,%s,%s,%s)""",
-      [sid, ctx["user_id"], name, _text(p.get("category"), "category", 60), _text(p.get("address"), "address", 500),
-       "Asia/Kolkata", p.get("language") if p.get("language") in ("en", "hi", "pa") else "en"])
-    x("INSERT INTO shop_members(shop_id, user_id, role, status) VALUES (%s,%s,'owner','active')", [sid, ctx["user_id"]])
-    subs.create_for_shop(sid, ctx["user_id"])
+    ledger.create_shop(user_id=ctx["user_id"], shop_id=sid, name=name, category=_text(p.get("category"), "category", 60),
+                       address=_text(p.get("address"), "address", 500), language=p.get("language"))
     ctx["shop_id"] = sid
     return sid
 
 
 def create_customer(ctx: dict, p: dict) -> str:
     cid = _uuid(p.get("id"), "customer id")
-    other = q1("SELECT shop_id FROM customers WHERE id = %s", [cid])
-    if other:
-        if str(other["shop_id"]) == ctx["shop_id"]:
-            raise Duplicate(cid)
-        raise Reject("Customer id is not available")
     mobile = _text(p.get("mobile"), "mobile", 16)
-    x("INSERT INTO customers(id, shop_id, name, mobile_e164, notes) VALUES (%s,%s,%s,%s,%s)",
-      [cid, ctx["shop_id"], _text(p.get("name"), "name", 160, True), mobile, _text(p.get("notes"), "notes", 1000)])
-    return cid
+    name = _text(p.get("name"), "name", 160, True)
+    return ledger.create_customer(shop_id=ctx["shop_id"], customer_id=cid, name=name, mobile=mobile,
+                                  notes=_text(p.get("notes"), "notes", 1000))
 
 
 def archive_customer(ctx: dict, p: dict) -> str:
-    cid = _uuid(p.get("id"), "customer id")
-    if not x("UPDATE customers SET status='archived', updated_at=now() WHERE id=%s AND shop_id=%s", [cid, ctx["shop_id"]]):
-        raise Reject("Customer not found in this shop")
-    return cid
+    return ledger.archive_customer(shop_id=ctx["shop_id"], customer_id=_uuid(p.get("id"), "customer id"))
 
 
 def post_ledger_event(ctx: dict, p: dict) -> str:
-    shop_id = ctx["shop_id"]
     eid = _uuid(p.get("id"), "event id")
-    if q1("SELECT 1 AS x FROM ledger_events WHERE id = %s", [eid]):
-        raise Reject("Entry id is not available")
     cust = _uuid(p.get("customer_id"), "customer id")
-    _own_customer(shop_id, cust)
     etype = p.get("type")
     if etype not in LEDGER_TYPES:
         raise Reject("Unknown entry type")
@@ -141,58 +107,8 @@ def post_ledger_event(ctx: dict, p: dict) -> str:
     occurred = _ts(p.get("occurred_at"), "occurred_at")
     created = _ts(p["created_at"], "created_at") if p.get("created_at") else None
     reason = _text(p.get("reason"), "reason", 500)
-    reversal_of = None
-    sale_id = None
-
-    if etype in ("opening", "credit"):
-        delta = amount
-        if amount <= 0:
-            raise Reject("Amount must be greater than zero")
-    elif etype == "payment":
-        delta = -amount
-        if amount <= 0:
-            raise Reject("Amount must be greater than zero")
-        # An offline payment can exceed the balance if another device posted meanwhile. The event is a
-        # fact, so it is kept (the customer simply shows an advance) rather than silently dropped.
-    elif etype == "adjustment":
-        raw = p.get("delta_paise")
-        if isinstance(raw, bool) or not isinstance(raw, int) or abs(raw) != amount or amount <= 0:
-            raise Reject("Adjustment must carry a signed amount equal to its size")
-        delta = raw
-        if not reason:
-            raise Reject("An adjustment needs a reason")
-    else:  # reversal
-        reversal_of = _uuid(p.get("reversal_of_id"), "reversal_of_id")
-        orig = q1("SELECT * FROM ledger_events WHERE id = %s AND shop_id = %s", [reversal_of, shop_id])
-        if not orig:
-            raise Reject("Entry to reverse was not found")
-        if orig["type"] == "reversal":
-            raise Reject("A reversal cannot be reversed")
-        if str(orig["customer_id"]) != cust:
-            raise Reject("Reversal customer does not match the original entry")
-        if not reason:
-            raise Reject("A reversal needs a reason")
-        if q1("SELECT 1 AS x FROM ledger_events WHERE reversal_of_id = %s", [reversal_of]):
-            raise Conflict("This entry has already been reversed")
-        amount, delta = orig["amount_paise"], -orig["delta_paise"]  # always mirror the original exactly
-
-    if p.get("sale_id"):
-        sale_id = _uuid(p["sale_id"], "sale_id")
-        if etype != "credit" and etype != "adjustment":
-            raise Reject("Only credit or adjustment entries can reference a sale")
-        sale = q1("SELECT customer_id FROM sales WHERE id = %s AND shop_id = %s", [sale_id, shop_id])
-        if not sale or str(sale["customer_id"]) != cust:
-            raise Reject("Linked sale not found for this customer")
-        if etype == "credit":
-            credit_total = q1("SELECT COALESCE(SUM(amount_paise),0)::bigint AS t FROM sale_payments "
-                              "WHERE sale_id = %s AND payment_method = 'credit'", [sale_id])["t"]
-            if credit_total != amount:
-                raise Reject("Credit amount does not match the sale's credit portion")
-
-    method = p.get("payment_method")
-    if method is not None and method not in PAY_METHODS:
-        raise Reject("Unknown payment method")
-
+    reversal_of = _uuid(p.get("reversal_of_id"), "reversal_of_id") if etype == "reversal" else None
+    sale_id = _uuid(p["sale_id"], "sale_id") if p.get("sale_id") else None
     items = p.get("items") or []
     if not isinstance(items, list):
         raise Reject("items must be a list")
@@ -202,24 +118,12 @@ def post_ledger_event(ctx: dict, p: dict) -> str:
         price = _int(it.get("unit_price_paise"), "unit price")
         line = _int(it.get("line_total_paise"), "line total")
         clean.append((_text(it.get("item_name"), "item name", 200, True), qty, _text(it.get("unit"), "unit", 20), price, line))
-    if clean and etype == "credit" and not sale_id and sum(c[4] for c in clean) != amount:
-        raise Reject("Item totals do not match the entry amount")
-
-    x("""INSERT INTO ledger_events(id, shop_id, customer_id, type, amount_paise, delta_paise, occurred_at,
-                client_created_at, created_by, device_id, idempotency_key, note, payment_method, payment_reference,
-                sale_id, reversal_of_id, reason, confirmation_status)
-         VALUES (%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,'shopkeeper_recorded')""",
-      [eid, shop_id, cust, etype, amount, delta, occurred, created, ctx["user_id"], ctx.get("device_id"),
-       ctx["key"], _text(p.get("note"), "note", 1000), method, _text(p.get("payment_reference"), "reference", 120),
-       sale_id, reversal_of, reason])
-    for name, qty, unit, price, line in clean:
-        x("""INSERT INTO transaction_items(ledger_event_id, item_name, quantity_milli, unit, unit_price_paise, line_total_paise)
-             VALUES (%s,%s,%s,%s,%s,%s)""", [eid, name, qty, unit, price, line])
-    if sale_id and etype == "credit":
-        x("INSERT INTO sale_ledger_links(sale_id, ledger_transaction_id, idempotency_key) VALUES (%s,%s,%s)",
-          [sale_id, eid, ctx["key"]])
-    audit(ctx, "ledger_event_posted", "ledger_event", eid, {"type": etype, "amount_paise": amount})
-    return eid
+    return ledger.post_event(
+        shop_id=ctx["shop_id"], user_id=ctx["user_id"], device_id=ctx.get("device_id"), key=ctx["key"], event_id=eid,
+        customer_id=cust, etype=etype, amount_paise=amount, occurred_at=occurred, created_at=created,
+        note=_text(p.get("note"), "note", 1000), reason=reason, reversal_of_id=reversal_of, delta_paise=p.get("delta_paise"),
+        sale_id=sale_id, payment_method=p.get("payment_method"),
+        payment_reference=_text(p.get("payment_reference"), "reference", 120), items=clean)
 
 
 def post_sale(ctx: dict, p: dict) -> str:
@@ -316,14 +220,7 @@ def post_sale_return(ctx: dict, p: dict) -> str:
 
 
 def audit(ctx: dict, action: str, entity_type: str, entity_id: str, meta: dict) -> None:
-    import json
-    x("""INSERT INTO audit_logs(shop_id, actor_id, action, entity_type, entity_id, metadata)
-         VALUES (%s,%s,%s,%s,%s,%s)""", [ctx["shop_id"], ctx["user_id"], action, entity_type, entity_id, json.dumps(meta)])
-
-
-class Duplicate(Exception):
-    def __init__(self, server_id: str):
-        self.server_id = server_id
+    ledger.audit(ctx["shop_id"], ctx["user_id"], action, entity_type, entity_id, meta)
 
 
 HANDLERS = {

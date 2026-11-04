@@ -1,5 +1,5 @@
-<svg class="art" viewBox="0 0 640 280" role="img" aria-label="A phone saves entries offline, then sends them once to the cloud when the internet returns" focusable="false">
-  <title>Offline-first sync</title>
+{% load i18n %}<svg class="art" viewBox="0 0 640 280" role="img" aria-label="{% trans 'A phone saves entries offline, then sends them once to the cloud when the internet returns' %}" focusable="false">
+  <title>{% trans "Offline-first sync" %}</title>
   <rect class="f-s" x="0" y="20" width="640" height="240" rx="24" opacity=".6"/>
   <rect class="f-i" x="56" y="62" width="92" height="170" rx="16"/><rect class="f-w" x="62" y="70" width="80" height="154" rx="10"/>
   <rect class="f-p" x="62" y="70" width="80" height="26" rx="10"/><rect class="f-p" x="62" y="84" width="80" height="12"/>
@@ -9,7 +9,7 @@
     <g class="a-fade1"><path class="st s-m" stroke-width="2.5" d="M-12 8v-4M-5 8v-9M2 8v-13"/><path class="st s-a" stroke-width="3" d="M-14 -8l22 18"/></g>
     <g class="a-fade2"><path class="st s-p" stroke-width="2.5" d="M-12 8v-4M-5 8v-9M2 8v-13M9 8v-17"/></g>
   </g>
-  <text class="tx f-m" x="102" y="256" font-size="13" text-anchor="middle">Saved on phone</text>
+  <text class="tx f-m" x="102" y="256" font-size="13" text-anchor="middle">{% trans "Saved on phone" %}</text>
   <path class="st s-p a-dash" stroke-width="3" opacity=".6" d="M158 140C240 70 340 210 450 140"/>
   <rect class="f-a" x="-9" y="-9" width="18" height="18" rx="5"><animateMotion dur="6s" repeatCount="indefinite" path="M158 140C240 70 340 210 450 140"/></rect>
   <rect class="f-p" x="-7" y="-7" width="14" height="14" rx="4"><animateMotion dur="6s" begin="-2s" repeatCount="indefinite" path="M158 140C240 70 340 210 450 140"/></rect>
@@ -18,6 +18,6 @@
   <rect class="f-p" x="490" y="124" width="56" height="12" rx="4"/><rect class="f-p" x="490" y="142" width="56" height="12" rx="4" opacity=".7"/>
   <circle class="f-a" cx="534" cy="130" r="2.5"/><circle class="f-a" cx="534" cy="148" r="2.5"/>
   <g class="a-pulse"><circle class="f-p" cx="590" cy="104" r="14"/><path class="st" stroke-width="3" style="stroke:var(--on-primary)" d="M583 104l5 5 9-10"/></g>
-  <text class="tx f-m" x="520" y="226" font-size="13" text-anchor="middle">Synced exactly once</text>
-  <text class="tx f-m" x="304" y="244" font-size="12" text-anchor="middle">When internet returns</text>
+  <text class="tx f-m" x="520" y="226" font-size="13" text-anchor="middle">{% trans "Synced exactly once" %}</text>
+  <text class="tx f-m" x="304" y="244" font-size="12" text-anchor="middle">{% trans "When internet returns" %}</text>
 </svg>

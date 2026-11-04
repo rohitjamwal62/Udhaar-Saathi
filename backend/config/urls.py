@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.urls import include, path
+from django.views.i18n import set_language
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from apps.system import views as system_views
@@ -19,5 +20,6 @@ urlpatterns = [
     path("api/v1/", include("apps.shops.urls")),
     path("api/v1/", include("apps.sync.urls")),
     path("api/v1/", include("apps.subscriptions.urls")),
+    path("i18n/setlang/", set_language, name="set_language"),   # POST: language + next (safe redirect)
     path("", include("apps.web.urls")),              # the website: last, so the paths above always win
 ]

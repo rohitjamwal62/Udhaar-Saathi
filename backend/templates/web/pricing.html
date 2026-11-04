@@ -1,39 +1,39 @@
-{% extends 'base.html' %}
-{% block title %}Pricing: free to start, Rs {{ plan.amount_rupees }} a month | {{ SITE_NAME }}{% endblock %}
-{% block description %}Free registration, a {{ plan.trial_months }}-month free trial per shop, then Rs {{ plan.amount_rupees }} per month. One simple plan. Cancel any time.{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% blocktrans trimmed with amount_rupees=plan.amount_rupees site_name=SITE_NAME %}Pricing: free to start, Rs {{ amount_rupees }} a month | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% blocktrans trimmed with trial_months=plan.trial_months amount_rupees=plan.amount_rupees %}Free registration, a {{ trial_months }}-month free trial per shop, then Rs {{ amount_rupees }} per month. One simple plan. Cancel any time.{% endblocktrans %}{% endblock %}
 {% block content %}
-<section class="page-hero"><div class="container"><span class="eyebrow">Pricing</span><h1>One simple plan</h1><p class="lead">Free to register. Free for {{ plan.trial_months }} months. Then Rs {{ plan.amount_rupees }} a month.</p></div></section>
+<section class="page-hero"><div class="container"><span class="eyebrow">{% trans "Pricing" %}</span><h1>{% trans "One simple plan" %}</h1><p class="lead">{% blocktrans trimmed with trial_months=plan.trial_months amount_rupees=plan.amount_rupees %}Free to register. Free for {{ trial_months }} months. Then Rs {{ amount_rupees }} a month.{% endblocktrans %}</p></div></section>
 
 <section class="section" style="padding-top:24px"><div class="container">
   <div class="card price-card reveal">
     {% include "partials/art_coin.html" %}
     <h2 style="margin-bottom:4px">{{ plan.name }}</h2>
-    <div class="price"><small>Rs</small> {{ plan.amount_rupees }}<small> / month</small></div>
-    <p class="muted" style="margin-top:8px">after {{ plan.trial_months }} months free</p>
+    <div class="price">{% blocktrans trimmed with amount_rupees=plan.amount_rupees %}<small>Rs</small> {{ amount_rupees }}<small> / month</small>{% endblocktrans %}</div>
+    <p class="muted" style="margin-top:8px">{% blocktrans trimmed with trial_months=plan.trial_months %}after {{ trial_months }} months free{% endblocktrans %}</p>
     <ul class="ticks">
-      <li>Registration is free</li>
-      <li>One {{ plan.trial_months }}-month free trial per shop</li>
-      <li>Digital khata, sales tracking, reports and export</li>
-      <li>Offline-first Android app and this website</li>
-      <li>Taxes and gateway charges are shown before you pay</li>
-      <li>Cancel any time</li>
+      <li>{% trans "Registration is free" %}</li>
+      <li>{% blocktrans trimmed with trial_months=plan.trial_months %}One {{ trial_months }}-month free trial per shop{% endblocktrans %}</li>
+      <li>{% trans "Digital khata, sales tracking, reports and export" %}</li>
+      <li>{% trans "Offline-first Android app and this website" %}</li>
+      <li>{% trans "Taxes and gateway charges are shown before you pay" %}</li>
+      <li>{% trans "Cancel any time" %}</li>
     </ul>
-    <a class="btn btn-block" href="{% url 'register' %}">Start free</a>
+    <a class="btn btn-block" href="{% url 'register' %}">{% trans "Start free" %}</a>
   </div>
 </div></section>
 
 <section class="section alt"><div class="container">
-  <div class="section-head reveal"><h2>What happens when the trial ends</h2></div>
+  <div class="section-head reveal"><h2>{% trans "What happens when the trial ends" %}</h2></div>
   <div class="grid c3">
-    <article class="card reveal"><h3>Trial</h3><p>Use everything free for {{ plan.trial_months }} months. It is one trial per shop.</p></article>
-    <article class="card reveal d1"><h3>If a renewal fails</h3><p>You get a {{ plan.grace_days }}-day grace period to fix the payment.</p></article>
-    <article class="card reveal d2"><h3>After the grace period</h3><p>Paid features become read-only. Your records and exports are never deleted.</p></article>
+    <article class="card reveal"><h3>{% trans "Trial" %}</h3><p>{% blocktrans trimmed with trial_months=plan.trial_months %}Use everything free for {{ trial_months }} months. It is one trial per shop.{% endblocktrans %}</p></article>
+    <article class="card reveal d1"><h3>{% trans "If a renewal fails" %}</h3><p>{% blocktrans trimmed with grace_days=plan.grace_days %}You get a {{ grace_days }}-day grace period to fix the payment.{% endblocktrans %}</p></article>
+    <article class="card reveal d2"><h3>{% trans "After the grace period" %}</h3><p>{% trans "Paid features become read-only. Your records and exports are never deleted." %}</p></article>
   </div>
-  <div class="note reveal" style="margin-top:24px;max-width:800px;margin-inline:auto"><strong>Payment methods (planned):</strong> UPI, cards and net banking through a payment gateway. {{ SITE_NAME }} never stores your card or UPI details.</div>
+  <div class="note reveal" style="margin-top:24px;max-width:800px;margin-inline:auto">{% blocktrans trimmed with site_name=SITE_NAME %}<strong>Payment methods (planned):</strong> UPI, cards and net banking through a payment gateway. {{ site_name }} never stores your card or UPI details.{% endblocktrans %}</div>
 </div></section>
 
 <section class="section"><div class="container">
-  <div class="section-head reveal"><h2>Pricing questions</h2></div>
+  <div class="section-head reveal"><h2>{% trans "Pricing questions" %}</h2></div>
   {% include "partials/faq_list.html" %}
 </div></section>
 {% include "partials/cta.html" %}

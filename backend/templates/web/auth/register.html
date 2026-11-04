@@ -1,11 +1,11 @@
-{% extends 'base.html' %}
-{% block title %}Create your free account | {{ SITE_NAME }}{% endblock %}
-{% block description %}Register for {{ SITE_NAME }} for free. Shopkeepers get a {{ PLAN.trial_months }}-month free trial. Customers can link to many shops.{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}Create your free account | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% blocktrans trimmed with site_name=SITE_NAME trial_months=PLAN.trial_months %}Register for {{ site_name }} for free. Shopkeepers get a {{ trial_months }}-month free trial. Customers can link to many shops.{% endblocktrans %}{% endblock %}
 {% block content %}
 <section class="auth"><div class="container auth-wrap">
   <div class="auth-card">
-    <h1>Create your free account</h1>
-    <p class="sub">Registration is free. We will email you a code to verify your address.</p>
+    <h1>{% trans "Create your free account" %}</h1>
+    <p class="sub">{% trans "Registration is free. We will email you a code to verify your address." %}</p>
     <form method="post" novalidate>
       {% csrf_token %}
       {% include "partials/nonfield.html" %}
@@ -24,13 +24,13 @@
       {% with field=form.password1 %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.password2 %}{% include "partials/field.html" %}{% endwith %}
       <div class="field{% if form.accept_terms.errors %} has-error{% endif %}">
-        <div class="check">{{ form.accept_terms }}<label for="{{ form.accept_terms.id_for_label }}">I accept the <a href="{% url 'terms' %}" target="_blank" rel="noopener">Terms</a> and the <a href="{% url 'privacy' %}" target="_blank" rel="noopener">Privacy Notice</a></label></div>
+        <div class="check">{{ form.accept_terms }}<label for="{{ form.accept_terms.id_for_label }}">{% url 'terms' as url_terms %}{% url 'privacy' as url_privacy %}{% blocktrans trimmed %}I accept the <a href="{{ url_terms }}" target="_blank" rel="noopener">Terms</a> and the <a href="{{ url_privacy }}" target="_blank" rel="noopener">Privacy Notice</a>{% endblocktrans %}</label></div>
         {% if form.accept_terms.errors %}<ul class="errs" role="alert">{% for e in form.accept_terms.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
       </div>
-      <button class="btn btn-block" type="submit">Create account</button>
+      <button class="btn btn-block" type="submit">{% trans "Create account" %}</button>
     </form>
-    <div class="form-links"><span>Already registered? <a href="{% url 'login' %}">Log in</a></span></div>
+    <div class="form-links">{% url 'login' as url_login %}<span>{% blocktrans trimmed %}Already registered? <a href="{{ url_login }}">Log in</a>{% endblocktrans %}</span></div>
   </div>
-  <div class="auth-art">{% include "partials/art_auth_shop.html" %}<p>{{ PLAN.trial_months }} months free for your shop. Then Rs {{ PLAN.amount_rupees }} a month.</p></div>
+  <div class="auth-art">{% include "partials/art_auth_shop.html" %}<p>{% blocktrans trimmed with trial_months=PLAN.trial_months amount_rupees=PLAN.amount_rupees %}{{ trial_months }} months free for your shop. Then Rs {{ amount_rupees }} a month.{% endblocktrans %}</p></div>
 </div></section>
 {% endblock %}

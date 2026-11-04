@@ -1,8 +1,8 @@
-{% extends 'base.html' %}
-{% block title %}Frequently asked questions | {{ SITE_NAME }}{% endblock %}
-{% block description %}Answers to common questions about {{ SITE_NAME }}: how the khata works, offline use, pricing, security and customer confirmation.{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}Frequently asked questions | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% blocktrans trimmed with site_name=SITE_NAME %}Answers to common questions about {{ site_name }}: how the khata works, offline use, pricing, security and customer confirmation.{% endblocktrans %}{% endblock %}
 {% block content %}
-<section class="page-hero"><div class="container"><span class="eyebrow">FAQ</span><h1>Questions, answered</h1><p class="lead">Cannot find what you need? <a href="{% url 'contact' %}">Contact us</a>.</p></div></section>
+<section class="page-hero"><div class="container"><span class="eyebrow">{% trans "FAQ" %}</span><h1>{% trans "Questions, answered" %}</h1><p class="lead">{% url 'contact' as url_contact %}{% blocktrans trimmed %}Cannot find what you need? <a href="{{ url_contact }}">Contact us</a>.{% endblocktrans %}</p></div></section>
 <section class="section"><div class="container">{% include "partials/faq_list.html" %}</div></section>
 {% include "partials/cta.html" %}
 {% endblock %}

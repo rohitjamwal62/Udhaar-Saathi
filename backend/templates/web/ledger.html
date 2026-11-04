@@ -1,47 +1,47 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}{% load i18n %}
 {% load money %}
-{% block title %}Your ledger | {{ SITE_NAME }}{% endblock %}
-{% block description %}Record the money you lend and who owes you.{% endblock %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}Your ledger | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% trans "Record the money you lend and who owes you." %}{% endblock %}
 {% block content %}
 <div class="container dash-head">
-  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">Your udhaar ledger</h1>
-  <p class="muted">Who you lent money to, how much, and what is still to come back.</p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{% trans "Your udhaar ledger" %}</h1>
+  <p class="muted">{% trans "Who you lent money to, how much, and what is still to come back." %}</p>
   <div class="stats">
-    <div class="card stat"><div class="k">To collect</div><div class="v owes">{{ to_collect|rupees }}</div><div class="s">from {{ owing_count }} {{ owing_count|pluralize:"person,people" }}</div></div>
-    <div class="card stat"><div class="k">Total given</div><div class="v">{{ total_given|rupees }}</div><div class="s">all time</div></div>
-    <div class="card stat"><div class="k">Total received back</div><div class="v paid">{{ total_received|rupees }}</div><div class="s">all time</div></div>
+    <div class="card stat"><div class="k">{% trans "To collect" %}</div><div class="v owes">{{ to_collect|rupees }}</div><div class="s">{% blocktrans trimmed count counter=owing_count %}from {{ counter }} person{% plural %}from {{ counter }} people{% endblocktrans %}</div></div>
+    <div class="card stat"><div class="k">{% trans "Total given" %}</div><div class="v">{{ total_given|rupees }}</div><div class="s">{% trans "all time" %}</div></div>
+    <div class="card stat"><div class="k">{% trans "Total received back" %}</div><div class="v paid">{{ total_received|rupees }}</div><div class="s">{% trans "all time" %}</div></div>
   </div>
 </div>
 <div class="container dash-grid">
   <section class="card" aria-labelledby="people-h">
-    <h2 id="people-h" style="font-size:1.3rem">People <span class="chip info">{{ people|length }}</span></h2>
+    <h2 id="people-h" style="font-size:1.3rem">{% trans "People" %}<span class="chip info">{{ people|length }}</span></h2>
     {% if people %}
     <div class="tbl-wrap"><table class="docs">
-      <thead><tr><th scope="col">Person</th><th scope="col">Given</th><th scope="col">Received</th><th scope="col">Balance</th><th scope="col"><span class="sr-only">Open</span></th></tr></thead>
+      <thead><tr><th scope="col">{% trans "Person" %}</th><th scope="col">{% trans "Given" %}</th><th scope="col">{% trans "Received" %}</th><th scope="col">{% trans "Balance" %}</th><th scope="col"><span class="sr-only">{% trans "Open" %}</span></th></tr></thead>
       <tbody>
       {% for p in people %}
         <tr>
-          <td data-label="Person"><span><span class="t">{{ p.name }}</span>{% if p.phone %}<br><span class="f">{{ p.phone }}</span>{% endif %}</span></td>
-          <td data-label="Given">{{ p.gave|rupees }}</td>
-          <td data-label="Received">{{ p.got|rupees }}</td>
-          <td data-label="Balance">{% if p.balance > 0 %}<span class="chip bad">Owes {{ p.balance|rupees }}</span>{% elif p.balance < 0 %}<span class="chip info">Paid extra {{ p.balance|absval|rupees }}</span>{% else %}<span class="chip">Settled</span>{% endif %}</td>
-          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'party_detail' p.pk %}">Open</a></td>
+          <td data-label="{% trans 'Person' %}"><span><span class="t">{{ p.name }}</span>{% if p.phone %}<br><span class="f">{{ p.phone }}</span>{% endif %}</span></td>
+          <td data-label="{% trans 'Given' %}">{{ p.gave|rupees }}</td>
+          <td data-label="{% trans 'Received' %}">{{ p.got|rupees }}</td>
+          <td data-label="{% trans 'Balance' %}">{% if p.balance > 0 %}<span class="chip bad">{% blocktrans trimmed with balance=p.balance|rupees %}Owes {{ balance }}{% endblocktrans %}</span>{% elif p.balance < 0 %}<span class="chip info">{% blocktrans trimmed with balance=p.balance|absval|rupees %}Paid extra {{ balance }}{% endblocktrans %}</span>{% else %}<span class="chip">{% trans "Settled" %}</span>{% endif %}</td>
+          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'party_detail' p.pk %}">{% trans "Open" %}</a></td>
         </tr>
       {% endfor %}
       </tbody></table></div>
     {% else %}
-    <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>No one yet.</strong><br>Add the first person you have lent money to.</p></div>
+    <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>{% trans "No one yet." %}</strong><br>{% trans "Add the first person you have lent money to." %}</p></div>
     {% endif %}
   </section>
 
   <section class="card" aria-labelledby="add-h">
-    <h2 id="add-h" style="font-size:1.3rem">Add a person</h2>
+    <h2 id="add-h" style="font-size:1.3rem">{% trans "Add a person" %}</h2>
     <form method="post" action="{% url 'party_add' %}" novalidate>
       {% csrf_token %}
       {% with field=form.name %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.phone %}{% include "partials/field.html" %}{% endwith %}
       {% with field=form.note %}{% include "partials/field.html" %}{% endwith %}
-      <button class="btn btn-block" type="submit">Add person</button>
+      <button class="btn btn-block" type="submit">{% trans "Add person" %}</button>
     </form>
   </section>
 </div>

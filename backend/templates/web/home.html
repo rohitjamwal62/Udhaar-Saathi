@@ -1,21 +1,21 @@
-{% extends 'base.html' %}
-{% block title %}{{ SITE_NAME }}: digital khata and sales tracking for small shops{% endblock %}
-{% block description %}Record udhaar, track sales and keep clear accounts with your customers. Offline-first Android app for small Indian shops. Free to register, {{ plan.trial_months }} months free trial.{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}{{ site_name }}: digital khata and sales tracking for small shops{% endblocktrans %}{% endblock %}
+{% block description %}{% blocktrans trimmed with trial_months=plan.trial_months %}Record udhaar, track sales and keep clear accounts with your customers. Offline-first Android app for small Indian shops. Free to register, {{ trial_months }} months free trial.{% endblocktrans %}{% endblock %}
 {% block content %}
 <section class="hero">
   <div class="container split">
     <div>
-      <span class="eyebrow">Digital khata + sales tracking</span>
-      <h1>Your shop's udhaar, <em>clear and agreed</em> by both sides.</h1>
-      <p class="lead">Write down what was sold on credit, note every payment, and let your customer see and confirm the same entry. Works on your phone, even without internet.</p>
+      <span class="eyebrow">{% trans "Digital khata + sales tracking" %}</span>
+      <h1>{% blocktrans trimmed %}Your shop's udhaar, <em>clear and agreed</em> by both sides.{% endblocktrans %}</h1>
+      <p class="lead">{% trans "Write down what was sold on credit, note every payment, and let your customer see and confirm the same entry. Works on your phone, even without internet." %}</p>
       <div class="btn-row" style="margin-top:24px">
-        <a class="btn" href="{% url 'register' %}">Start free <span class="arr" aria-hidden="true">&rarr;</span></a>
-        <a class="btn btn-ghost" href="{% url 'how_it_works' %}">See how it works</a>
+        <a class="btn" href="{% url 'register' %}">{% trans "Start free" %}<span class="arr" aria-hidden="true">&rarr;</span></a>
+        <a class="btn btn-ghost" href="{% url 'how_it_works' %}">{% trans "See how it works" %}</a>
       </div>
       <ul class="trust-list">
-        <li><svg viewBox="0 0 20 20" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>Registration is free. {{ plan.trial_months }} months free trial for each shop.</li>
-        <li><svg viewBox="0 0 20 20" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>Android app that saves entries on the phone first.</li>
-        <li><svg viewBox="0 0 20 20" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>Then Rs {{ plan.amount_rupees }} per month. Cancel any time.</li>
+        <li><svg viewBox="0 0 20 20" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>{% blocktrans trimmed with trial_months=plan.trial_months %}Registration is free. {{ trial_months }} months free trial for each shop.{% endblocktrans %}</li>
+        <li><svg viewBox="0 0 20 20" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>{% trans "Android app that saves entries on the phone first." %}</li>
+        <li><svg viewBox="0 0 20 20" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 10.5l4 4 8-9"/></svg>{% blocktrans trimmed with amount_rupees=plan.amount_rupees %}Then Rs {{ amount_rupees }} per month. Cancel any time.{% endblocktrans %}</li>
       </ul>
     </div>
     {% include "partials/art_hero.html" %}
@@ -24,35 +24,35 @@
 
 <section class="section" style="padding-top:0">
   <div class="container strip reveal">
-    <div class="item"><svg viewBox="0 0 32 32" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 4h15a3 3 0 0 1 3 3v21H10a3 3 0 0 1-3-3z"/><path d="M12 10h8M12 14h5"/></svg><div><strong>No more paper confusion</strong><span>Every sale and payment is written once and kept safe.</span></div></div>
-    <div class="item"><svg viewBox="0 0 32 32" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="12" r="5"/><circle cx="22" cy="12" r="4"/><path d="M3 26c0-5 4-8 8-8s8 3 8 8M20 20c4 0 8 2 8 6"/></svg><div><strong>Fewer arguments</strong><span>Your customer sees the same entry and can confirm or dispute it.</span></div></div>
-    <div class="item"><svg viewBox="0 0 32 32" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 28V4M4 28h24"/><path d="M9 22l5-6 4 3 7-9"/></svg><div><strong>Know where you stand</strong><span>See total receivable, each balance and your daily sales.</span></div></div>
+    <div class="item"><svg viewBox="0 0 32 32" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M7 4h15a3 3 0 0 1 3 3v21H10a3 3 0 0 1-3-3z"/><path d="M12 10h8M12 14h5"/></svg><div><strong>{% trans "No more paper confusion" %}</strong><span>{% trans "Every sale and payment is written once and kept safe." %}</span></div></div>
+    <div class="item"><svg viewBox="0 0 32 32" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><circle cx="11" cy="12" r="5"/><circle cx="22" cy="12" r="4"/><path d="M3 26c0-5 4-8 8-8s8 3 8 8M20 20c4 0 8 2 8 6"/></svg><div><strong>{% trans "Fewer arguments" %}</strong><span>{% trans "Your customer sees the same entry and can confirm or dispute it." %}</span></div></div>
+    <div class="item"><svg viewBox="0 0 32 32" class="st" stroke="currentColor" stroke-width="2" aria-hidden="true"><path d="M4 28V4M4 28h24"/><path d="M9 22l5-6 4 3 7-9"/></svg><div><strong>{% trans "Know where you stand" %}</strong><span>{% trans "See total receivable, each balance and your daily sales." %}</span></div></div>
   </div>
 </section>
 
 <section class="section alt">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">What you get</span><h2>Everything a small shop needs, nothing it doesn't</h2><p>Simple tools for the khata and the counter.</p></div>
+    <div class="section-head reveal"><span class="eyebrow">{% trans "What you get" %}</span><h2>{% trans "Everything a small shop needs, nothing it doesn't" %}</h2><p>{% trans "Simple tools for the khata and the counter." %}</p></div>
     <div class="grid c3">
-      <article class="card feature reveal"><div class="icon-tile">{% include "partials/icon_ledger.html" %}</div><h3>Digital khata</h3><p>Add customers, record goods on credit and payments in full or in part. See each balance at a glance.</p></article>
-      <article class="card feature reveal d1"><div class="icon-tile">{% include "partials/icon_offline.html" %}</div><h3>Works offline</h3><p>Entries are saved on your phone first and sent once when the internet comes back.</p></article>
-      <article class="card feature reveal d2"><div class="icon-tile">{% include "partials/icon_receipt.html" %}</div><h3>Bills and itemised entries</h3><p>Record a total, or list every item. Attach a photo of the bill.</p></article>
-      <article class="card feature reveal"><div class="icon-tile">{% include "partials/icon_bell.html" %}</div><h3>Reminders</h3><p>Send a polite reminder for pending dues when you are online.</p></article>
-      <article class="card feature reveal d1"><div class="icon-tile">{% include "partials/icon_shield.html" %}</div><h3>Honest records</h3><p>Corrections are shown as adjustments with a reason. Nothing is silently changed or deleted.</p></article>
-      <article class="card feature reveal d2"><div class="icon-tile">{% include "partials/icon_chart.html" %}</div><h3>Sales tracking</h3><p>Quick or itemised sales, split payments, returns, and daily or monthly reports.</p></article>
+      <article class="card feature reveal"><div class="icon-tile">{% include "partials/icon_ledger.html" %}</div><h3>{% trans "Digital khata" %}</h3><p>{% trans "Add customers, record goods on credit and payments in full or in part. See each balance at a glance." %}</p></article>
+      <article class="card feature reveal d1"><div class="icon-tile">{% include "partials/icon_offline.html" %}</div><h3>{% trans "Works offline" %}</h3><p>{% trans "Entries are saved on your phone first and sent once when the internet comes back." %}</p></article>
+      <article class="card feature reveal d2"><div class="icon-tile">{% include "partials/icon_receipt.html" %}</div><h3>{% trans "Bills and itemised entries" %}</h3><p>{% trans "Record a total, or list every item. Attach a photo of the bill." %}</p></article>
+      <article class="card feature reveal"><div class="icon-tile">{% include "partials/icon_bell.html" %}</div><h3>{% trans "Reminders" %}</h3><p>{% trans "Send a polite reminder for pending dues when you are online." %}</p></article>
+      <article class="card feature reveal d1"><div class="icon-tile">{% include "partials/icon_shield.html" %}</div><h3>{% trans "Honest records" %}</h3><p>{% trans "Corrections are shown as adjustments with a reason. Nothing is silently changed or deleted." %}</p></article>
+      <article class="card feature reveal d2"><div class="icon-tile">{% include "partials/icon_chart.html" %}</div><h3>{% trans "Sales tracking" %}</h3><p>{% trans "Quick or itemised sales, split payments, returns, and daily or monthly reports." %}</p></article>
     </div>
-    <p class="center" style="margin-top:28px"><a class="btn btn-ghost" href="{% url 'features' %}">All features</a></p>
+    <p class="center" style="margin-top:28px"><a class="btn btn-ghost" href="{% url 'features' %}">{% trans "All features" %}</a></p>
   </div>
 </section>
 
 <section class="section">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">How it works</span><h2>Three simple steps</h2></div>
+    <div class="section-head reveal"><span class="eyebrow">{% trans "How it works" %}</span><h2>{% trans "Three simple steps" %}</h2></div>
     <div class="steps reveal">
       <svg class="steps-line" viewBox="0 0 900 56" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="a-draw" pathLength="1" vector-effect="non-scaling-stroke" d="M150 28C230 2 300 54 450 28S670 2 750 28"/></svg>
-      <div class="step"><div class="num">1</div><h3>Add your customer</h3><p>Enter a name and number. Your customer can link their own account later, only if they approve.</p></div>
-      <div class="step"><div class="num">2</div><h3>Record the udhaar</h3><p>Write what was sold and the amount, or just the total. Add payments as they come.</p></div>
-      <div class="step"><div class="num">3</div><h3>Customer confirms</h3><p>They see the entry and confirm it, or raise a dispute. You both see the same history.</p></div>
+      <div class="step"><div class="num">1</div><h3>{% trans "Add your customer" %}</h3><p>{% trans "Enter a name and number. Your customer can link their own account later, only if they approve." %}</p></div>
+      <div class="step"><div class="num">2</div><h3>{% trans "Record the udhaar" %}</h3><p>{% trans "Write what was sold and the amount, or just the total. Add payments as they come." %}</p></div>
+      <div class="step"><div class="num">3</div><h3>{% trans "Customer confirms" %}</h3><p>{% trans "They see the entry and confirm it, or raise a dispute. You both see the same history." %}</p></div>
     </div>
   </div>
 </section>
@@ -60,10 +60,10 @@
 <section class="section alt">
   <div class="container split two">
     <div class="reveal">
-      <span class="eyebrow">Offline-first</span>
-      <h2>No signal in the shop? Keep working.</h2>
-      <p class="lead">Every entry is saved on the phone straight away. When internet returns, it is sent to the server exactly once, so nothing is lost and nothing is counted twice.</p>
-      <p class="muted">Sending messages, one-time codes and confirmation links needs internet.</p>
+      <span class="eyebrow">{% trans "Offline-first" %}</span>
+      <h2>{% trans "No signal in the shop? Keep working." %}</h2>
+      <p class="lead">{% trans "Every entry is saved on the phone straight away. When internet returns, it is sent to the server exactly once, so nothing is lost and nothing is counted twice." %}</p>
+      <p class="muted">{% trans "Sending messages, one-time codes and confirmation links needs internet." %}</p>
     </div>
     <div class="reveal d1">{% include "partials/art_sync.html" %}</div>
   </div>
@@ -72,14 +72,14 @@
 <section class="section">
   <div class="container split two flip">
     <div class="reveal">
-      <span class="eyebrow">Two-sided transparency</span>
-      <h2>One entry. Two views. No surprises.</h2>
-      <p class="lead">Your customer has their own verified account and can see their own entries, per shop and combined. A shopkeeper can never mark an entry as confirmed. Only the customer can.</p>
+      <span class="eyebrow">{% trans "Two-sided transparency" %}</span>
+      <h2>{% trans "One entry. Two views. No surprises." %}</h2>
+      <p class="lead">{% trans "Your customer has their own verified account and can see their own entries, per shop and combined. A shopkeeper can never mark an entry as confirmed. Only the customer can." %}</p>
       <ul class="ticks">
-        <li>Every entry shows its status: Shopkeeper recorded, Awaiting confirmation, Customer confirmed or Disputed.</li>
-        <li>Mistakes are fixed with a reversal and a reason. The audit trail stays.</li>
+        <li>{% trans "Every entry shows its status: Shopkeeper recorded, Awaiting confirmation, Customer confirmed or Disputed." %}</li>
+        <li>{% trans "Mistakes are fixed with a reversal and a reason. The audit trail stays." %}</li>
       </ul>
-      <p class="muted" style="font-size:.9rem">A confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof.</p>
+      <p class="muted" style="font-size:.9rem">{% trans "A confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof." %}</p>
     </div>
     <div class="reveal d1">{% include "partials/art_two_sided.html" %}</div>
   </div>
@@ -88,16 +88,16 @@
 <section class="section tint">
   <div class="container split two">
     <div class="reveal">
-      <span class="eyebrow">Pricing</span>
-      <h2>One simple plan</h2>
-      <p class="lead">Free to register. {{ plan.trial_months }} months free for your shop. Then Rs {{ plan.amount_rupees }} per month. Taxes and gateway charges are shown before you pay.</p>
-      <p><a class="btn" href="{% url 'pricing' %}">See pricing</a></p>
+      <span class="eyebrow">{% trans "Pricing" %}</span>
+      <h2>{% trans "One simple plan" %}</h2>
+      <p class="lead">{% blocktrans trimmed with trial_months=plan.trial_months amount_rupees=plan.amount_rupees %}Free to register. {{ trial_months }} months free for your shop. Then Rs {{ amount_rupees }} per month. Taxes and gateway charges are shown before you pay.{% endblocktrans %}</p>
+      <p><a class="btn" href="{% url 'pricing' %}">{% trans "See pricing" %}</a></p>
     </div>
     <div class="reveal d1 center">
       <div class="card" style="text-align:center">
         {% include "partials/art_coin.html" %}
-        <div class="price"><small>Rs</small> {{ plan.amount_rupees }}<small> / month</small></div>
-        <p class="muted" style="margin-top:8px">after {{ plan.trial_months }} free months</p>
+        <div class="price">{% blocktrans trimmed with amount_rupees=plan.amount_rupees %}<small>Rs</small> {{ amount_rupees }}<small> / month</small>{% endblocktrans %}</div>
+        <p class="muted" style="margin-top:8px">{% blocktrans trimmed with trial_months=plan.trial_months %}after {{ trial_months }} free months{% endblocktrans %}</p>
       </div>
     </div>
   </div>
@@ -106,10 +106,10 @@
 <section class="section">
   <div class="container split two flip">
     <div class="reveal">
-      <span class="eyebrow">Security</span>
-      <h2>Your records, kept private</h2>
-      <p class="lead">Passwords are stored hashed. One-time codes expire and work only once. Each shop's data is kept separate, and bills are stored privately.</p>
-      <p><a class="btn btn-ghost" href="{% url 'security' %}">How we protect data</a></p>
+      <span class="eyebrow">{% trans "Security" %}</span>
+      <h2>{% trans "Your records, kept private" %}</h2>
+      <p class="lead">{% trans "Passwords are stored hashed. One-time codes expire and work only once. Each shop's data is kept separate, and bills are stored privately." %}</p>
+      <p><a class="btn btn-ghost" href="{% url 'security' %}">{% trans "How we protect data" %}</a></p>
     </div>
     <div class="reveal d1">{% include "partials/art_security.html" %}</div>
   </div>
@@ -117,9 +117,9 @@
 
 <section class="section alt">
   <div class="container">
-    <div class="section-head reveal"><span class="eyebrow">FAQ</span><h2>Common questions</h2></div>
+    <div class="section-head reveal"><span class="eyebrow">{% trans "FAQ" %}</span><h2>{% trans "Common questions" %}</h2></div>
     {% with faqs|slice:":5" as top %}{% include "partials/faq_list.html" with faqs=top %}{% endwith %}
-    <p class="center" style="margin-top:24px"><a href="{% url 'faq' %}">Read all questions</a></p>
+    <p class="center" style="margin-top:24px"><a href="{% url 'faq' %}">{% trans "Read all questions" %}</a></p>
   </div>
 </section>
 

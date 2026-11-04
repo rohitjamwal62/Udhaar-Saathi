@@ -17,6 +17,12 @@ python manage.py runserver 0.0.0.0:8000     # the first line printed shows which
 - Development OTPs are printed in this console as `[DEV OTP] +91...: 123456` (`OTP_SENDER=console`, only when `DJANGO_DEBUG=true`).
 - Payments use a **fake gateway** unless you set the Razorpay keys and `PAYMENT_GATEWAY=razorpay`.
 
+## Languages (English / हिन्दी)
+The website is English for everyone; Hindi is used only after a visitor picks it (EN | हिन्दी switch in the header and footer, remembered in a cookie; the browser's Accept-Language is ignored on purpose).
+- Strings: `{% trans %}` / `gettext` everywhere; Hindi lives in `locale/hi/LC_MESSAGES/django.po`, compiled to the committed `django.mo` (Render needs no gettext).
+- After adding or changing text: `python tools/extract_messages.py` (adds new strings to the .po, compiles), write the Hindi `msgstr`, then `python tools/compile_messages.py`. The tests fail if a msgstr is empty or the .mo is stale. With GNU gettext installed, `manage.py makemessages -l hi` / `compilemessages` work too.
+- FAQ rows have optional Hindi fields (`question_hi`, `answer_hi`) editable in Django admin.
+
 ## Test
 ```bash
 python -m pytest        # 39 tests on a LOCAL scratch database `udhaar_saathi_test` (needs local PostgreSQL; never touches Neon)

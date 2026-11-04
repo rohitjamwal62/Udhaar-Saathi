@@ -9,6 +9,8 @@ from django.conf import settings
 from django.core.cache import cache
 from django.db import transaction
 from django.utils import timezone
+from django.utils.translation import gettext as _
+from django.utils.translation import ngettext
 
 from apps.common.ratelimit import hit
 
@@ -41,9 +43,9 @@ def send_code(email: str, purpose: str, ip: str | None = None) -> None:
     email = email.strip().lower()
     wait = seconds_until_resend(email, purpose)
     if wait:
-        raise OtpError(f"Please wait {wait} seconds before asking for another code.")
+        raise OtpError(ngettext("Please wait %(n)d second before asking for another code.", "Please wait %(n)d seconds before asking for another code.", wait) % {"n": wait})
     if not hit(f"emailotp:hour:{email}", 6, 3600) or (ip and not hit(f"emailotp:ip:{ip}", 20, 3600)):
-        raise OtpError("Too many code requests. Please try again in an hour.")
+        raise OtpError(_("Too many code requests. Please try again in an hour."))
     code = f"{secrets.randbelow(1_000_000):06d}"
     with transaction.atomic():
         EmailOTP.objects.filter(email__iexact=email, purpose=purpose, consumed_at__isnull=True).update(consumed_at=timezone.now())
@@ -57,12 +59,12 @@ def send_code(email: str, purpose: str, ip: str | None = None) -> None:
         print(f"[DEV EMAIL OTP] {email} ({purpose}): {code}", flush=True)
     sent = mailer.send_otp_email(email, code, purpose, settings.EMAIL_OTP_TTL_SECONDS // 60)
     if not sent and not settings.ALLOW_DEV_OTP_IN_LOGS:
-        raise OtpDeliveryError("We could not send the email right now. Please try again in a moment.")
+        raise OtpDeliveryError(_("We could not send the email right now. Please try again in a moment."))
 
 
 def verify_code(email: str, purpose: str, code: str) -> None:
     """Burn the code if it is right; raise OtpError otherwise. Every wrong guess counts."""
-    bad = OtpError("That code is incorrect or has expired.")
+    bad = OtpError(_("That code is incorrect or has expired."))
     email = email.strip().lower()
     with transaction.atomic():
         otp = (EmailOTP.objects.select_for_update()
@@ -71,7 +73,7 @@ def verify_code(email: str, purpose: str, code: str) -> None:
         if not otp:
             raise bad
         if otp.attempts >= settings.EMAIL_OTP_MAX_ATTEMPTS:
-            raise OtpError("Too many wrong attempts. Please request a new code.")
+            raise OtpError(_("Too many wrong attempts. Please request a new code."))
         otp.attempts += 1
         ok = hmac.compare_digest(otp.code_hash, _digest(otp.pk, code.strip()))
         if ok:

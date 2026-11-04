@@ -1,4 +1,4 @@
-<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:auto;padding:24px;color:#17211c">
-<h2 style="color:#0B6E4F">Welcome to {{ site_name }}, {{ name }}!</h2><p>Your email is verified and your account is ready.</p>
-<p><a href="{{ site_url }}/login/" style="background:#0B6E4F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none">Open your dashboard</a></p>
-<p style="color:#5B6761;font-size:13px">You can upload your documents safely from your dashboard.</p></div>
+{% load i18n %}<div style="font-family:Arial,Helvetica,sans-serif;max-width:520px;margin:auto;padding:24px;color:#17211c">
+<h2 style="color:#0B6E4F">{% blocktrans trimmed with site_name=site_name name=name %}Welcome to {{ site_name }}, {{ name }}!{% endblocktrans %}</h2><p>{% trans "Your email is verified and your account is ready." %}</p>
+<p><a href="{{ site_url }}/login/" style="background:#0B6E4F;color:#fff;padding:12px 20px;border-radius:8px;text-decoration:none">{% trans "Open your dashboard" %}</a></p>
+<p style="color:#5B6761;font-size:13px">{% trans "You can upload your documents safely from your dashboard." %}</p></div>

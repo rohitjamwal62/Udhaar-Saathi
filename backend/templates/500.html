@@ -1,6 +1,6 @@
-<!doctype html>
-<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Something went wrong | UdhaarSaathi</title><meta name="theme-color" content="#0B6E4F">
+{% load i18n %}<!doctype html>
+<html lang="{% get_current_language as CUR_LANG %}{{ CUR_LANG }}"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{% trans "Something went wrong | UdhaarSaathi" %}</title><meta name="theme-color" content="#0B6E4F">
 <style>
 :root{--p:#0B6E4F;--ink:#17211C;--muted:#5B6761;--bg:#F6F7F5}
 @media (prefers-color-scheme:dark){:root{--p:#3DBE8D;--ink:#EAF1ED;--muted:#A5B3AC;--bg:#0E1512}}
@@ -10,8 +10,8 @@ a{display:inline-block;min-height:44px;line-height:44px;padding:0 24px;border-ra
 svg{width:160px;height:auto}
 </style></head>
 <body><main>
-<svg viewBox="0 0 120 120" role="img" aria-label="A warning sign"><title>Something went wrong</title><circle cx="60" cy="60" r="50" fill="#F2A900"/><path d="M60 32v34" stroke="#17211C" stroke-width="9" stroke-linecap="round"/><circle cx="60" cy="86" r="6" fill="#17211C"/></svg>
-<h1>Something went wrong on our side</h1>
-<p>Please try again in a few minutes.</p>
-<p><a href="/">Go to the home page</a></p>
+<svg viewBox="0 0 120 120" role="img" aria-label="{% trans 'A warning sign' %}"><title>{% trans "Something went wrong" %}</title><circle cx="60" cy="60" r="50" fill="#F2A900"/><path d="M60 32v34" stroke="#17211C" stroke-width="9" stroke-linecap="round"/><circle cx="60" cy="86" r="6" fill="#17211C"/></svg>
+<h1>{% trans "Something went wrong on our side" %}</h1>
+<p>{% trans "Please try again in a few minutes." %}</p>
+<p><a href="/">{% trans "Go to the home page" %}</a></p>
 </main></body></html>

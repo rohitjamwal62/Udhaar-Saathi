@@ -1,0 +1,2211 @@
+# Hindi translation for UdhaarSaathi.
+# Written for small shopkeepers in India: simple, everyday Hindi.
+msgid ""
+msgstr ""
+"Project-Id-Version: UdhaarSaathi\n"
+"Report-Msgid-Bugs-To: \n"
+"Language: hi\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+
+#: apps/web/forms.py:25
+msgid "Enter a valid mobile number, for example 98765 43210."
+msgstr "सही मोबाइल नंबर लिखें, जैसे 98765 43210।"
+
+#: apps/web/forms.py:30
+msgid "Use 8 to 128 characters."
+msgstr "8 से 128 अक्षर रखें।"
+
+#: apps/web/forms.py:32
+msgid "Include both letters and numbers."
+msgstr "पासवर्ड में अक्षर और अंक दोनों होने चाहिए।"
+
+#: apps/web/forms.py:47
+msgid "Full name"
+msgstr "पूरा नाम"
+
+#: apps/web/forms.py:48 apps/web/forms.py:86 apps/web/forms.py:105
+msgid "Email address"
+msgstr "ईमेल पता"
+
+#: apps/web/forms.py:49 apps/web/forms.py:133
+msgid "Mobile number (optional)"
+msgstr "मोबाइल नंबर (वैकल्पिक)"
+
+#: apps/web/forms.py:50
+msgid "Shop name (optional)"
+msgstr "दुकान का नाम (वैकल्पिक)"
+
+#: apps/web/forms.py:51
+msgid "I am a"
+msgstr "मैं हूँ"
+
+#: apps/web/forms.py:52 apps/web/forms.py:82
+msgid "Password"
+msgstr "पासवर्ड"
+
+#: apps/web/forms.py:53
+msgid "Confirm password"
+msgstr "पासवर्ड दोबारा लिखें"
+
+#: apps/web/forms.py:54
+msgid "I accept the Terms and the Privacy Notice"
+msgstr "मैं नियम व शर्तें और गोपनीयता सूचना स्वीकार करता/करती हूँ"
+
+#: apps/web/forms.py:76
+msgid "6-digit code"
+msgstr "6 अंकों का कोड"
+
+#: apps/web/forms.py:81
+msgid "Email or username"
+msgstr "ईमेल या यूज़रनेम"
+
+#: apps/web/forms.py:90
+msgid "New password"
+msgstr "नया पासवर्ड"
+
+#: apps/web/forms.py:91
+msgid "Confirm new password"
+msgstr "नया पासवर्ड दोबारा लिखें"
+
+#: apps/web/forms.py:104
+msgid "Your name"
+msgstr "आपका नाम"
+
+#: apps/web/forms.py:106
+msgid "Phone (optional)"
+msgstr "फ़ोन (वैकल्पिक)"
+
+#: apps/web/forms.py:107
+msgid "Subject"
+msgstr "विषय"
+
+#: apps/web/forms.py:108
+msgid "Message"
+msgstr "संदेश"
+
+#: apps/web/forms.py:115
+msgid "Document title"
+msgstr "दस्तावेज़ का नाम"
+
+#: apps/web/forms.py:116
+msgid "Type of document"
+msgstr "दस्तावेज़ का प्रकार"
+
+#: apps/web/forms.py:117
+msgid "File"
+msgstr "फ़ाइल"
+
+#: apps/web/forms.py:132
+msgid "Person's name"
+msgstr "व्यक्ति का नाम"
+
+#: apps/web/forms.py:134 apps/web/forms.py:141
+msgid "Note (optional)"
+msgstr "टिप्पणी (वैकल्पिक)"
+
+#: apps/web/forms.py:138
+msgid "What happened"
+msgstr "क्या हुआ"
+
+#: apps/web/forms.py:139
+msgid "Amount (Rs)"
+msgstr "रकम (Rs)"
+
+#: apps/web/forms.py:140 templates/web/party.html:23 templates/web/party.html:27
+msgid "Date"
+msgstr "तारीख़"
+
+#: apps/web/forms.py:42
+msgid "Spam detected."
+msgstr "स्पैम का शक है।"
+
+#: apps/web/forms.py:59
+msgid "An account with this email already exists. Please log in instead."
+msgstr "इस ईमेल से खाता पहले से बना हुआ है। कृपया लॉग इन करें।"
+
+#: apps/web/forms.py:71 apps/web/forms.py:99
+msgid "The two passwords do not match."
+msgstr "दोनों पासवर्ड मेल नहीं खाते।"
+
+#: apps/web/forms.py:76
+msgid "Enter the 6 digits from the email."
+msgstr "ईमेल में आए 6 अंक लिखें।"
+
+#: apps/web/forms.py:127
+msgid "The file is empty."
+msgstr "फ़ाइल खाली है।"
+
+#: apps/web/forms.py:147
+msgid "The date cannot be in the future."
+msgstr "तारीख़ आगे की नहीं हो सकती।"
+
+#: apps/web/forms.py:123
+#, python-format
+msgid "Allowed file types: %(types)s."
+msgstr "इन प्रकार की फ़ाइलें चलेंगी: %(types)s।"
+
+#: apps/web/forms.py:125
+#, python-format
+msgid "The file is too large (limit %(mb)s MB)."
+msgstr "फ़ाइल बहुत बड़ी है (सीमा %(mb)s MB)।"
+
+#: apps/web/forms.py:138
+msgid "I gave money (udhaar)"
+msgstr "मैंने पैसे दिए (उधार)"
+
+#: apps/web/forms.py:138
+msgid "I received money back"
+msgstr "मुझे पैसे वापस मिले"
+
+#: apps/web/mailer.py:85
+msgid "Welcome to UdhaarSaathi"
+msgstr "UdhaarSaathi में आपका स्वागत है"
+
+#: apps/web/mailer.py:95
+msgid "We received your message"
+msgstr "हमें आपका संदेश मिल गया"
+
+#: apps/web/mailer.py:80
+msgid "Your UdhaarSaathi verification code"
+msgstr "आपका UdhaarSaathi सत्यापन कोड"
+
+#: apps/web/mailer.py:80
+msgid "Reset your UdhaarSaathi password"
+msgstr "अपना UdhaarSaathi पासवर्ड रीसेट करें"
+
+#: apps/web/models.py:8
+msgid "Shopkeeper"
+msgstr "दुकानदार"
+
+#: apps/web/models.py:8
+msgid "Customer"
+msgstr "ग्राहक"
+
+#: apps/web/models.py:62
+msgid "ID proof"
+msgstr "पहचान का प्रमाण"
+
+#: apps/web/models.py:62
+msgid "Shop proof / licence"
+msgstr "दुकान का प्रमाण / लाइसेंस"
+
+#: apps/web/models.py:62
+msgid "Bill or receipt"
+msgstr "बिल या रसीद"
+
+#: apps/web/models.py:63
+msgid "Agreement"
+msgstr "समझौता"
+
+#: apps/web/models.py:63
+msgid "Other"
+msgstr "अन्य"
+
+#: apps/web/models.py:131
+msgid "Gave (udhaar)"
+msgstr "दिया (उधार)"
+
+#: apps/web/models.py:131
+msgid "Received (repayment)"
+msgstr "मिला (वापसी)"
+
+#: apps/web/otp.py:67
+msgid "That code is incorrect or has expired."
+msgstr "कोड गलत है या उसकी समय-सीमा खत्म हो चुकी है।"
+
+#: apps/web/otp.py:48
+msgid "Too many code requests. Please try again in an hour."
+msgstr "कोड के बहुत ज़्यादा अनुरोध हो गए। कृपया एक घंटे बाद फिर कोशिश करें।"
+
+#: apps/web/otp.py:62
+msgid "We could not send the email right now. Please try again in a moment."
+msgstr "अभी हम ईमेल नहीं भेज पाए। कृपया थोड़ी देर बाद फिर कोशिश करें।"
+
+#: apps/web/otp.py:46
+msgid "Please wait %(n)d second before asking for another code."
+msgid_plural "Please wait %(n)d seconds before asking for another code."
+msgstr[0] "नया कोड माँगने से पहले कृपया %(n)d सेकंड रुकें।"
+msgstr[1] "नया कोड माँगने से पहले कृपया %(n)d सेकंड रुकें।"
+
+#: apps/web/otp.py:76
+msgid "Too many wrong attempts. Please request a new code."
+msgstr "बहुत ज़्यादा गलत कोशिशें हो गईं। कृपया नया कोड माँगें।"
+
+#: apps/web/views.py:193
+msgid "You are logged out."
+msgstr "आप लॉग आउट हो गए हैं।"
+
+#: apps/web/views.py:131
+msgid "Please register first."
+msgstr "कृपया पहले रजिस्टर करें।"
+
+#: apps/web/views.py:204
+msgid "If that email has an account, we sent a code to it."
+msgstr "अगर इस ईमेल से खाता है, तो हमने उस पर कोड भेज दिया है।"
+
+#: apps/web/views.py:250
+msgid "Document storage is not connected yet. Please try again later."
+msgstr "दस्तावेज़ रखने की सुविधा अभी जुड़ी नहीं है। कृपया बाद में कोशिश करें।"
+
+#: apps/web/views.py:253
+msgid "Upload limit reached. Please try again later."
+msgstr "अपलोड की सीमा पूरी हो गई है। कृपया बाद में कोशिश करें।"
+
+#: apps/web/views.py:269
+#, python-format
+msgid "“%(title)s” was uploaded and stored safely."
+msgstr "“%(title)s” अपलोड हो गया और सुरक्षित रख लिया गया है।"
+
+#: apps/web/views.py:322
+msgid "You have reached the limit of 2000 people."
+msgstr "आप 2000 लोगों की सीमा तक पहुँच गए हैं।"
+
+#: apps/web/views.py:325
+#, python-format
+msgid "%(name)s was added. Now record the money you gave."
+msgstr "%(name)s जुड़ गए हैं। अब जो पैसे दिए हैं वह लिखें।"
+
+#: apps/web/views.py:337
+msgid "Entry saved."
+msgstr "एंट्री सेव हो गई।"
+
+#: apps/web/views.py:354
+msgid "Entry cancelled. It stays in the history, marked as cancelled."
+msgstr "एंट्री रद्द हो गई। वह इतिहास में \"रद्द\" के निशान के साथ बनी रहेगी।"
+
+#: apps/web/views.py:92
+msgid "Too many messages from this connection. Please try again later."
+msgstr "इस कनेक्शन से बहुत ज़्यादा संदेश भेजे गए हैं। कृपया बाद में फिर कोशिश करें।"
+
+#: apps/web/views.py:136
+msgid "Too many attempts. Please wait a few minutes."
+msgstr "बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट रुकें।"
+
+#: apps/web/views.py:162
+#, python-format
+msgid "A new code was sent to %(email)s."
+msgstr "नया कोड %(email)s पर भेज दिया गया है।"
+
+#: apps/web/views.py:174
+msgid "Too many login attempts. Please try again in a few minutes."
+msgstr "लॉग इन की बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट बाद फिर कोशिश करें।"
+
+#: apps/web/views.py:186
+msgid "The email or password is incorrect."
+msgstr "ईमेल या पासवर्ड गलत है।"
+
+#: apps/web/views.py:225
+msgid "Your password was changed. Please log in."
+msgstr "आपका पासवर्ड बदल गया है। कृपया लॉग इन करें।"
+
+#: apps/web/views.py:264
+msgid "We could not store the file right now. Please try again."
+msgstr "अभी हम फ़ाइल सेव नहीं कर पाए। कृपया फिर कोशिश करें।"
+
+#: apps/web/views.py:279
+msgid "The file could not be fetched."
+msgstr "फ़ाइल नहीं मिल सकी।"
+
+#: apps/web/views.py:319
+#, python-format
+msgid "You already have a person called %(name)s."
+msgstr "आपके पास %(name)s नाम का व्यक्ति पहले से है।"
+
+#: apps/web/views.py:98
+msgid "Thank you. Your message was received and we will reply by email."
+msgstr "धन्यवाद। आपका संदेश हमें मिल गया है और हम ईमेल से जवाब देंगे।"
+
+#: apps/web/views.py:123
+#, python-format
+msgid "We sent a 6-digit code to %(email)s."
+msgstr "हमने %(email)s पर 6 अंकों का कोड भेजा है।"
+
+#: apps/web/views.py:150
+msgid "Your email is verified. Welcome to UdhaarSaathi!"
+msgstr "आपका ईमेल सत्यापित हो गया। UdhaarSaathi में आपका स्वागत है!"
+
+#: apps/web/views.py:149
+msgid "there"
+msgstr "आप"
+
+#: apps/web/views.py:181
+msgid "Please verify your email first. We sent you a new code."
+msgstr "कृपया पहले अपना ईमेल सत्यापित करें। हमने आपको नया कोड भेजा है।"
+
+#: templates/404.html:3
+msgid "Page not found | UdhaarSaathi"
+msgstr "पेज नहीं मिला | UdhaarSaathi"
+
+#: templates/404.html:7
+msgid "A ledger page with a question mark"
+msgstr "एक बही-खाते का पन्ना, जिस पर प्रश्नचिह्न बना है"
+
+#: templates/404.html:7
+msgid "Page not found"
+msgstr "पेज नहीं मिला"
+
+#: templates/404.html:11
+msgid "We could not find that page"
+msgstr "हमें वह पेज नहीं मिला"
+
+#: templates/404.html:12
+msgid "The link may be old or mistyped."
+msgstr "हो सकता है लिंक पुराना हो या गलत लिखा गया हो।"
+
+#: templates/404.html:13 templates/500.html:16
+msgid "Go to the home page"
+msgstr "होम पेज पर जाएँ"
+
+#: templates/404.html:13
+msgid "Contact us"
+msgstr "हमसे संपर्क करें"
+
+#: templates/500.html:3
+msgid "Something went wrong | UdhaarSaathi"
+msgstr "कुछ गड़बड़ हो गई | UdhaarSaathi"
+
+#: templates/500.html:13
+msgid "A warning sign"
+msgstr "चेतावनी का निशान"
+
+#: templates/500.html:13
+msgid "Something went wrong"
+msgstr "कुछ गड़बड़ हो गई"
+
+#: templates/500.html:14
+msgid "Something went wrong on our side"
+msgstr "हमारी तरफ़ से कुछ गड़बड़ हो गई"
+
+#: templates/500.html:15
+msgid "Please try again in a few minutes."
+msgstr "कृपया कुछ मिनट बाद फिर कोशिश करें।"
+
+#: templates/base.html:7
+msgid "UdhaarSaathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start."
+msgstr "UdhaarSaathi छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब रखने वाला ऐप है। बिना इंटरनेट भी चलता है। शुरू करना मुफ़्त है।"
+
+#: templates/base.html:12
+msgid "Record udhaar, track sales and keep honest accounts with your customers. Offline-first Android app."
+msgstr "उधार लिखें, बिक्री का हिसाब रखें और अपने ग्राहकों के साथ सच्चा हिसाब रखें। बिना इंटरनेट चलने वाला Android ऐप।"
+
+#: templates/base.html:21
+msgid "Skip to main content"
+msgstr "मुख्य सामग्री पर जाएँ"
+
+#: templates/base.html:27
+msgid "Open menu"
+msgstr "मेन्यू खोलें"
+
+#: templates/base.html:27
+msgid "Close menu"
+msgstr "मेन्यू बंद करें"
+
+#: templates/base.html:28
+msgid "Main"
+msgstr "मुख्य"
+
+#: templates/base.html:29 templates/base.html:63 templates/web/features.html:5
+msgid "Features"
+msgstr "विशेषताएँ"
+
+#: templates/base.html:30 templates/base.html:63 templates/web/home.html:50 templates/web/how_it_works.html:5
+msgid "How it works"
+msgstr "यह कैसे काम करता है"
+
+#: templates/base.html:31 templates/base.html:64 templates/web/home.html:91 templates/web/pricing.html:5
+msgid "Pricing"
+msgstr "कीमत"
+
+#: templates/base.html:32 templates/base.html:64 templates/web/home.html:109 templates/web/privacy.html:47
+msgid "Security"
+msgstr "सुरक्षा"
+
+#: templates/base.html:33 templates/base.html:66 templates/web/faq.html:5 templates/web/home.html:120
+msgid "FAQ"
+msgstr "सवाल-जवाब"
+
+#: templates/base.html:34 templates/base.html:66 templates/base.html:70 templates/web/contact.html:5
+msgid "Contact"
+msgstr "संपर्क"
+
+#: templates/base.html:38
+msgid "Dashboard"
+msgstr "डैशबोर्ड"
+
+#: templates/base.html:39
+msgid "Log out"
+msgstr "लॉग आउट"
+
+#: templates/base.html:41 templates/base.html:67 templates/web/auth/login.html:14
+msgid "Log in"
+msgstr "लॉग इन"
+
+#: templates/base.html:42 templates/base.html:67 templates/partials/cta.html:4 templates/web/home.html:12
+msgid "Start free"
+msgstr "मुफ़्त शुरू करें"
+
+#: templates/base.html:50
+msgid "Notifications"
+msgstr "सूचनाएँ"
+
+#: templates/base.html:51
+msgid "Dismiss message"
+msgstr "संदेश बंद करें"
+
+#: templates/base.html:60
+msgid "A digital khata and sales tracker for small shops in India. Not a bank, lender or debt-collection agency."
+msgstr "छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब। यह बैंक, साहूकार या वसूली करने वाली एजेंसी नहीं है।"
+
+#: templates/base.html:62
+msgid "Product"
+msgstr "उत्पाद"
+
+#: templates/base.html:65
+msgid "Company"
+msgstr "कंपनी"
+
+#: templates/base.html:68
+msgid "Legal"
+msgstr "कानूनी"
+
+#: templates/base.html:69
+msgid "Terms"
+msgstr "नियम व शर्तें"
+
+#: templates/base.html:69
+msgid "Privacy"
+msgstr "गोपनीयता"
+
+#: templates/base.html:71 templates/partials/lang_switch.html:1
+msgid "Language"
+msgstr "भाषा"
+
+#: templates/base.html:11
+#, python-format
+msgid "%(site_name)s: digital khata for small shops"
+msgstr "%(site_name)s: छोटी दुकानों के लिए डिजिटल खाता"
+
+#: templates/base.html:22
+#, python-format
+msgid "%(app_env)s environment: not the live site"
+msgstr "%(app_env)s वातावरण: यह असली साइट नहीं है"
+
+#: templates/base.html:73
+#, python-format
+msgid "&copy; %(year)s %(site_name)s. Confirmations in the app are an acknowledgement and evidence trail, not guaranteed legal proof."
+msgstr "&copy; %(year)s %(site_name)s। ऐप में की गई पुष्टि एक स्वीकृति और सबूत की कड़ी है, कानूनी सबूत होने की गारंटी नहीं।"
+
+#: templates/emails/contact_ack.html:1
+#, python-format
+msgid "Thanks for writing to %(site_name)s"
+msgstr "%(site_name)s को लिखने के लिए धन्यवाद"
+
+#: templates/emails/contact_ack.html:1
+#, python-format
+msgid "Hi %(name)s, we received your message about <b>%(subject)s</b> and will reply by email."
+msgstr "नमस्ते %(name)s, हमें <b>%(subject)s</b> के बारे में आपका संदेश मिल गया है और हम ईमेल से जवाब देंगे।"
+
+#: templates/emails/contact_ack.txt:1 templates/emails/welcome.txt:1
+#, python-format
+msgid "Hi %(name)s,"
+msgstr "नमस्ते %(name)s,"
+
+#: templates/emails/contact_ack.txt:3
+#, python-format
+msgid "Thanks for writing to %(site_name)s. We received your message about \"%(subject)s\" and will reply by email."
+msgstr "%(site_name)s को लिखने के लिए धन्यवाद। हमें \"%(subject)s\" के बारे में आपका संदेश मिल गया है और हम ईमेल से जवाब देंगे।"
+
+#: templates/emails/contact_ack.txt:5 templates/emails/welcome.txt:8
+#, python-format
+msgid "The %(site_name)s team"
+msgstr "%(site_name)s टीम"
+
+#: templates/emails/otp.html:3
+msgid "Use this code to reset your password:"
+msgstr "अपना पासवर्ड रीसेट करने के लिए यह कोड इस्तेमाल करें:"
+
+#: templates/emails/otp.html:3
+msgid "Use this code to verify your email address:"
+msgstr "अपना ईमेल पता सत्यापित करने के लिए यह कोड इस्तेमाल करें:"
+
+#: templates/emails/otp.html:5
+#, python-format
+msgid "It works for <b>%(minutes)s minutes</b> and can be used once. If you did not ask for it, you can safely ignore this email."
+msgstr "यह कोड <b>%(minutes)s मिनट</b> तक चलता है और सिर्फ़ एक बार इस्तेमाल हो सकता है। अगर आपने इसे नहीं माँगा था, तो इस ईमेल को अनदेखा कर दें।"
+
+#: templates/emails/otp.html:6 templates/emails/otp.txt:7
+#, python-format
+msgid "%(site_name)s will never ask you for this code by phone or chat."
+msgstr "%(site_name)s आपसे यह कोड फ़ोन या चैट पर कभी नहीं माँगेगा।"
+
+#: templates/emails/otp.txt:1
+#, python-format
+msgid "Use this code to reset your %(site_name)s password:"
+msgstr "अपना %(site_name)s पासवर्ड रीसेट करने के लिए यह कोड इस्तेमाल करें:"
+
+#: templates/emails/otp.txt:1
+#, python-format
+msgid "Use this code to verify your email for %(site_name)s:"
+msgstr "%(site_name)s के लिए अपना ईमेल सत्यापित करने के लिए यह कोड इस्तेमाल करें:"
+
+#: templates/emails/otp.txt:5
+#, python-format
+msgid "It works for %(minutes)s minutes and can be used once. If you did not ask for it, you can ignore this email: nobody can use the code without access to your inbox."
+msgstr "यह कोड %(minutes)s मिनट तक चलता है और सिर्फ़ एक बार इस्तेमाल हो सकता है। अगर आपने इसे नहीं माँगा था, तो इस ईमेल को अनदेखा कर दें: आपके इनबॉक्स तक पहुँचे बिना कोई इस कोड का इस्तेमाल नहीं कर सकता।"
+
+#: templates/emails/welcome.html:2
+msgid "Your email is verified and your account is ready."
+msgstr "आपका ईमेल सत्यापित हो गया है और आपका खाता तैयार है।"
+
+#: templates/emails/welcome.html:3
+msgid "Open your dashboard"
+msgstr "अपना डैशबोर्ड खोलें"
+
+#: templates/emails/welcome.html:4 templates/emails/welcome.txt:6
+msgid "You can upload your documents safely from your dashboard."
+msgstr "आप अपने डैशबोर्ड से अपने दस्तावेज़ सुरक्षित रूप से अपलोड कर सकते हैं।"
+
+#: templates/emails/welcome.html:2
+#, python-format
+msgid "Welcome to %(site_name)s, %(name)s!"
+msgstr "%(site_name)s में आपका स्वागत है, %(name)s!"
+
+#: templates/emails/welcome.txt:3
+#, python-format
+msgid "Your email is verified and your %(site_name)s account is ready."
+msgstr "आपका ईमेल सत्यापित हो गया है और आपका %(site_name)s खाता तैयार है।"
+
+#: templates/emails/welcome.txt:4
+#, python-format
+msgid "Sign in: %(site_url)s/login/"
+msgstr "लॉग इन करें: %(site_url)s/login/"
+
+#: templates/partials/art_auth_key.html:1
+msgid "A key beside a padlock"
+msgstr "ताले के पास रखी एक चाबी"
+
+#: templates/partials/art_auth_key.html:2
+msgid "Reset your password safely"
+msgstr "अपना पासवर्ड सुरक्षित तरीके से रीसेट करें"
+
+#: templates/partials/art_auth_otp.html:1
+msgid "An envelope with a speech bubble showing a six digit code"
+msgstr "एक लिफ़ाफ़ा, जिस पर बने संदेश-बुलबुले में छह अंकों का कोड है"
+
+#: templates/partials/art_auth_otp.html:2
+msgid "A code arrives by email"
+msgstr "कोड ईमेल से आता है"
+
+#: templates/partials/art_auth_shop.html:1
+msgid "A small shop front with a striped awning and a ledger sign"
+msgstr "धारीदार छज्जे और बही-खाते के बोर्ड वाली एक छोटी दुकान"
+
+#: templates/partials/art_auth_shop.html:2
+msgid "Your shop, your khata"
+msgstr "आपकी दुकान, आपका खाता"
+
+#: templates/partials/art_coin.html:1
+msgid "A rupee coin gently turning, with sparkles"
+msgstr "चमक के साथ धीरे-धीरे घूमता हुआ रुपये का सिक्का"
+
+#: templates/partials/art_coin.html:2
+msgid "Rupee coin"
+msgstr "रुपये का सिक्का"
+
+#: templates/partials/art_empty.html:1
+msgid "An empty folder with a floating document"
+msgstr "एक खाली फ़ोल्डर, जिसके ऊपर एक दस्तावेज़ तैर रहा है"
+
+#: templates/partials/art_empty.html:2
+msgid "No documents yet"
+msgstr "अभी कोई दस्तावेज़ नहीं"
+
+#: templates/partials/art_hero.html:1
+msgid "A phone showing a khata list with customers, amounts and status chips, surrounded by floating rupee coins and a ledger book"
+msgstr "फ़ोन में ग्राहकों, रकम और स्थिति के निशानों वाली खाता-सूची, जिसके चारों ओर रुपये के सिक्के और बही-खाता तैर रहे हैं"
+
+#: templates/partials/art_hero.html:2
+msgid "UdhaarSaathi khata on a phone"
+msgstr "फ़ोन पर UdhaarSaathi खाता"
+
+#: templates/partials/art_hero.html:13
+msgid "Total receivable"
+msgstr "कुल वसूली बाकी"
+
+#: templates/partials/art_hero.html:17
+msgid "3 items"
+msgstr "3 सामान"
+
+#: templates/partials/art_hero.html:19 templates/partials/art_hero.html:29
+msgid "Pending"
+msgstr "बाकी"
+
+#: templates/partials/art_hero.html:22
+msgid "Payment"
+msgstr "भुगतान"
+
+#: templates/partials/art_hero.html:24
+msgid "Confirmed"
+msgstr "पुष्टि हो गई"
+
+#: templates/partials/art_hero.html:27
+msgid "5 items"
+msgstr "5 सामान"
+
+#: templates/partials/art_security.html:1
+msgid "A shield with a lock inside, with soft rings spreading outward"
+msgstr "एक ढाल, जिसके अंदर ताला है और चारों ओर हल्के घेरे फैल रहे हैं"
+
+#: templates/partials/art_security.html:2
+msgid "Protected records"
+msgstr "सुरक्षित रिकॉर्ड"
+
+#: templates/partials/art_sync.html:1
+msgid "A phone saves entries offline, then sends them once to the cloud when the internet returns"
+msgstr "फ़ोन बिना इंटरनेट के एंट्रियाँ सेव करता है, फिर इंटरनेट लौटने पर उन्हें एक बार क्लाउड पर भेजता है"
+
+#: templates/partials/art_sync.html:2
+msgid "Offline-first sync"
+msgstr "पहले ऑफ़लाइन, फिर सिंक"
+
+#: templates/partials/art_sync.html:12
+msgid "Saved on phone"
+msgstr "फ़ोन में सेव"
+
+#: templates/partials/art_sync.html:21
+msgid "Synced exactly once"
+msgstr "ठीक एक बार सिंक"
+
+#: templates/partials/art_sync.html:22
+msgid "When internet returns"
+msgstr "इंटरनेट लौटने पर"
+
+#: templates/partials/art_two_sided.html:1
+msgid "The same entry seen by a shopkeeper and a customer, joined by a shield with a check mark. The customer confirms or disputes it."
+msgstr "दुकानदार और ग्राहक एक ही एंट्री देखते हैं, जो सही के निशान वाली ढाल से जुड़ी है। ग्राहक उसकी पुष्टि करता है या आपत्ति दर्ज करता है।"
+
+#: templates/partials/art_two_sided.html:2
+msgid "Shopkeeper and customer see the same entry"
+msgstr "दुकानदार और ग्राहक को एक ही एंट्री दिखती है"
+
+#: templates/partials/art_two_sided.html:6
+msgid "Shopkeeper view"
+msgstr "दुकानदार का दृश्य"
+
+#: templates/partials/art_two_sided.html:8 templates/partials/art_two_sided.html:17
+msgid "Atta, dal, oil"
+msgstr "आटा, दाल, तेल"
+
+#: templates/partials/art_two_sided.html:9
+msgid "Awaiting confirmation"
+msgstr "पुष्टि की प्रतीक्षा"
+
+#: templates/partials/art_two_sided.html:10
+msgid "Customer confirmed"
+msgstr "ग्राहक ने पुष्टि की"
+
+#: templates/partials/art_two_sided.html:12
+msgid "Only the customer can confirm."
+msgstr "सिर्फ़ ग्राहक ही पुष्टि कर सकता है।"
+
+#: templates/partials/art_two_sided.html:15
+msgid "Customer view"
+msgstr "ग्राहक का दृश्य"
+
+#: templates/partials/art_two_sided.html:16
+msgid "Sharma Kirana"
+msgstr "शर्मा किराना"
+
+#: templates/partials/art_two_sided.html:18
+msgid "Confirm"
+msgstr "पुष्टि करें"
+
+#: templates/partials/art_two_sided.html:19
+msgid "Dispute"
+msgstr "आपत्ति करें"
+
+#: templates/partials/cta.html:2
+msgid "Keep your khata clear, from today"
+msgstr "आज से अपना खाता साफ़ रखें"
+
+#: templates/partials/cta.html:4 templates/web/home.html:13
+msgid "See how it works"
+msgstr "देखें यह कैसे काम करता है"
+
+#: templates/partials/cta.html:3
+#, python-format
+msgid "Registration is free and you get %(trial_months)s months free for each shop. No card needed to start."
+msgstr "रजिस्ट्रेशन मुफ़्त है और हर दुकान को %(trial_months)s महीने मुफ़्त मिलते हैं। शुरू करने के लिए कार्ड की ज़रूरत नहीं।"
+
+#: templates/partials/faq_list.html:3
+#, python-format
+msgid "Questions and answers will appear here soon. Meanwhile, write to <a href=\"mailto:%(support_email)s\">%(support_email)s</a>."
+msgstr "सवाल और जवाब जल्द यहाँ दिखेंगे। तब तक <a href=\"mailto:%(support_email)s\">%(support_email)s</a> पर लिखें।"
+
+#: templates/partials/field.html:3
+msgid "Show or hide password"
+msgstr "पासवर्ड दिखाएँ या छिपाएँ"
+
+#: templates/partials/field.html:3
+msgid "Show"
+msgstr "दिखाएँ"
+
+#: templates/partials/field.html:3
+msgid "Hide"
+msgstr "छिपाएँ"
+
+#: templates/partials/honeypot.html:1
+msgid "Leave this field empty"
+msgstr "इस खाने को खाली छोड़ें"
+
+#: templates/web/auth/forgot_password.html:7 templates/web/auth/login.html:16
+msgid "Forgot your password?"
+msgstr "पासवर्ड भूल गए?"
+
+#: templates/web/auth/forgot_password.html:8
+msgid "Enter your email address. If an account exists, we will send a one-time code."
+msgstr "अपना ईमेल पता लिखें। अगर खाता होगा, तो हम एक बार का कोड भेजेंगे।"
+
+#: templates/web/auth/forgot_password.html:13
+msgid "Send code"
+msgstr "कोड भेजें"
+
+#: templates/web/auth/forgot_password.html:15 templates/web/auth/reset_password.html:21
+msgid "Back to log in"
+msgstr "लॉग इन पर वापस जाएँ"
+
+#: templates/web/auth/forgot_password.html:17
+msgid "A code by email, then a new password."
+msgstr "ईमेल से कोड आएगा, फिर नया पासवर्ड बनाएँ।"
+
+#: templates/web/auth/forgot_password.html:2
+#, python-format
+msgid "Forgot your password? | %(site_name)s"
+msgstr "पासवर्ड भूल गए? | %(site_name)s"
+
+#: templates/web/auth/forgot_password.html:3
+#, python-format
+msgid "Get a one-time code by email to reset your %(site_name)s password."
+msgstr "अपना %(site_name)s पासवर्ड रीसेट करने के लिए ईमेल से एक बार का कोड पाएँ।"
+
+#: templates/web/auth/login.html:7
+msgid "Welcome back"
+msgstr "फिर से स्वागत है"
+
+#: templates/web/auth/login.html:16
+msgid "Create an account"
+msgstr "खाता बनाएँ"
+
+#: templates/web/auth/login.html:18
+msgid "Your khata, wherever you are."
+msgstr "आपका खाता, आप जहाँ भी हों।"
+
+#: templates/web/auth/login.html:2
+#, python-format
+msgid "Log in | %(site_name)s"
+msgstr "लॉग इन | %(site_name)s"
+
+#: templates/web/auth/login.html:3 templates/web/auth/login.html:8
+#, python-format
+msgid "Log in to your %(site_name)s account."
+msgstr "अपने %(site_name)s खाते में लॉग इन करें।"
+
+#: templates/web/auth/register.html:7
+msgid "Create your free account"
+msgstr "अपना मुफ़्त खाता बनाएँ"
+
+#: templates/web/auth/register.html:8
+msgid "Registration is free. We will email you a code to verify your address."
+msgstr "रजिस्ट्रेशन मुफ़्त है। आपका पता जाँचने के लिए हम आपको एक कोड ईमेल करेंगे।"
+
+#: templates/web/auth/register.html:30
+msgid "Create account"
+msgstr "खाता बनाएँ"
+
+#: templates/web/auth/register.html:2
+#, python-format
+msgid "Create your free account | %(site_name)s"
+msgstr "अपना मुफ़्त खाता बनाएँ | %(site_name)s"
+
+#: templates/web/auth/register.html:3
+#, python-format
+msgid "Register for %(site_name)s for free. Shopkeepers get a %(trial_months)s-month free trial. Customers can link to many shops."
+msgstr "%(site_name)s पर मुफ़्त रजिस्टर करें। दुकानदारों को %(trial_months)s महीने का मुफ़्त ट्रायल मिलता है। ग्राहक कई दुकानों से जुड़ सकते हैं।"
+
+#: templates/web/auth/register.html:27
+#, python-format
+msgid "I accept the <a href=\"%(url_terms)s\" target=\"_blank\" rel=\"noopener\">Terms</a> and the <a href=\"%(url_privacy)s\" target=\"_blank\" rel=\"noopener\">Privacy Notice</a>"
+msgstr "मैं <a href=\"%(url_terms)s\" target=\"_blank\" rel=\"noopener\">नियम व शर्तें</a> और <a href=\"%(url_privacy)s\" target=\"_blank\" rel=\"noopener\">गोपनीयता सूचना</a> स्वीकार करता/करती हूँ"
+
+#: templates/web/auth/register.html:32
+#, python-format
+msgid "Already registered? <a href=\"%(url_login)s\">Log in</a>"
+msgstr "पहले से रजिस्टर हैं? <a href=\"%(url_login)s\">लॉग इन करें</a>"
+
+#: templates/web/auth/register.html:34
+#, python-format
+msgid "%(trial_months)s months free for your shop. Then Rs %(amount_rupees)s a month."
+msgstr "आपकी दुकान के लिए %(trial_months)s महीने मुफ़्त। उसके बाद Rs %(amount_rupees)s प्रति माह।"
+
+#: templates/web/auth/reset_password.html:7
+msgid "Set a new password"
+msgstr "नया पासवर्ड बनाएँ"
+
+#: templates/web/auth/reset_password.html:19
+msgid "Save new password"
+msgstr "नया पासवर्ड सेव करें"
+
+#: templates/web/auth/reset_password.html:21
+msgid "Send a new code"
+msgstr "नया कोड भेजें"
+
+#: templates/web/auth/reset_password.html:23
+msgid "Codes expire and can be used only once."
+msgstr "कोड की समय-सीमा खत्म हो जाती है और वह सिर्फ़ एक बार चलता है।"
+
+#: templates/web/auth/reset_password.html:2
+#, python-format
+msgid "Set a new password | %(site_name)s"
+msgstr "नया पासवर्ड बनाएँ | %(site_name)s"
+
+#: templates/web/auth/reset_password.html:3
+#, python-format
+msgid "Enter your one-time code and choose a new %(site_name)s password."
+msgstr "अपना एक बार का कोड लिखें और अपना नया %(site_name)s पासवर्ड चुनें।"
+
+#: templates/web/auth/reset_password.html:8
+#, python-format
+msgid "Enter the 6-digit code sent to <strong>%(email)s</strong>, then choose a new password."
+msgstr "<strong>%(email)s</strong> पर भेजा गया 6 अंकों का कोड लिखें, फिर नया पासवर्ड चुनें।"
+
+#: templates/web/auth/verify_otp.html:7
+msgid "Check your email"
+msgstr "अपना ईमेल देखें"
+
+#: templates/web/auth/verify_otp.html:21
+msgid "Verify"
+msgstr "सत्यापित करें"
+
+#: templates/web/auth/verify_otp.html:25 templates/web/auth/verify_otp.html:27
+msgid "Did not get the email? Check spam, then request a new code."
+msgstr "ईमेल नहीं मिला? स्पैम फ़ोल्डर देखें, फिर नया कोड माँगें।"
+
+#: templates/web/auth/verify_otp.html:25
+msgid "Resend code"
+msgstr "कोड फिर से भेजें"
+
+#: templates/web/auth/verify_otp.html:30
+msgid "Codes only travel by email, so you need internet for this step."
+msgstr "कोड सिर्फ़ ईमेल से आता है, इसलिए इस कदम के लिए इंटरनेट चाहिए।"
+
+#: templates/web/auth/verify_otp.html:2
+#, python-format
+msgid "Verify your email | %(site_name)s"
+msgstr "अपना ईमेल सत्यापित करें | %(site_name)s"
+
+#: templates/web/auth/verify_otp.html:3
+#, python-format
+msgid "Enter the 6-digit code we emailed you to verify your %(site_name)s account."
+msgstr "अपना %(site_name)s खाता सत्यापित करने के लिए हमारे ईमेल किए 6 अंकों का कोड लिखें।"
+
+#: templates/web/auth/verify_otp.html:9
+#, python-format
+msgid "<strong>We could not email the code to %(email)s.</strong> Email sending is having a problem on our side. Please try \"Resend code\" in a minute, or <a href=\"%(url_contact)s\">contact us</a> and we will help you finish signing up."
+msgstr "<strong>हम %(email)s पर कोड नहीं भेज पाए।</strong> हमारी तरफ़ ईमेल भेजने में दिक्कत आ रही है। कृपया एक मिनट बाद \"कोड फिर से भेजें\" दबाएँ, या <a href=\"%(url_contact)s\">हमसे संपर्क करें</a> और हम आपका रजिस्ट्रेशन पूरा कराने में मदद करेंगे।"
+
+#: templates/web/auth/verify_otp.html:11
+#, python-format
+msgid "We sent a 6-digit code to <strong>%(email)s</strong>. It expires soon and works only once."
+msgstr "हमने <strong>%(email)s</strong> पर 6 अंकों का कोड भेजा है। यह जल्दी खत्म हो जाता है और सिर्फ़ एक बार चलता है।"
+
+#: templates/web/auth/verify_otp.html:25 templates/web/auth/verify_otp.html:27
+#, python-format
+msgid "You can request a new code in %(resend_in)ss."
+msgstr "आप %(resend_in)s सेकंड बाद नया कोड माँग सकते हैं।"
+
+#: templates/web/contact.html:5
+msgid "We'd like to hear from you"
+msgstr "हम आपसे सुनना चाहेंगे"
+
+#: templates/web/contact.html:5
+msgid "Questions, feedback or a problem? Send us a note."
+msgstr "कोई सवाल, सुझाव या दिक्कत? हमें लिख भेजें।"
+
+#: templates/web/contact.html:17
+msgid "Send message"
+msgstr "संदेश भेजें"
+
+#: templates/web/contact.html:21 templates/web/dashboard.html:13
+msgid "Email"
+msgstr "ईमेल"
+
+#: templates/web/contact.html:22
+msgid "What to expect"
+msgstr "आगे क्या होगा"
+
+#: templates/web/contact.html:23
+msgid "We send an acknowledgement to your email address when your message arrives, then reply as soon as we can. Please do not send passwords or one-time codes."
+msgstr "आपका संदेश आते ही हम आपके ईमेल पते पर पावती भेजते हैं, फिर जितनी जल्दी हो सके जवाब देते हैं। कृपया पासवर्ड या एक बार के कोड न भेजें।"
+
+#: templates/web/contact.html:2
+#, python-format
+msgid "Contact us | %(site_name)s"
+msgstr "हमसे संपर्क करें | %(site_name)s"
+
+#: templates/web/contact.html:3
+#, python-format
+msgid "Send a message to the %(site_name)s team, or email %(support_email)s. We read every message."
+msgstr "%(site_name)s टीम को संदेश भेजें, या %(support_email)s पर ईमेल करें। हम हर संदेश पढ़ते हैं।"
+
+#: templates/web/dashboard.html:6
+msgid "Welcome"
+msgstr "स्वागत है"
+
+#: templates/web/dashboard.html:7
+msgid "Your account, plan and documents in one place."
+msgstr "आपका खाता, प्लान और दस्तावेज़ एक जगह।"
+
+#: templates/web/dashboard.html:9
+msgid "Open my udhaar ledger"
+msgstr "मेरा उधार बही-खाता खोलें"
+
+#: templates/web/dashboard.html:9
+msgid "Record money you lend and what comes back."
+msgstr "जो पैसे आप उधार देते हैं और जो वापस आते हैं, उन्हें लिखें।"
+
+#: templates/web/dashboard.html:11
+msgid "Role"
+msgstr "भूमिका"
+
+#: templates/web/dashboard.html:12
+msgid "Plan"
+msgstr "प्लान"
+
+#: templates/web/dashboard.html:13
+msgid "Verified"
+msgstr "सत्यापित"
+
+#: templates/web/dashboard.html:13
+msgid "Not verified"
+msgstr "सत्यापित नहीं"
+
+#: templates/web/dashboard.html:18
+msgid "Your documents"
+msgstr "आपके दस्तावेज़"
+
+#: templates/web/dashboard.html:21 templates/web/dashboard.html:25
+msgid "Document"
+msgstr "दस्तावेज़"
+
+#: templates/web/dashboard.html:21 templates/web/dashboard.html:26
+msgid "Type"
+msgstr "प्रकार"
+
+#: templates/web/dashboard.html:21 templates/web/dashboard.html:27
+msgid "Size"
+msgstr "आकार"
+
+#: templates/web/dashboard.html:21 templates/web/dashboard.html:28
+msgid "Added"
+msgstr "जोड़ा गया"
+
+#: templates/web/dashboard.html:21 templates/web/dashboard.html:29
+msgid "Download"
+msgstr "डाउनलोड करें"
+
+#: templates/web/dashboard.html:34
+msgid "No documents yet."
+msgstr "अभी कोई दस्तावेज़ नहीं।"
+
+#: templates/web/dashboard.html:34
+msgid "Upload an ID proof, shop proof or bill and it will show up here."
+msgstr "पहचान का प्रमाण, दुकान का प्रमाण या बिल अपलोड करें, वह यहाँ दिखाई देगा।"
+
+#: templates/web/dashboard.html:39
+msgid "Upload a document"
+msgstr "दस्तावेज़ अपलोड करें"
+
+#: templates/web/dashboard.html:51
+msgid "PDF, PNG, JPG, JPEG, DOCX, XLSX, TXT or CSV. Up to 10 MB."
+msgstr "PDF, PNG, JPG, JPEG, DOCX, XLSX, TXT या CSV। 10 MB तक।"
+
+#: templates/web/dashboard.html:57
+msgid "Upload"
+msgstr "अपलोड करें"
+
+#: templates/web/dashboard.html:60
+msgid "Files are kept in private storage."
+msgstr "फ़ाइलें निजी स्टोरेज में रखी जाती हैं।"
+
+#: templates/web/dashboard.html:2
+#, python-format
+msgid "Your dashboard | %(site_name)s"
+msgstr "आपका डैशबोर्ड | %(site_name)s"
+
+#: templates/web/dashboard.html:3
+#, python-format
+msgid "Your %(site_name)s account, plan and documents."
+msgstr "आपका %(site_name)s खाता, प्लान और दस्तावेज़।"
+
+#: templates/web/dashboard.html:8
+msgid "<strong>Document storage is being connected.</strong> Uploads will work soon."
+msgstr "<strong>दस्तावेज़ रखने की सुविधा जोड़ी जा रही है।</strong> अपलोड जल्द शुरू होंगे।"
+
+#: templates/web/dashboard.html:12
+#, python-format
+msgid "%(trial_months)s months free, then Rs %(amount_rupees)s a month"
+msgstr "%(trial_months)s महीने मुफ़्त, फिर Rs %(amount_rupees)s प्रति माह"
+
+#: templates/web/dashboard.html:50
+msgid "<strong>Drop a file here</strong> or tap to choose"
+msgstr "<strong>फ़ाइल यहाँ छोड़ें</strong> या चुनने के लिए दबाएँ"
+
+#: templates/web/faq.html:5
+msgid "Questions, answered"
+msgstr "सवालों के जवाब"
+
+#: templates/web/faq.html:2
+#, python-format
+msgid "Frequently asked questions | %(site_name)s"
+msgstr "अक्सर पूछे जाने वाले सवाल | %(site_name)s"
+
+#: templates/web/faq.html:3
+#, python-format
+msgid "Answers to common questions about %(site_name)s: how the khata works, offline use, pricing, security and customer confirmation."
+msgstr "%(site_name)s के बारे में आम सवालों के जवाब: खाता कैसे चलता है, बिना इंटरनेट इस्तेमाल, कीमत, सुरक्षा और ग्राहक की पुष्टि।"
+
+#: templates/web/faq.html:5
+#, python-format
+msgid "Cannot find what you need? <a href=\"%(url_contact)s\">Contact us</a>."
+msgstr "जो चाहिए वह नहीं मिला? <a href=\"%(url_contact)s\">हमसे संपर्क करें</a>।"
+
+#: templates/web/features.html:5
+msgid "Built for the way small shops really work"
+msgstr "छोटी दुकानों के असली तरीके को ध्यान में रखकर बनाया गया"
+
+#: templates/web/features.html:5
+msgid "A digital khata for udhaar, plus sales tracking for the counter. All in one simple app."
+msgstr "उधार के लिए डिजिटल खाता, और काउंटर के लिए बिक्री का हिसाब। सब कुछ एक सरल ऐप में।"
+
+#: templates/web/features.html:8
+msgid "Digital khata for shopkeepers"
+msgstr "दुकानदारों के लिए डिजिटल खाता"
+
+#: templates/web/features.html:9
+msgid "Keep your whole credit ledger in one place and always know who owes what."
+msgstr "अपना पूरा उधार-खाता एक जगह रखें और हमेशा जानें कि किस पर कितना बकाया है।"
+
+#: templates/web/features.html:10
+msgid "Add customers and record goods sold on credit, itemised or as a total."
+msgstr "ग्राहक जोड़ें और उधार दिया सामान लिखें, सामान की सूची के साथ या सिर्फ़ कुल रकम।"
+
+#: templates/web/features.html:10
+msgid "Record full or partial payments."
+msgstr "पूरा या आंशिक भुगतान लिखें।"
+
+#: templates/web/features.html:10
+msgid "See total receivable and each customer's balance."
+msgstr "कुल वसूली और हर ग्राहक का बकाया देखें।"
+
+#: templates/web/features.html:10
+msgid "Attach bill photos to entries."
+msgstr "एंट्री के साथ बिल की फ़ोटो लगाएँ।"
+
+#: templates/web/features.html:10
+msgid "Send reminders, view reports and export your records."
+msgstr "रिमाइंडर भेजें, रिपोर्ट देखें और अपने रिकॉर्ड एक्सपोर्ट करें।"
+
+#: templates/web/features.html:15
+msgid "Offline-first, sync once"
+msgstr "पहले ऑफ़लाइन, एक बार सिंक"
+
+#: templates/web/features.html:16
+msgid "Shops do not always have internet. The app saves every entry on the phone and syncs it exactly once when you are back online."
+msgstr "दुकानों में हमेशा इंटरनेट नहीं रहता। ऐप हर एंट्री फ़ोन में सेव कर लेता है और ऑनलाइन आते ही उसे ठीक एक बार सिंक करता है।"
+
+#: templates/web/features.html:17
+msgid "Add entries and payments without a connection."
+msgstr "बिना कनेक्शन के एंट्री और भुगतान लिखें।"
+
+#: templates/web/features.html:17
+msgid "No duplicates when the connection drops and returns."
+msgstr "कनेक्शन जाने और लौटने पर कोई एंट्री दोहराई नहीं जाती।"
+
+#: templates/web/features.html:17 templates/web/how_it_works.html:41
+msgid "Messages, one-time codes and confirmation links need internet."
+msgstr "संदेश, एक बार के कोड और पुष्टि के लिंक के लिए इंटरनेट चाहिए।"
+
+#: templates/web/features.html:22
+msgid "Honest on both sides"
+msgstr "दोनों पक्षों के लिए ईमानदार"
+
+#: templates/web/features.html:23
+msgid "Customers get a verified account that can link to many shops, but only after the customer approves each link."
+msgstr "ग्राहक को एक सत्यापित खाता मिलता है जो कई दुकानों से जुड़ सकता है, लेकिन हर जुड़ाव ग्राहक की मंज़ूरी के बाद ही होता है।"
+
+#: templates/web/features.html:24
+msgid "Customers see their own entries, the balance per shop and the combined balance."
+msgstr "ग्राहक अपनी एंट्रियाँ, हर दुकान का बकाया और कुल बकाया देख सकते हैं।"
+
+#: templates/web/features.html:24
+msgid "A customer can dispute a wrong entry."
+msgstr "ग्राहक गलत एंट्री पर आपत्ति कर सकता है।"
+
+#: templates/web/features.html:24
+msgid "A shopkeeper can never mark an entry as confirmed."
+msgstr "दुकानदार किसी एंट्री को कभी \"पुष्टि हुई\" नहीं बना सकता।"
+
+#: templates/web/features.html:24
+msgid "Corrections are reversals or adjustments with a reason. Never silent edits or deletes."
+msgstr "सुधार रिवर्सल या एडजस्टमेंट से होते हैं, कारण के साथ। चुपचाप बदलना या मिटाना नहीं।"
+
+#: templates/web/features.html:24
+msgid "Amounts are exact. They are stored in paise, so there are no rounding errors."
+msgstr "रकम बिल्कुल सही रहती है। वह पैसे में सेव होती है, इसलिए गोल करने की कोई गलती नहीं होती।"
+
+#: templates/web/features.html:24
+msgid "Everything has an audit trail."
+msgstr "हर काम का ऑडिट रिकॉर्ड रहता है।"
+
+#: templates/web/features.html:25
+msgid "Confirmations are an acknowledgement and evidence trail, not guaranteed legal proof."
+msgstr "पुष्टि एक स्वीकृति और सबूत की कड़ी है, कानूनी सबूत होने की गारंटी नहीं।"
+
+#: templates/web/features.html:30
+msgid "Sales tracking at the counter"
+msgstr "काउंटर पर बिक्री का हिसाब"
+
+#: templates/web/features.html:30
+msgid "Know what you sold today, this month or any period you choose."
+msgstr "जानें कि आज, इस महीने या आपकी चुनी किसी भी अवधि में आपने क्या बेचा।"
+
+#: templates/web/features.html:32
+msgid "Quick or itemised sales"
+msgstr "तेज़ या सामान-वार बिक्री"
+
+#: templates/web/features.html:32
+msgid "Type one total for a fast sale, or list items when you need detail."
+msgstr "जल्दी की बिक्री के लिए सिर्फ़ कुल रकम लिखें, या ब्योरा चाहिए तो सामान की सूची बनाएँ।"
+
+#: templates/web/features.html:33
+msgid "Split payments"
+msgstr "बँटा हुआ भुगतान"
+
+#: templates/web/features.html:33
+msgid "Take part in cash, part by UPI and part by card in the same sale."
+msgstr "एक ही बिक्री में कुछ नकद, कुछ UPI और कुछ कार्ड से लें।"
+
+#: templates/web/features.html:34
+msgid "Credit sales linked to the khata"
+msgstr "खाते से जुड़ी उधार बिक्री"
+
+#: templates/web/features.html:34
+msgid "A sale on credit goes straight into the customer's khata."
+msgstr "उधार की बिक्री सीधे ग्राहक के खाते में चली जाती है।"
+
+#: templates/web/features.html:35
+msgid "Discounts, returns and refunds"
+msgstr "छूट, वापसी और रिफ़ंड"
+
+#: templates/web/features.html:35
+msgid "Record them properly so your numbers stay right."
+msgstr "इन्हें ठीक से लिखें ताकि आपके आँकड़े सही रहें।"
+
+#: templates/web/features.html:36
+msgid "Daily, monthly and custom reports"
+msgstr "रोज़ाना, मासिक और अपनी चुनी अवधि की रिपोर्ट"
+
+#: templates/web/features.html:36
+msgid "Pick any date range to see your sales."
+msgstr "अपनी बिक्री देखने के लिए कोई भी तारीख़ सीमा चुनें।"
+
+#: templates/web/features.html:37
+msgid "No double counting"
+msgstr "दोहरी गिनती नहीं"
+
+#: templates/web/features.html:37
+msgid "When a customer pays an old due, it is a collection, not a new sale. It is not counted as sales."
+msgstr "जब ग्राहक पुराना बकाया चुकाता है, तो वह वसूली है, नई बिक्री नहीं। उसे बिक्री में नहीं गिना जाता।"
+
+#: templates/web/features.html:42
+msgid "Also good to know"
+msgstr "यह भी जानें"
+
+#: templates/web/features.html:44
+msgid "Bills and photos"
+msgstr "बिल और फ़ोटो"
+
+#: templates/web/features.html:44
+msgid "Attach a bill photo so you can show proof of what was sold."
+msgstr "बिल की फ़ोटो लगाएँ ताकि आप दिखा सकें कि क्या बेचा गया था।"
+
+#: templates/web/features.html:45 templates/web/home.html:40
+msgid "Reminders"
+msgstr "रिमाइंडर"
+
+#: templates/web/features.html:45
+msgid "Send a reminder for a pending due when you have internet."
+msgstr "इंटरनेट होने पर बाकी बकाया के लिए रिमाइंडर भेजें।"
+
+#: templates/web/features.html:2
+#, python-format
+msgid "Features: khata, offline entries and sales tracking | %(site_name)s"
+msgstr "विशेषताएँ: खाता, ऑफ़लाइन एंट्री और बिक्री का हिसाब | %(site_name)s"
+
+#: templates/web/features.html:3
+#, python-format
+msgid "Digital khata, offline-first entries, itemised bills, reminders, honest records and sales tracking for small shops. See everything %(site_name)s does."
+msgstr "छोटी दुकानों के लिए डिजिटल खाता, ऑफ़लाइन एंट्री, सामान-वार बिल, रिमाइंडर, ईमानदार रिकॉर्ड और बिक्री का हिसाब। जानें %(site_name)s क्या-क्या करता है।"
+
+#: templates/web/features.html:47
+#, python-format
+msgid "<strong>What %(site_name)s is not.</strong> It is not a bank, lender, credit bureau or debt-collection agency, and it is not a GST billing or full POS product. Languages: English and Hindi on this website. Punjabi is planned."
+msgstr "<strong>%(site_name)s क्या नहीं है।</strong> यह बैंक, साहूकार, क्रेडिट ब्यूरो या कर्ज़ वसूली एजेंसी नहीं है, और न ही GST बिलिंग या पूरा POS उत्पाद है। भाषाएँ: इस वेबसाइट पर अंग्रेज़ी और हिन्दी। पंजाबी की योजना है।"
+
+#: templates/web/home.html:8
+msgid "Digital khata + sales tracking"
+msgstr "डिजिटल खाता + बिक्री का हिसाब"
+
+#: templates/web/home.html:10
+msgid "Write down what was sold on credit, note every payment, and let your customer see and confirm the same entry. Works on your phone, even without internet."
+msgstr "जो सामान उधार बिका उसे लिखें, हर भुगतान दर्ज करें, और अपने ग्राहक को वही एंट्री देखने और पुष्टि करने दें। आपके फ़ोन पर चलता है, बिना इंटरनेट भी।"
+
+#: templates/web/home.html:17
+msgid "Android app that saves entries on the phone first."
+msgstr "Android ऐप जो एंट्री पहले फ़ोन में सेव करता है।"
+
+#: templates/web/home.html:27
+msgid "No more paper confusion"
+msgstr "कागज़ की उलझन खत्म"
+
+#: templates/web/home.html:27
+msgid "Every sale and payment is written once and kept safe."
+msgstr "हर बिक्री और भुगतान एक बार लिखा जाता है और सुरक्षित रहता है।"
+
+#: templates/web/home.html:28
+msgid "Fewer arguments"
+msgstr "बहस कम"
+
+#: templates/web/home.html:28
+msgid "Your customer sees the same entry and can confirm or dispute it."
+msgstr "आपके ग्राहक को वही एंट्री दिखती है और वह उसकी पुष्टि या उस पर आपत्ति कर सकता है।"
+
+#: templates/web/home.html:29
+msgid "Know where you stand"
+msgstr "जानें आप कहाँ खड़े हैं"
+
+#: templates/web/home.html:29
+msgid "See total receivable, each balance and your daily sales."
+msgstr "कुल वसूली, हर ग्राहक का बकाया और रोज़ की बिक्री देखें।"
+
+#: templates/web/home.html:35
+msgid "What you get"
+msgstr "आपको क्या मिलता है"
+
+#: templates/web/home.html:35
+msgid "Everything a small shop needs, nothing it doesn't"
+msgstr "छोटी दुकान को जो चाहिए वह सब, और कुछ फ़ालतू नहीं"
+
+#: templates/web/home.html:35
+msgid "Simple tools for the khata and the counter."
+msgstr "खाते और काउंटर के लिए आसान साधन।"
+
+#: templates/web/home.html:37
+msgid "Digital khata"
+msgstr "डिजिटल खाता"
+
+#: templates/web/home.html:37
+msgid "Add customers, record goods on credit and payments in full or in part. See each balance at a glance."
+msgstr "ग्राहक जोड़ें, उधार का सामान और पूरे या आंशिक भुगतान लिखें। हर ग्राहक का बकाया एक नज़र में देखें।"
+
+#: templates/web/home.html:38
+msgid "Works offline"
+msgstr "ऑफ़लाइन भी चलता है"
+
+#: templates/web/home.html:38
+msgid "Entries are saved on your phone first and sent once when the internet comes back."
+msgstr "एंट्री पहले आपके फ़ोन में सेव होती है और इंटरनेट लौटने पर एक बार भेजी जाती है।"
+
+#: templates/web/home.html:39
+msgid "Bills and itemised entries"
+msgstr "बिल और सामान-वार एंट्री"
+
+#: templates/web/home.html:39
+msgid "Record a total, or list every item. Attach a photo of the bill."
+msgstr "कुल रकम लिखें, या हर सामान की सूची बनाएँ। बिल की फ़ोटो भी लगाएँ।"
+
+#: templates/web/home.html:40
+msgid "Send a polite reminder for pending dues when you are online."
+msgstr "बाकी बकाया के लिए ऑनलाइन होने पर विनम्र रिमाइंडर भेजें।"
+
+#: templates/web/home.html:41
+msgid "Honest records"
+msgstr "ईमानदार रिकॉर्ड"
+
+#: templates/web/home.html:41
+msgid "Corrections are shown as adjustments with a reason. Nothing is silently changed or deleted."
+msgstr "सुधार कारण के साथ एडजस्टमेंट के रूप में दिखते हैं। कुछ भी चुपचाप बदला या मिटाया नहीं जाता।"
+
+#: templates/web/home.html:42
+msgid "Sales tracking"
+msgstr "बिक्री का हिसाब"
+
+#: templates/web/home.html:42
+msgid "Quick or itemised sales, split payments, returns, and daily or monthly reports."
+msgstr "तेज़ या सामान-वार बिक्री, बँटा हुआ भुगतान, वापसी, और रोज़ाना या मासिक रिपोर्ट।"
+
+#: templates/web/home.html:44
+msgid "All features"
+msgstr "सभी विशेषताएँ"
+
+#: templates/web/home.html:50
+msgid "Three simple steps"
+msgstr "तीन आसान कदम"
+
+#: templates/web/home.html:53
+msgid "Add your customer"
+msgstr "अपना ग्राहक जोड़ें"
+
+#: templates/web/home.html:53
+msgid "Enter a name and number. Your customer can link their own account later, only if they approve."
+msgstr "नाम और नंबर लिखें। आपका ग्राहक बाद में अपना खाता जोड़ सकता है, सिर्फ़ तब जब वह मंज़ूर करे।"
+
+#: templates/web/home.html:54
+msgid "Record the udhaar"
+msgstr "उधार लिखें"
+
+#: templates/web/home.html:54
+msgid "Write what was sold and the amount, or just the total. Add payments as they come."
+msgstr "जो बिका और उसकी रकम लिखें, या सिर्फ़ कुल रकम। भुगतान आते ही जोड़ते जाएँ।"
+
+#: templates/web/home.html:55
+msgid "Customer confirms"
+msgstr "ग्राहक पुष्टि करता है"
+
+#: templates/web/home.html:55
+msgid "They see the entry and confirm it, or raise a dispute. You both see the same history."
+msgstr "वह एंट्री देखता है और पुष्टि करता है, या आपत्ति दर्ज करता है। आप दोनों को एक ही इतिहास दिखता है।"
+
+#: templates/web/home.html:63 templates/web/how_it_works.html:39
+msgid "Offline-first"
+msgstr "पहले ऑफ़लाइन"
+
+#: templates/web/home.html:64
+msgid "No signal in the shop? Keep working."
+msgstr "दुकान में नेटवर्क नहीं है? काम चालू रखें।"
+
+#: templates/web/home.html:65
+msgid "Every entry is saved on the phone straight away. When internet returns, it is sent to the server exactly once, so nothing is lost and nothing is counted twice."
+msgstr "हर एंट्री तुरंत फ़ोन में सेव हो जाती है। इंटरनेट लौटने पर वह सर्वर पर ठीक एक बार भेजी जाती है, इसलिए कुछ खोता नहीं और कुछ दो बार नहीं गिना जाता।"
+
+#: templates/web/home.html:66
+msgid "Sending messages, one-time codes and confirmation links needs internet."
+msgstr "संदेश, एक बार के कोड और पुष्टि के लिंक भेजने के लिए इंटरनेट चाहिए।"
+
+#: templates/web/home.html:75
+msgid "Two-sided transparency"
+msgstr "दोनों तरफ़ पारदर्शिता"
+
+#: templates/web/home.html:76
+msgid "One entry. Two views. No surprises."
+msgstr "एक एंट्री। दो नज़रिए। कोई हैरानी नहीं।"
+
+#: templates/web/home.html:77
+msgid "Your customer has their own verified account and can see their own entries, per shop and combined. A shopkeeper can never mark an entry as confirmed. Only the customer can."
+msgstr "आपके ग्राहक का अपना सत्यापित खाता होता है और वह अपनी एंट्रियाँ, दुकान-वार और कुल मिलाकर, देख सकता है। दुकानदार किसी एंट्री को कभी \"पुष्टि हुई\" नहीं बना सकता। यह सिर्फ़ ग्राहक कर सकता है।"
+
+#: templates/web/home.html:79
+msgid "Every entry shows its status: Shopkeeper recorded, Awaiting confirmation, Customer confirmed or Disputed."
+msgstr "हर एंट्री की स्थिति दिखती है: दुकानदार द्वारा दर्ज, पुष्टि की प्रतीक्षा, ग्राहक ने पुष्टि की, या आपत्ति।"
+
+#: templates/web/home.html:80
+msgid "Mistakes are fixed with a reversal and a reason. The audit trail stays."
+msgstr "गलतियाँ रिवर्सल और कारण के साथ ठीक होती हैं। ऑडिट रिकॉर्ड बना रहता है।"
+
+#: templates/web/home.html:82
+msgid "A confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof."
+msgstr "पुष्टि एक स्वीकृति और सबूत की कड़ी है। यह कानूनी सबूत होने की गारंटी नहीं है।"
+
+#: templates/web/home.html:92 templates/web/pricing.html:5
+msgid "One simple plan"
+msgstr "एक सरल प्लान"
+
+#: templates/web/home.html:94
+msgid "See pricing"
+msgstr "कीमत देखें"
+
+#: templates/web/home.html:110
+msgid "Your records, kept private"
+msgstr "आपके रिकॉर्ड, निजी रहते हैं"
+
+#: templates/web/home.html:111
+msgid "Passwords are stored hashed. One-time codes expire and work only once. Each shop's data is kept separate, and bills are stored privately."
+msgstr "पासवर्ड हैश करके रखे जाते हैं। एक बार के कोड की समय-सीमा खत्म होती है और वे सिर्फ़ एक बार चलते हैं। हर दुकान का डेटा अलग रखा जाता है, और बिल निजी तौर पर रखे जाते हैं।"
+
+#: templates/web/home.html:112
+msgid "How we protect data"
+msgstr "हम डेटा की सुरक्षा कैसे करते हैं"
+
+#: templates/web/home.html:120
+msgid "Common questions"
+msgstr "आम सवाल"
+
+#: templates/web/home.html:122
+msgid "Read all questions"
+msgstr "सभी सवाल पढ़ें"
+
+#: templates/web/home.html:2
+#, python-format
+msgid "%(site_name)s: digital khata and sales tracking for small shops"
+msgstr "%(site_name)s: छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब"
+
+#: templates/web/home.html:3
+#, python-format
+msgid "Record udhaar, track sales and keep clear accounts with your customers. Offline-first Android app for small Indian shops. Free to register, %(trial_months)s months free trial."
+msgstr "उधार लिखें, बिक्री का हिसाब रखें और अपने ग्राहकों के साथ साफ़ हिसाब रखें। छोटी भारतीय दुकानों के लिए बिना इंटरनेट चलने वाला Android ऐप। रजिस्ट्रेशन मुफ़्त, %(trial_months)s महीने का मुफ़्त ट्रायल।"
+
+#: templates/web/home.html:9
+msgid "Your shop's udhaar, <em>clear and agreed</em> by both sides."
+msgstr "आपकी दुकान का उधार, <em>साफ़ और दोनों की सहमति से</em>।"
+
+#: templates/web/home.html:16
+#, python-format
+msgid "Registration is free. %(trial_months)s months free trial for each shop."
+msgstr "रजिस्ट्रेशन मुफ़्त है। हर दुकान को %(trial_months)s महीने का मुफ़्त ट्रायल।"
+
+#: templates/web/home.html:18
+#, python-format
+msgid "Then Rs %(amount_rupees)s per month. Cancel any time."
+msgstr "फिर Rs %(amount_rupees)s प्रति माह। जब चाहें बंद करें।"
+
+#: templates/web/home.html:93
+#, python-format
+msgid "Free to register. %(trial_months)s months free for your shop. Then Rs %(amount_rupees)s per month. Taxes and gateway charges are shown before you pay."
+msgstr "रजिस्ट्रेशन मुफ़्त। आपकी दुकान के लिए %(trial_months)s महीने मुफ़्त। फिर Rs %(amount_rupees)s प्रति माह। टैक्स और गेटवे शुल्क भुगतान से पहले दिखाए जाते हैं।"
+
+#: templates/web/home.html:99 templates/web/pricing.html:11
+#, python-format
+msgid "<small>Rs</small> %(amount_rupees)s<small> / month</small>"
+msgstr "<small>Rs</small> %(amount_rupees)s<small> / माह</small>"
+
+#: templates/web/home.html:100
+#, python-format
+msgid "after %(trial_months)s free months"
+msgstr "%(trial_months)s महीने मुफ़्त के बाद"
+
+#: templates/web/how_it_works.html:3
+msgid "See how a shopkeeper records udhaar, how a customer confirms it, and how offline entries sync. Simple steps, one shared record."
+msgstr "देखें कि दुकानदार उधार कैसे लिखता है, ग्राहक उसकी पुष्टि कैसे करता है, और ऑफ़लाइन एंट्री कैसे सिंक होती हैं। आसान कदम, एक साझा रिकॉर्ड।"
+
+#: templates/web/how_it_works.html:5
+msgid "Simple for the shopkeeper. Clear for the customer."
+msgstr "दुकानदार के लिए आसान। ग्राहक के लिए साफ़।"
+
+#: templates/web/how_it_works.html:5
+msgid "Both sides see the same record, so there is less to argue about."
+msgstr "दोनों पक्ष एक ही रिकॉर्ड देखते हैं, इसलिए बहस की गुंजाइश कम रहती है।"
+
+#: templates/web/how_it_works.html:9
+msgid "If you run the shop"
+msgstr "अगर आप दुकान चलाते हैं"
+
+#: templates/web/how_it_works.html:17
+msgid "If you are a customer"
+msgstr "अगर आप ग्राहक हैं"
+
+#: templates/web/how_it_works.html:28
+msgid "The same story, step by step"
+msgstr "वही कहानी, कदम-दर-कदम"
+
+#: templates/web/how_it_works.html:31
+msgid "Shopkeeper records"
+msgstr "दुकानदार लिखता है"
+
+#: templates/web/how_it_works.html:31
+msgid "Status: Shopkeeper recorded."
+msgstr "स्थिति: दुकानदार द्वारा दर्ज।"
+
+#: templates/web/how_it_works.html:32
+msgid "Customer is asked"
+msgstr "ग्राहक से पूछा जाता है"
+
+#: templates/web/how_it_works.html:32
+msgid "Status: Awaiting confirmation."
+msgstr "स्थिति: पुष्टि की प्रतीक्षा।"
+
+#: templates/web/how_it_works.html:33
+msgid "Customer decides"
+msgstr "ग्राहक फ़ैसला करता है"
+
+#: templates/web/how_it_works.html:33
+msgid "Status: Customer confirmed, or Disputed."
+msgstr "स्थिति: ग्राहक ने पुष्टि की, या आपत्ति।"
+
+#: templates/web/how_it_works.html:35
+msgid "A shopkeeper can never mark an entry confirmed. Only the customer can."
+msgstr "दुकानदार किसी एंट्री को कभी \"पुष्टि हुई\" नहीं बना सकता। यह सिर्फ़ ग्राहक कर सकता है।"
+
+#: templates/web/how_it_works.html:39
+msgid "What happens with no internet"
+msgstr "बिना इंटरनेट के क्या होता है"
+
+#: templates/web/how_it_works.html:40
+msgid "Entries are saved on the phone straight away and synced exactly once when internet returns."
+msgstr "एंट्री तुरंत फ़ोन में सेव हो जाती है और इंटरनेट लौटने पर ठीक एक बार सिंक होती है।"
+
+#: templates/web/how_it_works.html:46
+msgid "Mistakes happen. Corrections are visible."
+msgstr "गलतियाँ होती हैं। सुधार दिखाई देते हैं।"
+
+#: templates/web/how_it_works.html:47
+msgid "If an entry is wrong, it is corrected with a reversal or adjustment and a reason. Entries are never silently edited or deleted, and every change is in the audit trail."
+msgstr "अगर कोई एंट्री गलत है, तो उसे रिवर्सल या एडजस्टमेंट और कारण के साथ ठीक किया जाता है। एंट्री को कभी चुपचाप बदला या मिटाया नहीं जाता, और हर बदलाव ऑडिट रिकॉर्ड में रहता है।"
+
+#: templates/web/how_it_works.html:2
+#, python-format
+msgid "How it works for shopkeepers and customers | %(site_name)s"
+msgstr "दुकानदारों और ग्राहकों के लिए यह कैसे काम करता है | %(site_name)s"
+
+#: templates/web/how_it_works.html:11
+msgid "<strong>Create your free account</strong>Verify your email with a one-time code."
+msgstr "<strong>अपना मुफ़्त खाता बनाएँ</strong>एक बार के कोड से अपना ईमेल सत्यापित करें।"
+
+#: templates/web/how_it_works.html:12
+msgid "<strong>Add customers</strong>A name and number is enough to begin."
+msgstr "<strong>ग्राहक जोड़ें</strong>शुरू करने के लिए नाम और नंबर काफ़ी है।"
+
+#: templates/web/how_it_works.html:13
+msgid "<strong>Record what you sold</strong>Itemised or total only. Attach a bill photo if you like."
+msgstr "<strong>जो बेचा वह लिखें</strong>सामान-वार या सिर्फ़ कुल रकम। चाहें तो बिल की फ़ोटो लगाएँ।"
+
+#: templates/web/how_it_works.html:14
+msgid "<strong>Note each payment</strong>Full or partial. The balance updates for you."
+msgstr "<strong>हर भुगतान दर्ज करें</strong>पूरा या आंशिक। बकाया अपने आप अपडेट हो जाता है।"
+
+#: templates/web/how_it_works.html:15
+msgid "<strong>Remind and review</strong>Send a reminder, check reports and export your records."
+msgstr "<strong>याद दिलाएँ और जाँचें</strong>रिमाइंडर भेजें, रिपोर्ट देखें और अपने रिकॉर्ड एक्सपोर्ट करें।"
+
+#: templates/web/how_it_works.html:19
+msgid "<strong>Create a verified account</strong>One account works for many shops."
+msgstr "<strong>सत्यापित खाता बनाएँ</strong>एक खाता कई दुकानों के लिए चलता है।"
+
+#: templates/web/how_it_works.html:20
+msgid "<strong>Approve the shop link</strong>A shop sees your entries only after you approve."
+msgstr "<strong>दुकान का जुड़ाव मंज़ूर करें</strong>आपकी मंज़ूरी के बाद ही दुकान आपकी एंट्रियाँ देखती है।"
+
+#: templates/web/how_it_works.html:21
+msgid "<strong>See your entries</strong>View each shop's balance and your combined balance."
+msgstr "<strong>अपनी एंट्रियाँ देखें</strong>हर दुकान का बकाया और अपना कुल बकाया देखें।"
+
+#: templates/web/how_it_works.html:22
+msgid "<strong>Confirm or dispute</strong>Agree to an entry, or dispute one that is wrong."
+msgstr "<strong>पुष्टि करें या आपत्ति करें</strong>किसी एंट्री से सहमत हों, या गलत एंट्री पर आपत्ति करें।"
+
+#: templates/web/how_it_works.html:48
+#, python-format
+msgid "Rs %(amount_rupees)s per month after your %(trial_months)s-month free trial."
+msgstr "आपके %(trial_months)s महीने के मुफ़्त ट्रायल के बाद Rs %(amount_rupees)s प्रति माह।"
+
+#: templates/web/ledger.html:4
+msgid "Record the money you lend and who owes you."
+msgstr "जो पैसे आप उधार देते हैं और किसे कितना देना है, उसे लिखें।"
+
+#: templates/web/ledger.html:7
+msgid "Your udhaar ledger"
+msgstr "आपका उधार बही-खाता"
+
+#: templates/web/ledger.html:8
+msgid "Who you lent money to, how much, and what is still to come back."
+msgstr "आपने किसे पैसे उधार दिए, कितने दिए, और कितने वापस आने बाकी हैं।"
+
+#: templates/web/ledger.html:10
+msgid "To collect"
+msgstr "वसूली बाकी"
+
+#: templates/web/ledger.html:11 templates/web/party.html:14
+msgid "Total given"
+msgstr "कुल दिया"
+
+#: templates/web/ledger.html:11 templates/web/ledger.html:12
+msgid "all time"
+msgstr "अब तक"
+
+#: templates/web/ledger.html:12 templates/web/party.html:15
+msgid "Total received back"
+msgstr "कुल वापस मिला"
+
+#: templates/web/ledger.html:17
+msgid "People"
+msgstr "लोग"
+
+#: templates/web/ledger.html:20 templates/web/ledger.html:24
+msgid "Person"
+msgstr "व्यक्ति"
+
+#: templates/web/ledger.html:20 templates/web/ledger.html:25
+msgid "Given"
+msgstr "दिया"
+
+#: templates/web/ledger.html:20 templates/web/ledger.html:26 templates/web/party.html:28
+msgid "Received"
+msgstr "मिला"
+
+#: templates/web/ledger.html:20 templates/web/ledger.html:27 templates/web/party.html:12
+msgid "Balance"
+msgstr "बकाया"
+
+#: templates/web/ledger.html:20 templates/web/ledger.html:28
+msgid "Open"
+msgstr "खोलें"
+
+#: templates/web/ledger.html:27 templates/web/party.html:13
+msgid "Settled"
+msgstr "हिसाब बराबर"
+
+#: templates/web/ledger.html:33
+msgid "No one yet."
+msgstr "अभी कोई नहीं।"
+
+#: templates/web/ledger.html:33
+msgid "Add the first person you have lent money to."
+msgstr "जिस पहले व्यक्ति को आपने पैसे उधार दिए हैं, उसे जोड़ें।"
+
+#: templates/web/ledger.html:38
+msgid "Add a person"
+msgstr "व्यक्ति जोड़ें"
+
+#: templates/web/ledger.html:44
+msgid "Add person"
+msgstr "व्यक्ति जोड़ें"
+
+#: templates/web/ledger.html:3
+#, python-format
+msgid "Your ledger | %(site_name)s"
+msgstr "आपका बही-खाता | %(site_name)s"
+
+#: templates/web/ledger.html:10
+#, python-format
+msgid "from %(counter)s person"
+msgid_plural "from %(counter)s people"
+msgstr[0] "%(counter)s व्यक्ति से"
+msgstr[1] "%(counter)s लोगों से"
+
+#: templates/web/ledger.html:27
+#, python-format
+msgid "Owes %(balance)s"
+msgstr "बकाया %(balance)s"
+
+#: templates/web/ledger.html:27
+#, python-format
+msgid "Paid extra %(balance)s"
+msgstr "ज़्यादा चुकाया %(balance)s"
+
+#: templates/web/party.html:6
+msgid "Cancel this entry? It will stay in the history, marked as cancelled."
+msgstr "इस एंट्री को रद्द करें? वह इतिहास में \"रद्द\" के निशान के साथ बनी रहेगी।"
+
+#: templates/web/party.html:8
+msgid "&larr; Back to the ledger"
+msgstr "&larr; बही-खाते पर वापस"
+
+#: templates/web/party.html:20
+msgid "History"
+msgstr "इतिहास"
+
+#: templates/web/party.html:23 templates/web/party.html:28
+msgid "What"
+msgstr "क्या"
+
+#: templates/web/party.html:23 templates/web/party.html:29
+msgid "Amount"
+msgstr "रकम"
+
+#: templates/web/party.html:23 templates/web/party.html:30
+msgid "Note"
+msgstr "टिप्पणी"
+
+#: templates/web/party.html:23 templates/web/party.html:32
+msgid "Cancel"
+msgstr "रद्द करें"
+
+#: templates/web/party.html:28
+msgid "Gave"
+msgstr "दिया"
+
+#: templates/web/party.html:28
+msgid "Cancelled"
+msgstr "रद्द"
+
+#: templates/web/party.html:37
+msgid "No entries yet."
+msgstr "अभी कोई एंट्री नहीं।"
+
+#: templates/web/party.html:37
+msgid "Record the first amount on the right."
+msgstr "दाईं ओर पहली रकम लिखें।"
+
+#: templates/web/party.html:42
+msgid "Record money"
+msgstr "पैसे लिखें"
+
+#: templates/web/party.html:50
+msgid "Save entry"
+msgstr "एंट्री सेव करें"
+
+#: templates/web/party.html:52
+msgid "Entries are never deleted. If you make a mistake, cancel it and add the right one."
+msgstr "एंट्री कभी मिटाई नहीं जाती। गलती हो जाए तो उसे रद्द करें और सही एंट्री जोड़ें।"
+
+#: templates/web/party.html:3
+#, python-format
+msgid "%(name)s | Ledger | %(site_name)s"
+msgstr "%(name)s | बही-खाता | %(site_name)s"
+
+#: templates/web/party.html:4
+#, python-format
+msgid "Money lent to and received from %(name)s."
+msgstr "%(name)s को दिए और उनसे मिले पैसे।"
+
+#: templates/web/party.html:13
+#, python-format
+msgid "Owes you %(balance)s"
+msgstr "इन पर आपके %(balance)s बाकी हैं"
+
+#: templates/web/party.html:13
+#, python-format
+msgid "You owe %(balance)s"
+msgstr "आपको %(balance)s देने हैं"
+
+#: templates/web/pricing.html:14
+msgid "Registration is free"
+msgstr "रजिस्ट्रेशन मुफ़्त है"
+
+#: templates/web/pricing.html:16
+msgid "Digital khata, sales tracking, reports and export"
+msgstr "डिजिटल खाता, बिक्री का हिसाब, रिपोर्ट और एक्सपोर्ट"
+
+#: templates/web/pricing.html:17
+msgid "Offline-first Android app and this website"
+msgstr "बिना इंटरनेट चलने वाला Android ऐप और यह वेबसाइट"
+
+#: templates/web/pricing.html:18
+msgid "Taxes and gateway charges are shown before you pay"
+msgstr "टैक्स और गेटवे शुल्क भुगतान से पहले दिखाए जाते हैं"
+
+#: templates/web/pricing.html:19
+msgid "Cancel any time"
+msgstr "जब चाहें बंद करें"
+
+#: templates/web/pricing.html:26
+msgid "What happens when the trial ends"
+msgstr "ट्रायल खत्म होने पर क्या होता है"
+
+#: templates/web/pricing.html:28
+msgid "Trial"
+msgstr "ट्रायल"
+
+#: templates/web/pricing.html:29
+msgid "If a renewal fails"
+msgstr "अगर नवीनीकरण का भुगतान न हो"
+
+#: templates/web/pricing.html:30
+msgid "After the grace period"
+msgstr "छूट-अवधि के बाद"
+
+#: templates/web/pricing.html:30
+msgid "Paid features become read-only. Your records and exports are never deleted."
+msgstr "पेड सुविधाएँ सिर्फ़ देखने के लिए रह जाती हैं। आपके रिकॉर्ड और एक्सपोर्ट कभी मिटाए नहीं जाते।"
+
+#: templates/web/pricing.html:36
+msgid "Pricing questions"
+msgstr "कीमत के सवाल"
+
+#: templates/web/pricing.html:2
+#, python-format
+msgid "Pricing: free to start, Rs %(amount_rupees)s a month | %(site_name)s"
+msgstr "कीमत: शुरू करना मुफ़्त, Rs %(amount_rupees)s प्रति माह | %(site_name)s"
+
+#: templates/web/pricing.html:3
+#, python-format
+msgid "Free registration, a %(trial_months)s-month free trial per shop, then Rs %(amount_rupees)s per month. One simple plan. Cancel any time."
+msgstr "रजिस्ट्रेशन मुफ़्त, हर दुकान को %(trial_months)s महीने का मुफ़्त ट्रायल, फिर Rs %(amount_rupees)s प्रति माह। एक सरल प्लान। जब चाहें बंद करें।"
+
+#: templates/web/pricing.html:5
+#, python-format
+msgid "Free to register. Free for %(trial_months)s months. Then Rs %(amount_rupees)s a month."
+msgstr "रजिस्ट्रेशन मुफ़्त। %(trial_months)s महीने मुफ़्त। फिर Rs %(amount_rupees)s प्रति माह।"
+
+#: templates/web/pricing.html:12
+#, python-format
+msgid "after %(trial_months)s months free"
+msgstr "%(trial_months)s महीने मुफ़्त के बाद"
+
+#: templates/web/pricing.html:15
+#, python-format
+msgid "One %(trial_months)s-month free trial per shop"
+msgstr "हर दुकान को एक बार %(trial_months)s महीने का मुफ़्त ट्रायल"
+
+#: templates/web/pricing.html:28
+#, python-format
+msgid "Use everything free for %(trial_months)s months. It is one trial per shop."
+msgstr "%(trial_months)s महीने सब कुछ मुफ़्त इस्तेमाल करें। यह हर दुकान के लिए एक ही ट्रायल है।"
+
+#: templates/web/pricing.html:29
+#, python-format
+msgid "You get a %(grace_days)s-day grace period to fix the payment."
+msgstr "भुगतान ठीक करने के लिए आपको %(grace_days)s दिन की छूट-अवधि मिलती है।"
+
+#: templates/web/pricing.html:32
+#, python-format
+msgid "<strong>Payment methods (planned):</strong> UPI, cards and net banking through a payment gateway. %(site_name)s never stores your card or UPI details."
+msgstr "<strong>भुगतान के तरीके (प्रस्तावित):</strong> पेमेंट गेटवे के ज़रिए UPI, कार्ड और नेट बैंकिंग। %(site_name)s आपके कार्ड या UPI की जानकारी कभी सेव नहीं करता।"
+
+#: templates/web/privacy.html:6 templates/web/terms.html:6
+msgid "Draft: to be reviewed by legal counsel before launch"
+msgstr "मसौदा: शुरू करने से पहले कानूनी सलाहकार इसकी जाँच करेंगे"
+
+#: templates/web/privacy.html:7
+msgid "Privacy notice"
+msgstr "गोपनीयता सूचना"
+
+#: templates/web/privacy.html:10
+msgid "What we collect"
+msgstr "हम क्या जानकारी लेते हैं"
+
+#: templates/web/privacy.html:20
+msgid "Why we use it"
+msgstr "हम उसे क्यों इस्तेमाल करते हैं"
+
+#: templates/web/privacy.html:22
+msgid "To create your account and keep it secure."
+msgstr "आपका खाता बनाने और उसे सुरक्षित रखने के लिए।"
+
+#: templates/web/privacy.html:23
+msgid "To run the khata, sales tracking and reminders you ask for."
+msgstr "आपके माँगे हुए खाते, बिक्री के हिसाब और रिमाइंडर चलाने के लिए।"
+
+#: templates/web/privacy.html:24
+msgid "To show a customer their own entries and let them confirm or dispute."
+msgstr "ग्राहक को उसकी अपनी एंट्रियाँ दिखाने और उसे पुष्टि या आपत्ति करने देने के लिए।"
+
+#: templates/web/privacy.html:25
+msgid "To reply to you and to prevent misuse."
+msgstr "आपको जवाब देने और गलत इस्तेमाल रोकने के लिए।"
+
+#: templates/web/privacy.html:27
+msgid "We do not sell your data."
+msgstr "हम आपका डेटा बेचते नहीं हैं।"
+
+#: templates/web/privacy.html:29
+msgid "Email one-time codes"
+msgstr "ईमेल पर एक बार के कोड"
+
+#: templates/web/privacy.html:30
+msgid "We email you a one-time code to verify your address and to reset your password. The code expires and works only once. We also send a welcome email and replies to your contact messages."
+msgstr "आपका पता जाँचने और पासवर्ड रीसेट करने के लिए हम आपको एक बार का कोड ईमेल करते हैं। कोड की समय-सीमा खत्म होती है और वह सिर्फ़ एक बार चलता है। हम स्वागत ईमेल और आपके संपर्क संदेशों के जवाब भी भेजते हैं।"
+
+#: templates/web/privacy.html:32
+msgid "Documents in Google Drive"
+msgstr "Google Drive में दस्तावेज़"
+
+#: templates/web/privacy.html:33
+msgid "Documents you upload are stored in private storage on Google Drive that we control. They are not public. You can download your own documents from your dashboard. Google processes them as our storage provider."
+msgstr "आपके अपलोड किए दस्तावेज़ हमारे नियंत्रण वाले Google Drive के निजी स्टोरेज में रखे जाते हैं। वे सार्वजनिक नहीं होते। आप अपने डैशबोर्ड से अपने दस्तावेज़ डाउनलोड कर सकते हैं। Google हमारे स्टोरेज प्रदाता के रूप में उन्हें प्रोसेस करता है।"
+
+#: templates/web/privacy.html:35
+msgid "Who can see your data"
+msgstr "आपका डेटा कौन देख सकता है"
+
+#: templates/web/privacy.html:36
+msgid "Each shop's data is kept separate from other shops. A customer sees their own entries. A shopkeeper sees entries for their own shop. A customer's account is linked to a shop only after the customer approves."
+msgstr "हर दुकान का डेटा दूसरी दुकानों से अलग रखा जाता है। ग्राहक को अपनी एंट्रियाँ दिखती हैं। दुकानदार को अपनी दुकान की एंट्रियाँ दिखती हैं। ग्राहक का खाता किसी दुकान से तभी जुड़ता है जब ग्राहक मंज़ूरी दे।"
+
+#: templates/web/privacy.html:38
+msgid "How long we keep it"
+msgstr "हम इसे कितने समय तक रखते हैं"
+
+#: templates/web/privacy.html:39
+msgid "We keep your account and records while your account is active. If paid features become read-only, your records and exports are still kept. Audit logs are kept to protect everyone's records. When you ask us to delete your account, we delete or anonymise personal data, except what we must keep for law or to protect other users' records."
+msgstr "जब तक आपका खाता चालू है, हम आपका खाता और रिकॉर्ड रखते हैं। अगर पेड सुविधाएँ सिर्फ़ देखने के लिए रह जाएँ, तब भी आपके रिकॉर्ड और एक्सपोर्ट सुरक्षित रहते हैं। सबके रिकॉर्ड की सुरक्षा के लिए ऑडिट लॉग रखे जाते हैं। जब आप खाता मिटाने को कहते हैं, तो हम व्यक्तिगत जानकारी मिटा देते हैं या उसे पहचान से अलग कर देते हैं, सिवाय उसके जो हमें कानून के लिए या दूसरे उपयोगकर्ताओं के रिकॉर्ड की सुरक्षा के लिए रखनी पड़े।"
+
+#: templates/web/privacy.html:41
+msgid "Your rights"
+msgstr "आपके अधिकार"
+
+#: templates/web/privacy.html:44
+msgid "Payments"
+msgstr "भुगतान"
+
+#: templates/web/privacy.html:2
+#, python-format
+msgid "Privacy notice | %(site_name)s"
+msgstr "गोपनीयता सूचना | %(site_name)s"
+
+#: templates/web/privacy.html:3
+#, python-format
+msgid "What %(site_name)s collects, why, how long we keep it, and your rights to access, correct and delete your data."
+msgstr "%(site_name)s क्या जानकारी लेता है, क्यों, कितने समय रखता है, और अपने डेटा को देखने, सुधारने और मिटाने के आपके अधिकार।"
+
+#: templates/web/privacy.html:8 templates/web/terms.html:8
+#, python-format
+msgid "Last updated: %(year)s. This is plain-language draft text and may change before launch."
+msgstr "आखिरी बदलाव: %(year)s। यह सरल भाषा में लिखा मसौदा है और शुरू होने से पहले बदल सकता है।"
+
+#: templates/web/privacy.html:12
+msgid "<strong>Account details:</strong> your name, email address, optional mobile number, optional shop name and your role (shopkeeper or customer)."
+msgstr "<strong>खाते की जानकारी:</strong> आपका नाम, ईमेल पता, वैकल्पिक मोबाइल नंबर, वैकल्पिक दुकान का नाम और आपकी भूमिका (दुकानदार या ग्राहक)।"
+
+#: templates/web/privacy.html:13
+msgid "<strong>Your password:</strong> stored hashed, never as plain text."
+msgstr "<strong>आपका पासवर्ड:</strong> हैश करके रखा जाता है, कभी सादे पाठ में नहीं।"
+
+#: templates/web/privacy.html:14
+msgid "<strong>Khata and sales records:</strong> customers, entries, payments, items and amounts that you or your customers record."
+msgstr "<strong>खाते और बिक्री के रिकॉर्ड:</strong> ग्राहक, एंट्रियाँ, भुगतान, सामान और रकम जो आप या आपके ग्राहक दर्ज करते हैं।"
+
+#: templates/web/privacy.html:15
+msgid "<strong>Documents and bill photos</strong> that you upload."
+msgstr "<strong>दस्तावेज़ और बिल की फ़ोटो</strong> जो आप अपलोड करते हैं।"
+
+#: templates/web/privacy.html:16
+msgid "<strong>Messages</strong> you send us through the contact form."
+msgstr "<strong>संदेश</strong> जो आप संपर्क फ़ॉर्म से हमें भेजते हैं।"
+
+#: templates/web/privacy.html:17
+msgid "<strong>Technical data</strong> needed to run and protect the service, such as security and audit logs."
+msgstr "<strong>तकनीकी जानकारी</strong> जो सेवा चलाने और उसे सुरक्षित रखने के लिए चाहिए, जैसे सुरक्षा और ऑडिट लॉग।"
+
+#: templates/web/privacy.html:42
+#, python-format
+msgid "You can ask to see the personal data we hold about you, to correct it, or to delete it. Write to <a href=\"mailto:%(support_email)s\">%(support_email)s</a> from your registered email address. We will reply as soon as we can."
+msgstr "आप हमसे अपनी व्यक्तिगत जानकारी देखने, सुधारने या मिटाने को कह सकते हैं। अपने रजिस्टर किए ईमेल पते से <a href=\"mailto:%(support_email)s\">%(support_email)s</a> पर लिखें। हम जितनी जल्दी हो सके जवाब देंगे।"
+
+#: templates/web/privacy.html:45
+#, python-format
+msgid "When payments are available they will go through a payment gateway. %(site_name)s does not store card or UPI details."
+msgstr "जब भुगतान की सुविधा शुरू होगी, तो वह पेमेंट गेटवे से होगी। %(site_name)s कार्ड या UPI की जानकारी सेव नहीं करता।"
+
+#: templates/web/privacy.html:48
+#, python-format
+msgid "We use HTTPS, hashed passwords, expiring one-time codes, rate limiting and audit logs. No system is perfectly secure. See our <a href=\"%(url_security)s\">Security page</a>."
+msgstr "हम HTTPS, हैश किए पासवर्ड, समय-सीमा वाले एक बार के कोड, रेट लिमिटिंग और ऑडिट लॉग इस्तेमाल करते हैं। कोई भी सिस्टम पूरी तरह सुरक्षित नहीं होता। हमारा <a href=\"%(url_security)s\">सुरक्षा पेज</a> देखें।"
+
+#: templates/web/privacy.html:51
+#, python-format
+msgid "Privacy questions: <a href=\"mailto:%(support_email)s\">%(support_email)s</a>. See also our <a href=\"%(url_terms)s\">Terms</a>."
+msgstr "गोपनीयता के सवाल: <a href=\"mailto:%(support_email)s\">%(support_email)s</a>। हमारे <a href=\"%(url_terms)s\">नियम व शर्तें</a> भी देखें।"
+
+#: templates/web/security.html:5
+msgid "How we look after your records"
+msgstr "हम आपके रिकॉर्ड की देखभाल कैसे करते हैं"
+
+#: templates/web/security.html:5
+msgid "No system is perfect, and we do not claim otherwise. Here is what we do."
+msgstr "कोई भी सिस्टम पूरा सुरक्षित नहीं होता, और हम ऐसा दावा नहीं करते। हम यह करते हैं।"
+
+#: templates/web/security.html:24
+msgid "Records you can trust"
+msgstr "रिकॉर्ड जिन पर भरोसा किया जा सके"
+
+#: templates/web/security.html:24
+msgid "Corrections are reversals or adjustments with a reason. Entries are not silently edited or deleted."
+msgstr "सुधार कारण के साथ रिवर्सल या एडजस्टमेंट से होते हैं। एंट्री को चुपचाप बदला या मिटाया नहीं जाता।"
+
+#: templates/web/security.html:25
+msgid "Exact amounts"
+msgstr "सही रकम"
+
+#: templates/web/security.html:25
+msgid "Money is stored in paise, so there are no rounding errors."
+msgstr "पैसा पैसे (पैसों की सबसे छोटी इकाई) में सेव होता है, इसलिए गोल करने की कोई गलती नहीं होती।"
+
+#: templates/web/security.html:26
+msgid "No card details kept"
+msgstr "कार्ड की जानकारी नहीं रखी जाती"
+
+#: templates/web/security.html:29
+msgid "Read the privacy notice"
+msgstr "गोपनीयता सूचना पढ़ें"
+
+#: templates/web/security.html:2
+#, python-format
+msgid "Security and privacy of your records | %(site_name)s"
+msgstr "आपके रिकॉर्ड की सुरक्षा और गोपनीयता | %(site_name)s"
+
+#: templates/web/security.html:3
+#, python-format
+msgid "How %(site_name)s protects your records: HTTPS, hashed passwords, expiring one-time codes, rate limiting, isolated shop data, private storage and audit logs."
+msgstr "%(site_name)s आपके रिकॉर्ड की सुरक्षा कैसे करता है: HTTPS, हैश किए पासवर्ड, समय-सीमा वाले एक बार के कोड, रेट लिमिटिंग, अलग रखा गया दुकान का डेटा, निजी स्टोरेज और ऑडिट लॉग।"
+
+#: templates/web/security.html:10
+msgid "<strong>HTTPS.</strong> Data moves between your phone, this website and our servers over an encrypted connection."
+msgstr "<strong>HTTPS।</strong> आपके फ़ोन, इस वेबसाइट और हमारे सर्वर के बीच डेटा एन्क्रिप्टेड कनेक्शन से जाता है।"
+
+#: templates/web/security.html:11
+msgid "<strong>Hashed passwords.</strong> We never store your password as plain text."
+msgstr "<strong>हैश किए पासवर्ड।</strong> हम आपका पासवर्ड कभी सादे पाठ में सेव नहीं करते।"
+
+#: templates/web/security.html:12
+msgid "<strong>One-time codes.</strong> They expire and can be used only once."
+msgstr "<strong>एक बार के कोड।</strong> उनकी समय-सीमा खत्म होती है और वे सिर्फ़ एक बार चलते हैं।"
+
+#: templates/web/security.html:13
+msgid "<strong>Rate limiting.</strong> Repeated attempts are slowed down to make guessing harder."
+msgstr "<strong>रेट लिमिटिंग।</strong> बार-बार की कोशिशें धीमी कर दी जाती हैं ताकि अंदाज़ा लगाना मुश्किल हो।"
+
+#: templates/web/security.html:14
+msgid "<strong>Data isolation.</strong> Each shop's data is kept separate from every other shop."
+msgstr "<strong>डेटा का अलगाव।</strong> हर दुकान का डेटा बाकी सभी दुकानों से अलग रखा जाता है।"
+
+#: templates/web/security.html:15
+msgid "<strong>Private storage.</strong> Bills and documents are kept in private storage, not on public links."
+msgstr "<strong>निजी स्टोरेज।</strong> बिल और दस्तावेज़ निजी स्टोरेज में रखे जाते हैं, सार्वजनिक लिंक पर नहीं।"
+
+#: templates/web/security.html:16
+msgid "<strong>Audit logs.</strong> Changes are recorded so there is a trail."
+msgstr "<strong>ऑडिट लॉग।</strong> बदलाव दर्ज किए जाते हैं ताकि उनका रिकॉर्ड रहे।"
+
+#: templates/web/security.html:26
+#, python-format
+msgid "When payments launch, they go through a payment gateway. %(site_name)s does not store card or UPI details."
+msgstr "जब भुगतान शुरू होंगे, तो वे पेमेंट गेटवे से होंगे। %(site_name)s कार्ड या UPI की जानकारी सेव नहीं करता।"
+
+#: templates/web/security.html:28
+#, python-format
+msgid "A customer's confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof. Found a problem? Write to <a href=\"mailto:%(support_email)s\">%(support_email)s</a>."
+msgstr "ग्राहक की पुष्टि एक स्वीकृति और सबूत की कड़ी है। यह कानूनी सबूत होने की गारंटी नहीं है। कोई समस्या मिली? <a href=\"mailto:%(support_email)s\">%(support_email)s</a> पर लिखें।"
+
+#: templates/web/terms.html:7
+msgid "Terms of use"
+msgstr "उपयोग की शर्तें"
+
+#: templates/web/terms.html:14
+msgid "2. Your account"
+msgstr "2. आपका खाता"
+
+#: templates/web/terms.html:16
+msgid "Give true details and keep your password private. You are responsible for activity on your account."
+msgstr "सही जानकारी दें और अपना पासवर्ड निजी रखें। आपके खाते की गतिविधि की ज़िम्मेदारी आपकी है।"
+
+#: templates/web/terms.html:17
+msgid "We verify your email with a one-time code. Codes expire and can be used once."
+msgstr "हम एक बार के कोड से आपका ईमेल सत्यापित करते हैं। कोड की समय-सीमा खत्म होती है और वह एक बार चलता है।"
+
+#: templates/web/terms.html:18
+msgid "A customer account can link to a shop only after the customer approves."
+msgstr "ग्राहक का खाता किसी दुकान से तभी जुड़ सकता है जब ग्राहक मंज़ूरी दे।"
+
+#: templates/web/terms.html:21
+msgid "3. Entries and confirmations"
+msgstr "3. एंट्री और पुष्टि"
+
+#: templates/web/terms.html:23
+msgid "Shopkeepers record entries. A shopkeeper cannot mark an entry as confirmed. Only the customer can confirm or dispute it."
+msgstr "एंट्री दुकानदार दर्ज करते हैं। दुकानदार किसी एंट्री को \"पुष्टि हुई\" नहीं बना सकता। सिर्फ़ ग्राहक ही उसकी पुष्टि कर सकता है या उस पर आपत्ति कर सकता है।"
+
+#: templates/web/terms.html:24
+msgid "Corrections are made by reversal or adjustment with a reason. Entries are not silently edited or deleted."
+msgstr "सुधार रिवर्सल या एडजस्टमेंट से, कारण के साथ किए जाते हैं। एंट्री को चुपचाप बदला या मिटाया नहीं जाता।"
+
+#: templates/web/terms.html:25
+msgid "A confirmation is an acknowledgement and part of an evidence trail. We do not promise that it is legal proof. You should take your own legal advice where needed."
+msgstr "पुष्टि एक स्वीकृति और सबूत की कड़ी का हिस्सा है। हम यह वादा नहीं करते कि वह कानूनी सबूत है। ज़रूरत होने पर आप अपनी कानूनी सलाह खुद लें।"
+
+#: templates/web/terms.html:26
+msgid "You are responsible for the accuracy of what you record."
+msgstr "आप जो दर्ज करते हैं उसके सही होने की ज़िम्मेदारी आपकी है।"
+
+#: templates/web/terms.html:29
+msgid "4. Price and payment"
+msgstr "4. कीमत और भुगतान"
+
+#: templates/web/terms.html:34
+msgid "Payments are planned through a payment gateway (UPI, cards, net banking). We do not store card or UPI details."
+msgstr "भुगतान पेमेंट गेटवे (UPI, कार्ड, नेट बैंकिंग) से करने की योजना है। हम कार्ड या UPI की जानकारी सेव नहीं करते।"
+
+#: templates/web/terms.html:37
+msgid "5. Acceptable use"
+msgstr "5. स्वीकार्य उपयोग"
+
+#: templates/web/terms.html:38
+msgid "Do not use the service to cheat, harass or threaten anyone, to record false entries, to break the law, or to attack or overload our systems."
+msgstr "इस सेवा का इस्तेमाल किसी को धोखा देने, परेशान करने या धमकाने, झूठी एंट्री दर्ज करने, कानून तोड़ने, या हमारे सिस्टम पर हमला करने या उन पर बोझ डालने के लिए न करें।"
+
+#: templates/web/terms.html:40
+msgid "6. Availability"
+msgstr "6. उपलब्धता"
+
+#: templates/web/terms.html:41
+msgid "We try to keep the service running, but we cannot promise it will always be available. The app saves entries on your phone when offline. Messages, one-time codes and confirmation links need internet."
+msgstr "हम सेवा चालू रखने की कोशिश करते हैं, लेकिन यह वादा नहीं कर सकते कि वह हमेशा उपलब्ध रहेगी। ऑफ़लाइन होने पर ऐप एंट्री आपके फ़ोन में सेव करता है। संदेश, एक बार के कोड और पुष्टि के लिंक के लिए इंटरनेट चाहिए।"
+
+#: templates/web/terms.html:43
+msgid "7. Limits of responsibility"
+msgstr "7. ज़िम्मेदारी की सीमाएँ"
+
+#: templates/web/terms.html:44
+msgid "We provide the service as it is. To the extent the law allows, we are not responsible for losses from wrong entries, unpaid dues, or events outside our control. Nothing here limits rights you have under the law."
+msgstr "हम सेवा जैसी है वैसी ही देते हैं। कानून जितनी अनुमति देता है, उस हद तक गलत एंट्री, न चुकाए गए बकाया, या हमारे नियंत्रण से बाहर की घटनाओं से हुए नुकसान के लिए हम ज़िम्मेदार नहीं हैं। यहाँ कुछ भी कानून के तहत आपके अधिकारों को सीमित नहीं करता।"
+
+#: templates/web/terms.html:46
+msgid "8. Ending your account"
+msgstr "8. अपना खाता बंद करना"
+
+#: templates/web/terms.html:49
+msgid "9. Contact"
+msgstr "9. संपर्क"
+
+#: templates/web/terms.html:2
+#, python-format
+msgid "Terms of use | %(site_name)s"
+msgstr "उपयोग की शर्तें | %(site_name)s"
+
+#: templates/web/terms.html:3
+#, python-format
+msgid "The draft terms for using %(site_name)s, in plain language."
+msgstr "%(site_name)s इस्तेमाल करने की मसौदा शर्तें, सरल भाषा में।"
+
+#: templates/web/terms.html:10
+#, python-format
+msgid "1. What %(site_name)s is"
+msgstr "1. %(site_name)s क्या है"
+
+#: templates/web/terms.html:11
+#, python-format
+msgid "%(site_name)s is a digital khata (credit ledger) and sales tracking tool for small shops in India. It has an Android app and this website. It helps you record what was sold, what was paid and what is still due."
+msgstr "%(site_name)s छोटी दुकानों के लिए एक डिजिटल खाता (उधार-बही) और बिक्री का हिसाब रखने का साधन है। इसका एक Android ऐप है और यह वेबसाइट। यह आपको लिखने में मदद करता है कि क्या बिका, कितना चुकाया गया और कितना बाकी है।"
+
+#: templates/web/terms.html:12
+#, python-format
+msgid "%(site_name)s is not a bank, lender, credit bureau or debt-collection agency. It is not a GST billing or full point-of-sale product."
+msgstr "%(site_name)s बैंक, साहूकार, क्रेडिट ब्यूरो या कर्ज़ वसूली एजेंसी नहीं है। यह GST बिलिंग या पूरा पॉइंट-ऑफ़-सेल उत्पाद भी नहीं है।"
+
+#: templates/web/terms.html:31
+#, python-format
+msgid "Registration is free. Each shop gets one %(trial_months)s-month free trial."
+msgstr "रजिस्ट्रेशन मुफ़्त है। हर दुकान को %(trial_months)s महीने का एक मुफ़्त ट्रायल मिलता है।"
+
+#: templates/web/terms.html:32
+#, python-format
+msgid "After that the plan costs Rs %(amount_rupees)s per month. Taxes and gateway charges are shown before you pay. You can cancel any time."
+msgstr "उसके बाद प्लान की कीमत Rs %(amount_rupees)s प्रति माह है। टैक्स और गेटवे शुल्क भुगतान से पहले दिखाए जाते हैं। आप जब चाहें बंद कर सकते हैं।"
+
+#: templates/web/terms.html:33
+#, python-format
+msgid "If a renewal fails, you have a %(grace_days)s-day grace period. After that, paid features become read-only. Your records and exports are not deleted."
+msgstr "अगर नवीनीकरण का भुगतान न हो, तो आपको %(grace_days)s दिन की छूट-अवधि मिलती है। उसके बाद पेड सुविधाएँ सिर्फ़ देखने के लिए रह जाती हैं। आपके रिकॉर्ड और एक्सपोर्ट नहीं मिटाए जाते।"
+
+#: templates/web/terms.html:47
+#, python-format
+msgid "You may stop using %(site_name)s at any time. We may suspend accounts that break these terms."
+msgstr "आप किसी भी समय %(site_name)s इस्तेमाल करना बंद कर सकते हैं। जो खाते इन शर्तों को तोड़ते हैं, हम उन्हें रोक सकते हैं।"
+
+#: templates/web/terms.html:50
+#, python-format
+msgid "Questions about these terms: <a href=\"mailto:%(support_email)s\">%(support_email)s</a>. See also our <a href=\"%(url_privacy)s\">Privacy notice</a>."
+msgstr "इन शर्तों के बारे में सवाल: <a href=\"mailto:%(support_email)s\">%(support_email)s</a>। हमारी <a href=\"%(url_privacy)s\">गोपनीयता सूचना</a> भी देखें।"

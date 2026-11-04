@@ -1,7 +1,7 @@
-{% if purpose == 'reset' %}Use this code to reset your {{ site_name }} password:{% else %}Use this code to verify your email for {{ site_name }}:{% endif %}
+{% load i18n %}{% if purpose == 'reset' %}{% blocktrans trimmed with site_name=site_name %}Use this code to reset your {{ site_name }} password:{% endblocktrans %}{% else %}{% blocktrans trimmed with site_name=site_name %}Use this code to verify your email for {{ site_name }}:{% endblocktrans %}{% endif %}
 
     {{ code }}
 
-It works for {{ minutes }} minutes and can be used once. If you did not ask for it, you can ignore this email: nobody can use the code without access to your inbox.
+{% blocktrans trimmed with minutes=minutes %}It works for {{ minutes }} minutes and can be used once. If you did not ask for it, you can ignore this email: nobody can use the code without access to your inbox.{% endblocktrans %}
 
-{{ site_name }} will never ask you for this code by phone or chat.
+{% blocktrans trimmed with site_name=site_name %}{{ site_name }} will never ask you for this code by phone or chat.{% endblocktrans %}

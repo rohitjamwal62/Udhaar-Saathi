@@ -1,42 +1,42 @@
-{% extends 'base.html' %}
-{% block title %}Your dashboard | {{ SITE_NAME }}{% endblock %}
-{% block description %}Your {{ SITE_NAME }} account, plan and documents.{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}Your dashboard | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% blocktrans trimmed with site_name=SITE_NAME %}Your {{ site_name }} account, plan and documents.{% endblocktrans %}{% endblock %}
 {% block content %}
 <div class="container dash-head">
-  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">Welcome{% if user.first_name %}, {{ user.first_name }}{% endif %}</h1>
-  <p class="muted">Your account, plan and documents in one place.</p>
-  {% if not drive_ready %}<div class="note warn" role="status"><strong>Document storage is being connected.</strong> Uploads will work soon.</div>{% endif %}
-  <p style="margin:14px 0"><a class="btn" href="{% url 'ledger' %}">Open my udhaar ledger</a> <span class="muted">Record money you lend and what comes back.</span></p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{% trans "Welcome" %}{% if user.first_name %}, {{ user.first_name }}{% endif %}</h1>
+  <p class="muted">{% trans "Your account, plan and documents in one place." %}</p>
+  {% if not drive_ready %}<div class="note warn" role="status">{% blocktrans trimmed %}<strong>Document storage is being connected.</strong> Uploads will work soon.{% endblocktrans %}</div>{% endif %}
+  <p style="margin:14px 0"><a class="btn" href="{% url 'ledger' %}">{% trans "Open my udhaar ledger" %}</a> <span class="muted">{% trans "Record money you lend and what comes back." %}</span></p>
   <div class="stats">
-    <div class="card stat"><div class="k">Role</div><div class="v">{{ profile.get_role_display }}</div>{% if profile.shop_name %}<div class="s">{{ profile.shop_name }}</div>{% endif %}</div>
-    <div class="card stat"><div class="k">Plan</div><div class="v">{{ plan.name }}</div><div class="s">{{ plan.trial_months }} months free, then Rs {{ plan.amount_rupees }} a month</div></div>
-    <div class="card stat"><div class="k">Email</div><div class="v">{% if profile.email_verified %}<span class="chip">Verified</span>{% else %}<span class="chip warn">Not verified</span>{% endif %}</div><div class="s">{{ user.email }}</div></div>
+    <div class="card stat"><div class="k">{% trans "Role" %}</div><div class="v">{{ profile.get_role_display }}</div>{% if profile.shop_name %}<div class="s">{{ profile.shop_name }}</div>{% endif %}</div>
+    <div class="card stat"><div class="k">{% trans "Plan" %}</div><div class="v">{{ plan.name }}</div><div class="s">{% blocktrans trimmed with trial_months=plan.trial_months amount_rupees=plan.amount_rupees %}{{ trial_months }} months free, then Rs {{ amount_rupees }} a month{% endblocktrans %}</div></div>
+    <div class="card stat"><div class="k">{% trans "Email" %}</div><div class="v">{% if profile.email_verified %}<span class="chip">{% trans "Verified" %}</span>{% else %}<span class="chip warn">{% trans "Not verified" %}</span>{% endif %}</div><div class="s">{{ user.email }}</div></div>
   </div>
 </div>
 <div class="container dash-grid">
   <section class="card" aria-labelledby="docs-h">
-    <h2 id="docs-h" style="font-size:1.3rem">Your documents <span class="chip info">{{ doc_count }}</span></h2>
+    <h2 id="docs-h" style="font-size:1.3rem">{% trans "Your documents" %}<span class="chip info">{{ doc_count }}</span></h2>
     {% if documents %}
     <div class="tbl-wrap"><table class="docs">
-      <thead><tr><th scope="col">Document</th><th scope="col">Type</th><th scope="col">Size</th><th scope="col">Added</th><th scope="col"><span class="sr-only">Download</span></th></tr></thead>
+      <thead><tr><th scope="col">{% trans "Document" %}</th><th scope="col">{% trans "Type" %}</th><th scope="col">{% trans "Size" %}</th><th scope="col">{% trans "Added" %}</th><th scope="col"><span class="sr-only">{% trans "Download" %}</span></th></tr></thead>
       <tbody>
       {% for d in documents %}
         <tr>
-          <td data-label="Document"><span><span class="t">{{ d.title }}</span><br><span class="f">{{ d.original_name }}</span></span></td>
-          <td data-label="Type">{{ d.get_category_display }}</td>
-          <td data-label="Size">{{ d.size_bytes|filesizeformat }}</td>
-          <td data-label="Added">{{ d.created_at|date:"j M Y" }}</td>
-          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'document_download' d.pk %}">Download</a></td>
+          <td data-label="{% trans 'Document' %}"><span><span class="t">{{ d.title }}</span><br><span class="f">{{ d.original_name }}</span></span></td>
+          <td data-label="{% trans 'Type' %}">{{ d.get_category_display }}</td>
+          <td data-label="{% trans 'Size' %}">{{ d.size_bytes|filesizeformat }}</td>
+          <td data-label="{% trans 'Added' %}">{{ d.created_at|date:"j M Y" }}</td>
+          <td data-label=""><a class="btn btn-ghost btn-sm" href="{% url 'document_download' d.pk %}">{% trans "Download" %}</a></td>
         </tr>
       {% endfor %}
       </tbody></table></div>
     {% else %}
-    <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>No documents yet.</strong><br>Upload an ID proof, shop proof or bill and it will show up here.</p></div>
+    <div class="empty">{% include "partials/art_empty.html" %}<p class="muted"><strong>{% trans "No documents yet." %}</strong><br>{% trans "Upload an ID proof, shop proof or bill and it will show up here." %}</p></div>
     {% endif %}
   </section>
 
   <section class="card" aria-labelledby="up-h">
-    <h2 id="up-h" style="font-size:1.3rem">Upload a document</h2>
+    <h2 id="up-h" style="font-size:1.3rem">{% trans "Upload a document" %}</h2>
     <form method="post" action="{% url 'document_upload' %}" enctype="multipart/form-data" novalidate>
       {% csrf_token %}
       {% if upload_form.non_field_errors %}<div class="form-error" role="alert"><ul>{% for e in upload_form.non_field_errors %}<li>{{ e }}</li>{% endfor %}</ul></div>{% endif %}
@@ -47,17 +47,17 @@
           <span class="lbl">{{ upload_form.file.label }}</span>
           <div class="drop">
             <svg viewBox="0 0 48 48" class="st" stroke="currentColor" stroke-width="2.5" aria-hidden="true"><path d="M24 32V10M15 18l9-9 9 9M8 32v6a2 2 0 0 0 2 2h28a2 2 0 0 0 2-2v-6"/></svg>
-            <div><strong>Drop a file here</strong> or tap to choose</div>
-            <div class="help">PDF, PNG, JPG, JPEG, DOCX, XLSX, TXT or CSV. Up to 10 MB.</div>
+            <div>{% blocktrans trimmed %}<strong>Drop a file here</strong> or tap to choose{% endblocktrans %}</div>
+            <div class="help">{% trans "PDF, PNG, JPG, JPEG, DOCX, XLSX, TXT or CSV. Up to 10 MB." %}</div>
             <div class="fname" aria-live="polite"></div>
             {{ upload_form.file }}
           </div>
           {% if upload_form.file.errors %}<ul class="errs" role="alert">{% for e in upload_form.file.errors %}<li>{{ e }}</li>{% endfor %}</ul>{% endif %}
         </div>
-        <button class="btn btn-block" type="submit"{% if not drive_ready %} disabled{% endif %}>Upload</button>
+        <button class="btn btn-block" type="submit"{% if not drive_ready %} disabled{% endif %}>{% trans "Upload" %}</button>
       </fieldset>
     </form>
-    <p class="help" style="margin-top:12px">Files are kept in private storage.</p>
+    <p class="help" style="margin-top:12px">{% trans "Files are kept in private storage." %}</p>
   </section>
 </div>
 {% endblock %}

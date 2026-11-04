@@ -1,9 +1,11 @@
 from django.conf import settings
 from django.db import models
+from django.utils.translation import get_language
+from django.utils.translation import gettext_lazy as _
 
 
 class Profile(models.Model):
-    ROLES = [("shopkeeper", "Shopkeeper"), ("customer", "Customer")]
+    ROLES = [("shopkeeper", _("Shopkeeper")), ("customer", _("Customer"))]
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="profile")
     role = models.CharField(max_length=12, choices=ROLES, default="shopkeeper")
     phone = models.CharField(max_length=16, blank=True, help_text="E.164, e.g. +919876543210")
@@ -57,8 +59,8 @@ class ContactMessage(models.Model):
 
 class Document(models.Model):
     """A file uploaded by a signed-in user. The bytes live in Google Drive, only the reference is stored here."""
-    CATEGORIES = [("id_proof", "ID proof"), ("shop_proof", "Shop proof / licence"), ("bill", "Bill or receipt"),
-                  ("agreement", "Agreement"), ("other", "Other")]
+    CATEGORIES = [("id_proof", _("ID proof")), ("shop_proof", _("Shop proof / licence")), ("bill", _("Bill or receipt")),
+                  ("agreement", _("Agreement")), ("other", _("Other"))]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="documents")
     title = models.CharField(max_length=160)
     category = models.CharField(max_length=12, choices=CATEGORIES, default="other")
@@ -81,6 +83,10 @@ class FAQ(models.Model):
     """Questions shown on the website. Edit them in Django admin."""
     question = models.CharField(max_length=240)
     answer = models.TextField()
+    question_hi = models.CharField("Question (Hindi)", max_length=240, blank=True, null=True,
+                                   help_text="Optional. Shown instead of the English question when the visitor chose Hindi.")
+    answer_hi = models.TextField("Answer (Hindi)", blank=True, null=True,
+                                 help_text="Optional. Shown instead of the English answer when the visitor chose Hindi.")
     order = models.PositiveSmallIntegerField(default=100)
     published = models.BooleanField(default=True)
 
@@ -91,6 +97,15 @@ class FAQ(models.Model):
 
     def __str__(self):
         return self.question
+
+    @property
+    def display_question(self) -> str:
+        """The question in the visitor's language (Hindi text when 'hi' is active and has been written)."""
+        return self.question_hi if (get_language() or "").startswith("hi") and self.question_hi else self.question
+
+    @property
+    def display_answer(self) -> str:
+        return self.answer_hi if (get_language() or "").startswith("hi") and self.answer_hi else self.answer
 
 
 class Party(models.Model):
@@ -113,7 +128,7 @@ class Party(models.Model):
 class LedgerEntry(models.Model):
     """Money lent to a person (gave) or paid back by them (received). Amounts are whole paise.
     Entries are never edited or deleted: a mistake is cancelled (voided), so the history stays honest."""
-    KINDS = [("gave", "Gave (udhaar)"), ("received", "Received (repayment)")]
+    KINDS = [("gave", _("Gave (udhaar)")), ("received", _("Received (repayment)"))]
     owner = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, related_name="ledger_entries")
     party = models.ForeignKey(Party, on_delete=models.CASCADE, related_name="entries")
     kind = models.CharField(max_length=8, choices=KINDS)

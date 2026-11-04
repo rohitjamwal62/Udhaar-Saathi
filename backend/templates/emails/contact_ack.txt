@@ -1,5 +1,5 @@
-Hi {{ name }},
+{% load i18n %}{% blocktrans trimmed with name=name %}Hi {{ name }},{% endblocktrans %}
 
-Thanks for writing to {{ site_name }}. We received your message about "{{ subject }}" and will reply by email.
+{% blocktrans trimmed with site_name=site_name subject=subject %}Thanks for writing to {{ site_name }}. We received your message about "{{ subject }}" and will reply by email.{% endblocktrans %}
 
-The {{ site_name }} team
+{% blocktrans trimmed with site_name=site_name %}The {{ site_name }} team{% endblocktrans %}

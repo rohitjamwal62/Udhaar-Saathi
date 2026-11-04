@@ -71,6 +71,8 @@ MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
+    "apps.web.middleware.IgnoreAcceptLanguageMiddleware",   # English unless the visitor picks Hindi (cookie)
+    "django.middleware.locale.LocaleMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -88,6 +90,7 @@ TEMPLATES = [{
     "APP_DIRS": True,
     "OPTIONS": {"context_processors": [
         "django.template.context_processors.request",
+        "django.template.context_processors.i18n",
         "django.contrib.auth.context_processors.auth",
         "django.contrib.messages.context_processors.messages",
         "apps.web.context_processors.site",
@@ -142,7 +145,12 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 USE_TZ = True
 TIME_ZONE = "UTC"
-LANGUAGE_CODE = "en-us"
+LANGUAGE_CODE = "en"
+USE_I18N = True
+LANGUAGES = [("en", "English"), ("hi", "हिन्दी")]
+LOCALE_PATHS = [BASE_DIR / "locale"]
+LANGUAGE_COOKIE_AGE = 60 * 60 * 24 * 365      # the visitor's choice is remembered for a year
+LANGUAGE_COOKIE_SAMESITE = "Lax"
 
 PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.Argon2PasswordHasher",

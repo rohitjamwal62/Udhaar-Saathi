@@ -1,5 +1,5 @@
-<svg class="hero-art" viewBox="0 0 460 500" role="img" aria-label="A phone showing a khata list with customers, amounts and status chips, surrounded by floating rupee coins and a ledger book" focusable="false">
-  <title>UdhaarSaathi khata on a phone</title>
+{% load i18n %}<svg class="hero-art" viewBox="0 0 460 500" role="img" aria-label="{% trans 'A phone showing a khata list with customers, amounts and status chips, surrounded by floating rupee coins and a ledger book' %}" focusable="false">
+  <title>{% trans "UdhaarSaathi khata on a phone" %}</title>
   <path class="f-s" d="M80 120C110 40 250 20 350 70s110 150 60 250-170 150-270 110S50 200 80 120Z">
     <animate attributeName="d" dur="14s" repeatCount="indefinite" calcMode="spline" keySplines=".4 0 .6 1;.4 0 .6 1"
       values="M80 120C110 40 250 20 350 70s110 150 60 250-170 150-270 110S50 200 80 120Z;M60 170C70 70 220 30 330 60s130 170 70 260-190 140-280 90S50 250 60 170Z;M80 120C110 40 250 20 350 70s110 150 60 250-170 150-270 110S50 200 80 120Z"/>
@@ -10,23 +10,23 @@
     <rect class="f-w" x="141" y="50" width="178" height="376" rx="22"/>
     <rect class="f-i" x="206" y="56" width="48" height="6" rx="3" opacity=".25"/>
     <path class="f-p" d="M141 72h178v56H141z"/>
-    <text class="tx f-on" x="156" y="92" font-size="10" opacity=".85">Total receivable</text>
+    <text class="tx f-on" x="156" y="92" font-size="10" opacity=".85">{% trans "Total receivable" %}</text>
     <text class="tx f-on" x="156" y="116" font-size="22">&#8377;3,830</text>
     <rect class="f-bg" x="149" y="138" width="162" height="56" rx="10"/>
     <circle class="f-s" cx="170" cy="166" r="13"/><text class="tx f-p" x="170" y="170" font-size="11" text-anchor="middle">R</text>
-    <text class="tx f-i" x="190" y="161" font-size="12">Ramesh</text><text class="f-m" x="190" y="175" font-size="9.5">3 items</text>
+    <text class="tx f-i" x="190" y="161" font-size="12">Ramesh</text><text class="f-m" x="190" y="175" font-size="9.5">{% trans "3 items" %}</text>
     <text class="tx f-i" x="302" y="161" font-size="12" text-anchor="end">&#8377;1,250</text>
-    <rect class="f-a" x="251" y="168" width="52" height="16" rx="8"/><text class="tx" x="277" y="179.5" font-size="8.5" text-anchor="middle" fill="#17211C">Pending</text>
+    <rect class="f-a" x="251" y="168" width="52" height="16" rx="8"/><text class="tx" x="277" y="179.5" font-size="8.5" text-anchor="middle" fill="#17211C">{% trans "Pending" %}</text>
     <rect class="f-bg" x="149" y="200" width="162" height="56" rx="10"/>
     <circle class="f-s" cx="170" cy="228" r="13"/><text class="tx f-p" x="170" y="232" font-size="11" text-anchor="middle">S</text>
-    <text class="tx f-i" x="190" y="223" font-size="12">Sunita</text><text class="f-m" x="190" y="237" font-size="9.5">Payment</text>
+    <text class="tx f-i" x="190" y="223" font-size="12">Sunita</text><text class="f-m" x="190" y="237" font-size="9.5">{% trans "Payment" %}</text>
     <text class="tx f-i" x="302" y="223" font-size="12" text-anchor="end">&#8377;480</text>
-    <rect class="f-s" x="238" y="230" width="65" height="16" rx="8"/><text class="tx f-p" x="270.5" y="241.5" font-size="8.5" text-anchor="middle">Confirmed</text>
+    <rect class="f-s" x="238" y="230" width="65" height="16" rx="8"/><text class="tx f-p" x="270.5" y="241.5" font-size="8.5" text-anchor="middle">{% trans "Confirmed" %}</text>
     <rect class="f-bg" x="149" y="262" width="162" height="56" rx="10"/>
     <circle class="f-s" cx="170" cy="290" r="13"/><text class="tx f-p" x="170" y="294" font-size="11" text-anchor="middle">M</text>
-    <text class="tx f-i" x="190" y="285" font-size="12">Mohan</text><text class="f-m" x="190" y="299" font-size="9.5">5 items</text>
+    <text class="tx f-i" x="190" y="285" font-size="12">Mohan</text><text class="f-m" x="190" y="299" font-size="9.5">{% trans "5 items" %}</text>
     <text class="tx f-i" x="302" y="285" font-size="12" text-anchor="end">&#8377;2,100</text>
-    <rect class="f-a" x="251" y="292" width="52" height="16" rx="8"/><text class="tx" x="277" y="303.5" font-size="8.5" text-anchor="middle" fill="#17211C">Pending</text>
+    <rect class="f-a" x="251" y="292" width="52" height="16" rx="8"/><text class="tx" x="277" y="303.5" font-size="8.5" text-anchor="middle" fill="#17211C">{% trans "Pending" %}</text>
     <rect class="f-b" x="149" y="330" width="100" height="8" rx="4"/><rect class="f-b" x="149" y="346" width="70" height="8" rx="4"/>
     <circle class="f-a" cx="291" cy="392" r="20"/><path class="st s-i" stroke-width="3" d="M291 383v18M282 392h18"/>
   </g>

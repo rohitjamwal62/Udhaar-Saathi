@@ -1,22 +1,22 @@
-<svg class="art" viewBox="0 0 560 320" role="img" aria-label="The same entry seen by a shopkeeper and a customer, joined by a shield with a check mark. The customer confirms or disputes it." focusable="false">
-  <title>Shopkeeper and customer see the same entry</title>
+{% load i18n %}<svg class="art" viewBox="0 0 560 320" role="img" aria-label="{% trans 'The same entry seen by a shopkeeper and a customer, joined by a shield with a check mark. The customer confirms or disputes it.' %}" focusable="false">
+  <title>{% trans "Shopkeeper and customer see the same entry" %}</title>
   <rect class="f-s" x="0" y="0" width="560" height="320" rx="24" opacity=".6"/>
   <rect class="f-i" x="28" y="36" width="190" height="248" rx="22"/><rect class="f-w" x="36" y="46" width="174" height="228" rx="14"/>
   <rect class="f-p" x="36" y="46" width="174" height="34" rx="14"/><rect class="f-p" x="36" y="64" width="174" height="16"/>
-  <text class="tx f-on" x="48" y="68" font-size="12">Shopkeeper view</text>
+  <text class="tx f-on" x="48" y="68" font-size="12">{% trans "Shopkeeper view" %}</text>
   <text class="tx f-i" x="48" y="112" font-size="13">Ramesh</text><text class="tx f-i" x="198" y="112" font-size="16" text-anchor="end">&#8377;1,250</text>
-  <text class="f-m" x="48" y="132" font-size="11">Atta, dal, oil</text>
-  <g class="a-fade1"><rect class="f-a" x="48" y="146" width="150" height="22" rx="11"/><text class="tx" x="123" y="161" font-size="11" text-anchor="middle" fill="#17211C">Awaiting confirmation</text></g>
-  <g class="a-fade2"><rect class="f-s" x="48" y="146" width="150" height="22" rx="11"/><text class="tx f-p" x="123" y="161" font-size="11" text-anchor="middle">Customer confirmed</text></g>
+  <text class="f-m" x="48" y="132" font-size="11">{% trans "Atta, dal, oil" %}</text>
+  <g class="a-fade1"><rect class="f-a" x="48" y="146" width="150" height="22" rx="11"/><text class="tx" x="123" y="161" font-size="11" text-anchor="middle" fill="#17211C">{% trans "Awaiting confirmation" %}</text></g>
+  <g class="a-fade2"><rect class="f-s" x="48" y="146" width="150" height="22" rx="11"/><text class="tx f-p" x="123" y="161" font-size="11" text-anchor="middle">{% trans "Customer confirmed" %}</text></g>
   <rect class="f-b" x="48" y="188" width="150" height="8" rx="4"/><rect class="f-b" x="48" y="204" width="100" height="8" rx="4"/>
-  <text class="f-m" x="48" y="256" font-size="10.5">Only the customer can confirm.</text>
+  <text class="f-m" x="48" y="256" font-size="10.5">{% trans "Only the customer can confirm." %}</text>
   <rect class="f-i" x="342" y="36" width="190" height="248" rx="22"/><rect class="f-w" x="350" y="46" width="174" height="228" rx="14"/>
   <rect class="f-d" x="350" y="46" width="174" height="34" rx="14"/><rect class="f-d" x="350" y="64" width="174" height="16"/>
-  <text class="tx f-on" x="362" y="68" font-size="12">Customer view</text>
-  <text class="tx f-i" x="362" y="112" font-size="13">Sharma Kirana</text><text class="tx f-i" x="512" y="132" font-size="16" text-anchor="end">&#8377;1,250</text>
-  <text class="f-m" x="362" y="132" font-size="11">Atta, dal, oil</text>
-  <rect class="f-p" x="362" y="150" width="70" height="26" rx="13"/><text class="tx f-on" x="397" y="167" font-size="11" text-anchor="middle">Confirm</text>
-  <rect class="f-none" x="440" y="150" width="70" height="26" rx="13" stroke-width="2" style="stroke:var(--danger)"/><text class="tx f-danger" x="475" y="167" font-size="11" text-anchor="middle">Dispute</text>
+  <text class="tx f-on" x="362" y="68" font-size="12">{% trans "Customer view" %}</text>
+  <text class="tx f-i" x="362" y="112" font-size="13">{% trans "Sharma Kirana" %}</text><text class="tx f-i" x="512" y="132" font-size="16" text-anchor="end">&#8377;1,250</text>
+  <text class="f-m" x="362" y="132" font-size="11">{% trans "Atta, dal, oil" %}</text>
+  <rect class="f-p" x="362" y="150" width="70" height="26" rx="13"/><text class="tx f-on" x="397" y="167" font-size="11" text-anchor="middle">{% trans "Confirm" %}</text>
+  <rect class="f-none" x="440" y="150" width="70" height="26" rx="13" stroke-width="2" style="stroke:var(--danger)"/><text class="tx f-danger" x="475" y="167" font-size="11" text-anchor="middle">{% trans "Dispute" %}</text>
   <rect class="f-b" x="362" y="192" width="150" height="8" rx="4"/><rect class="f-b" x="362" y="208" width="100" height="8" rx="4"/>
   <path class="st s-p a-dash" stroke-width="3" opacity=".6" d="M218 160h124"/>
   <g transform="translate(280 160)">

@@ -22,7 +22,7 @@
     var setOpen = function (open) {
       nav.classList.toggle('open', open);
       toggle.setAttribute('aria-expanded', open ? 'true' : 'false');
-      toggle.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+      toggle.setAttribute('aria-label', open ? (toggle.getAttribute('data-label-close') || 'Close menu') : (toggle.getAttribute('data-label-open') || 'Open menu'));
     };
     toggle.addEventListener('click', function () { setOpen(toggle.getAttribute('aria-expanded') !== 'true'); });
     nav.addEventListener('click', function (e) { if (e.target.closest('a')) { setOpen(false); } });
@@ -67,7 +67,7 @@
       var input = btn.parentNode.querySelector('input');
       var show = input.type === 'password';
       input.type = show ? 'text' : 'password';
-      btn.textContent = show ? 'Hide' : 'Show';
+      btn.textContent = show ? (btn.getAttribute('data-hide') || 'Hide') : (btn.getAttribute('data-show') || 'Show');
       btn.setAttribute('aria-pressed', show ? 'true' : 'false');
     });
   });
@@ -80,12 +80,12 @@
     var tick = function () {
       if (left > 0) {
         rs.disabled = true;
-        if (msg) { msg.textContent = 'You can request a new code in ' + left + 's.'; }
+        if (msg) { msg.textContent = (rs.getAttribute('data-wait-text') || 'You can request a new code in __N__s.').replace('__N__', left); }
         left -= 1;
         setTimeout(tick, 1000);
       } else {
         rs.disabled = false;
-        if (msg) { msg.textContent = 'Did not get the email? Check spam, then request a new code.'; }
+        if (msg) { msg.textContent = rs.getAttribute('data-ready-text') || 'Did not get the email? Check spam, then request a new code.'; }
       }
     };
     tick();

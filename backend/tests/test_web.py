@@ -529,3 +529,230 @@ def test_duplicate_person_names_are_refused_and_rupee_formatting_is_indian():
     assert Party.objects.count() == 1
     from apps.web.templatetags.money import rupees
     assert rupees(12345678) == "Rs 1,23,456.78" and rupees(5) == "Rs 0.05" and rupees(-10000) == "-Rs 100.00"
+
+
+
+# ───────────────────────── English / Hindi language switch ─────────────────────────
+def choose(c: Client, lang: str, nxt: str = "/"):
+    return c.post("/i18n/setlang/", {"language": lang, "next": nxt})
+
+
+def page(c: Client, name: str, **kw) -> str:
+    r = c.get(reverse(name, **kw))
+    assert r.status_code == 200
+    return r.content.decode()
+
+
+def main_of(html: str) -> str:
+    return html.split("<main")[1].split("</main>")[0]
+
+
+def test_default_language_is_english_even_if_the_browser_asks_for_hindi():
+    for hdr in ({}, {"HTTP_ACCEPT_LANGUAGE": "hi-IN,hi;q=0.9"}):
+        html = Client().get(reverse("home"), **hdr).content.decode()
+        assert '<html lang="en">' in html and "Your shop's udhaar" in html and "उधार" not in main_of(html)
+
+
+def test_language_switcher_is_in_the_header_and_the_footer():
+    html = page(Client(), "home")
+    assert html.count('name="language"') == 4                      # English + Hindi buttons, in the header and in the footer
+    assert html.count('action="/i18n/setlang/"') == 2
+    en_btn = re.search(r'<button[^>]*value="en"[^>]*>', html).group(0)
+    hi_btn = re.search(r'<button[^>]*value="hi"[^>]*>', html).group(0)
+    assert 'aria-current="true"' in en_btn and "aria-current" not in hi_btn and 'lang="hi"' in hi_btn
+    c = Client()
+    choose(c, "hi")
+    html = page(c, "home")
+    hi_btn = re.search(r'<button[^>]*value="hi"[^>]*>', html).group(0)
+    assert 'aria-current="true"' in hi_btn and "csrfmiddlewaretoken" in html
+
+
+@pytest.mark.parametrize("name,hindi,english", [
+    ("home", "उधार", "Three simple steps"),
+    ("features", "विशेषताएँ", "Digital khata for shopkeepers"),
+    ("how_it_works", "यह कैसे काम करता है", "If you run the shop"),
+    ("pricing", "एक सरल प्लान", "What happens when the trial ends"),
+    ("security", "सुरक्षा", "Exact amounts"),
+    ("faq", "सवालों के जवाब", "Questions, answered"),
+    ("contact", "संदेश भेजें", "Send message"),
+    ("terms", "उपयोग की शर्तें", "Acceptable use"),
+    ("privacy", "गोपनीयता सूचना", "What we collect"),
+    ("login", "फिर से स्वागत है", "Welcome back"),
+    ("register", "अपना मुफ़्त खाता बनाएँ", "Create your free account"),
+    ("forgot_password", "पासवर्ड भूल गए?", "Send code"),
+])
+def test_pages_switch_to_hindi_and_back(name, hindi, english):
+    c = Client()
+    r = choose(c, "hi", reverse(name))
+    assert r.status_code == 302 and r["Location"] == reverse(name)
+    html = page(c, name)
+    assert '<html lang="hi">' in html and hindi in html
+    assert english not in main_of(html)                            # no untranslated msgid leaks through
+    assert "UdhaarSaathi" in html                                  # the brand stays as it is
+    choose(c, "en", reverse(name))
+    html = page(c, name)
+    assert '<html lang="en">' in html and english in html
+
+
+def test_hindi_is_remembered_in_the_cookie_and_prices_stay_untouched():
+    c = Client()
+    choose(c, "hi")
+    assert c.cookies["django_language"].value == "hi"
+    html = page(c, "pricing")                                      # the choice sticks on later pages
+    assert "Rs 49" in html or "Rs</small> 49" in html
+    assert "3 महीने" in html and "कीमत" in html and "फिर से स्वागत है" not in html
+
+
+def test_ledger_and_person_pages_in_hindi():
+    c = verified_client()
+    choose(c, "hi")
+    html = page(c, "ledger")
+    assert '<html lang="hi">' in html and "आपका उधार बही-खाता" in html and "वसूली बाकी" in html
+    assert "Your udhaar ledger" not in html and "To collect" not in html
+    c.post(reverse("party_add"), {"name": "Ramesh", "phone": "", "note": ""})
+    from apps.web.models import Party
+    p = Party.objects.get(name="Ramesh")
+    c.post(reverse("party_detail", args=[p.pk]), {"kind": "gave", "amount": "250", "entry_date": timezone.localdate().isoformat(), "note": ""})
+    html = page(c, "party_detail", args=[p.pk])
+    assert "पैसे लिखें" in html and "Rs 250.00" in html and "इतिहास" in html and "Record money" not in html
+    assert "मैंने पैसे दिए (उधार)" in html
+    html = page(c, "ledger")
+    assert "1 व्यक्ति से" in html and "Rs 250.00" in html
+
+
+def test_flash_messages_and_form_errors_follow_the_language():
+    c = Client()
+    choose(c, "hi")
+    r = c.post(reverse("login"), {"identifier": "nobody@example.com", "password": "wrong-pass1"})
+    assert "ईमेल या पासवर्ड गलत है।" in r.content.decode()
+    r = c.post(reverse("register"), {"full_name": "A", "email": "a@example.com", "password1": "abc", "password2": "abd", "accept_terms": "on"})
+    html = r.content.decode()
+    assert "8 से 128 अक्षर रखें।" in html and "The two passwords" not in html
+    r = Client().post(reverse("login"), {"identifier": "nobody@example.com", "password": "wrong-pass1"})
+    assert "The email or password is incorrect." in r.content.decode()
+
+
+def test_open_redirect_through_the_language_switch_is_refused():
+    for bad in ("https://evil.example/phish", "//evil.example/x", "javascript:alert(1)"):
+        r = Client().post("/i18n/setlang/", {"language": "hi", "next": bad})
+        assert r.status_code == 302 and "evil" not in r["Location"] and r["Location"].startswith("/")
+    c = Client()
+    c.post("/i18n/setlang/", {"language": "fr", "next": "/pricing/"})           # only English and Hindi are ever used
+    assert '<html lang="en">' in page(c, "pricing")
+
+
+def test_language_switch_is_post_only_and_csrf_protected():
+    c = Client(enforce_csrf_checks=True)
+    assert c.post("/i18n/setlang/", {"language": "hi", "next": "/"}).status_code == 403
+    r = c.get("/i18n/setlang/", {"language": "hi", "next": "/"})
+    assert "django_language" not in r.cookies                      # a GET never changes the language
+
+
+def test_otp_email_goes_out_in_the_chosen_language():
+    register(Client(), "eng@example.com")
+    assert mail.outbox[-1].subject.startswith("Your UdhaarSaathi verification code")
+    assert "Use this code to verify your email" in mail.outbox[-1].body
+    c = Client()
+    choose(c, "hi")
+    register(c, "hindi@example.com")
+    m = mail.outbox[-1]
+    assert m.subject.startswith("आपका UdhaarSaathi सत्यापन कोड: ") and re.search(r"\d{6}", m.subject)
+    assert "सत्यापित करने के लिए यह कोड इस्तेमाल करें" in m.body and "मिनट" in m.body
+    assert "सत्यापित" in m.alternatives[0][0] and "Use this code" not in m.body
+    assert last_code() == re.search(r"\b(\d{6})\b", m.subject).group(1)
+    r = c.post(reverse("verify_otp"), {"code": last_code()})           # the welcome email follows the same language
+    assert r.status_code == 302 and mail.outbox[-1].subject == "UdhaarSaathi में आपका स्वागत है"
+
+
+def test_reset_email_and_contact_ack_in_hindi_but_team_copy_stays_english():
+    verified_client("reset@example.com")
+    c2 = Client()
+    choose(c2, "hi")
+    c2.post(reverse("forgot_password"), {"email": "reset@example.com"})
+    assert mail.outbox[-1].subject.startswith("अपना UdhaarSaathi पासवर्ड रीसेट करें")
+    n = len(mail.outbox)
+    c2.post(reverse("contact"), {"name": "Ravi", "email": "ravi@example.com", "phone": "", "subject": "Help", "message": "Please call", "website": ""})
+    team, ack = mail.outbox[n], mail.outbox[n + 1]
+    assert team.subject == "[Contact] Help" and "New contact message" in team.body
+    assert ack.subject == "हमें आपका संदेश मिल गया" and "नमस्ते Ravi" in ack.body
+
+
+def test_faqs_show_hindi_when_available_and_fall_back_to_english():
+    from apps.web.models import FAQ
+    from django.utils import translation
+    seeded = FAQ.objects.get(question="What does it cost?")
+    assert seeded.question_hi and seeded.answer_hi and "₹49" in seeded.answer_hi            # data migration 0005
+    assert FAQ.objects.filter(question_hi__isnull=False).count() >= 9
+    c = Client()
+    choose(c, "hi")
+    html = page(c, "faq")
+    assert seeded.question_hi in html and "What does it cost?" not in html
+    FAQ.objects.create(question="English only?", answer="Yes, only English.", order=999)    # no Hindi written yet
+    assert "English only?" in page(c, "faq")
+    assert "What does it cost?" in page(Client(), "faq")
+    with translation.override("hi"):
+        assert seeded.display_question == seeded.question_hi
+    with translation.override("en"):
+        assert seeded.display_question == seeded.question
+
+
+def test_faq_hindi_fields_are_editable_in_admin():
+    from django.contrib import admin
+    from apps.web.models import FAQ
+    fields = [f for _, opts in admin.site._registry[FAQ].get_fieldsets(None) for f in opts["fields"]]
+    assert "question_hi" in fields and "answer_hi" in fields
+
+
+@override_settings(DEBUG=False)
+def test_404_page_follows_the_language():
+    c = Client()
+    choose(c, "hi")
+    html = c.get("/no-such-page-here/").content.decode()
+    assert '<html lang="hi">' in html and "पेज नहीं मिला" in html
+
+
+# ───────────────────────── translation catalogue health ─────────────────────────
+def _po_entries():
+    import sys
+    from pathlib import Path
+    base = Path(__file__).resolve().parents[1]
+    sys.path.insert(0, str(base / "tools"))
+    from compile_messages import parse_po
+    po = base / "locale" / "hi" / "LC_MESSAGES" / "django.po"
+    return base, po, [e for e in parse_po(po.read_text(encoding="utf-8")) if e["id"]]
+
+
+def test_no_msgstr_in_the_hindi_catalogue_is_empty_or_fuzzy():
+    _, _, entries = _po_entries()
+    assert len(entries) > 400
+    empty = [e["id"][:60] for e in entries if not e["str"] or any(not s.strip() for s in e["str"].values())]
+    assert not empty, f"{len(empty)} untranslated strings, for example: {empty[:5]}"
+    assert not [e["id"] for e in entries if "fuzzy" in e["flags"]]
+
+
+def test_hindi_translations_keep_the_placeholders_and_html_tags():
+    _, _, entries = _po_entries()
+    tag = r"</?(?:strong|em|a|b|small)\b"
+    bad = []
+    for e in entries:
+        if e["id_plural"] is not None:
+            continue
+        t = e["str"][0]
+        if sorted(re.findall(r"%\(\w+\)\w", e["id"])) != sorted(re.findall(r"%\(\w+\)\w", t)):
+            bad.append(e["id"][:50])
+        if sorted(re.findall(tag, e["id"])) != sorted(re.findall(tag, t)):
+            bad.append(e["id"][:50])
+    assert not bad, bad[:5]
+
+
+def test_every_translatable_string_in_the_code_is_in_the_catalogue_and_mo_is_current():
+    import sys
+    base, po, entries = _po_entries()
+    sys.path.insert(0, str(base / "tools"))
+    import extract_messages
+    from compile_messages import build_mo, parse_po
+    have = {(e["ctxt"], e["id"]) for e in entries}
+    missing = [m for c, m, p, w in extract_messages.collect() if (c, m) not in have]
+    assert not missing, f"run tools/extract_messages.py (new strings: {missing[:3]})"
+    assert build_mo(parse_po(po.read_text(encoding="utf-8"))) == po.with_suffix(".mo").read_bytes(), \
+        "django.mo is stale: run python tools/compile_messages.py and commit it"

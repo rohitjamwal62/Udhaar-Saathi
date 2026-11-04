@@ -1,4 +1,4 @@
-<div class="faq-list">
-{% for f in faqs %}<details class="q"><summary>{{ f.question }}</summary><div class="ans">{{ f.answer|linebreaks }}</div></details>
-{% empty %}<p class="center muted">Questions and answers will appear here soon. Meanwhile, write to <a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a>.</p>{% endfor %}
+{% load i18n %}<div class="faq-list">
+{% for f in faqs %}<details class="q"><summary>{{ f.display_question }}</summary><div class="ans">{{ f.display_answer|linebreaks }}</div></details>
+{% empty %}<p class="center muted">{% blocktrans trimmed with support_email=SUPPORT_EMAIL %}Questions and answers will appear here soon. Meanwhile, write to <a href="mailto:{{ support_email }}">{{ support_email }}</a>.{% endblocktrans %}</p>{% endfor %}
 </div>

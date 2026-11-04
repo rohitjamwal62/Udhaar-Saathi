@@ -9,6 +9,8 @@ from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.base import BaseEmailBackend
 from django.core.mail.backends.smtp import EmailBackend as SmtpBackend
 from django.template.loader import render_to_string
+from django.utils import translation
+from django.utils.translation import gettext as _
 
 from . import google
 
@@ -74,19 +76,21 @@ def _send(subject: str, to: list[str], template: str, context: dict, reply_to: l
 
 
 def send_otp_email(email: str, code: str, purpose: str, minutes: int) -> bool:
-    subject = {"register": "Your UdhaarSaathi verification code", "reset": "Reset your UdhaarSaathi password"}[purpose]
+    """The code email goes out in the language the visitor has chosen on the website (English by default)."""
+    subject = {"register": _("Your UdhaarSaathi verification code"), "reset": _("Reset your UdhaarSaathi password")}[purpose]
     return _send(f"{subject}: {code}", [email], "otp", {"code": code, "purpose": purpose, "minutes": minutes})
 
 
 def send_welcome_email(email: str, name: str) -> bool:
-    return _send("Welcome to UdhaarSaathi", [email], "welcome", {"name": name})
+    return _send(_("Welcome to UdhaarSaathi"), [email], "welcome", {"name": name})
 
 
 def send_contact_emails(name: str, email: str, phone: str, subject: str, message: str) -> bool:
-    """Notify the team, and acknowledge the sender."""
+    """Notify the team (always in English: that is the team's language), and acknowledge the sender in their language."""
     subject = " ".join(subject.split())[:160]          # one line only: no header injection through the subject
     name = " ".join(name.split())[:120]
-    ok = _send(f"[Contact] {subject}", [settings.SUPPORT_EMAIL], "contact_admin",
-               {"name": name, "email": email, "phone": phone, "subject": subject, "message": message}, reply_to=[email])
-    _send("We received your message", [email], "contact_ack", {"name": name, "subject": subject})
+    with translation.override("en"):
+        ok = _send(f"[Contact] {subject}", [settings.SUPPORT_EMAIL], "contact_admin",
+                   {"name": name, "email": email, "phone": phone, "subject": subject, "message": message}, reply_to=[email])
+    _send(_("We received your message"), [email], "contact_ack", {"name": name, "subject": subject})
     return ok

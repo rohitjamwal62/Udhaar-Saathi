@@ -1,51 +1,51 @@
-{% extends 'base.html' %}
-{% block title %}How it works for shopkeepers and customers | {{ SITE_NAME }}{% endblock %}
-{% block description %}See how a shopkeeper records udhaar, how a customer confirms it, and how offline entries sync. Simple steps, one shared record.{% endblock %}
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% blocktrans trimmed with site_name=SITE_NAME %}How it works for shopkeepers and customers | {{ site_name }}{% endblocktrans %}{% endblock %}
+{% block description %}{% trans "See how a shopkeeper records udhaar, how a customer confirms it, and how offline entries sync. Simple steps, one shared record." %}{% endblock %}
 {% block content %}
-<section class="page-hero"><div class="container"><span class="eyebrow">How it works</span><h1>Simple for the shopkeeper. Clear for the customer.</h1><p class="lead">Both sides see the same record, so there is less to argue about.</p></div></section>
+<section class="page-hero"><div class="container"><span class="eyebrow">{% trans "How it works" %}</span><h1>{% trans "Simple for the shopkeeper. Clear for the customer." %}</h1><p class="lead">{% trans "Both sides see the same record, so there is less to argue about." %}</p></div></section>
 
 <section class="section"><div class="container">
   <div class="split two">
-    <div class="reveal"><h2>If you run the shop</h2>
+    <div class="reveal"><h2>{% trans "If you run the shop" %}</h2>
       <ol class="flow">
-        <li><strong>Create your free account</strong>Verify your email with a one-time code.</li>
-        <li><strong>Add customers</strong>A name and number is enough to begin.</li>
-        <li><strong>Record what you sold</strong>Itemised or total only. Attach a bill photo if you like.</li>
-        <li><strong>Note each payment</strong>Full or partial. The balance updates for you.</li>
-        <li><strong>Remind and review</strong>Send a reminder, check reports and export your records.</li>
+        <li>{% blocktrans trimmed %}<strong>Create your free account</strong>Verify your email with a one-time code.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>Add customers</strong>A name and number is enough to begin.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>Record what you sold</strong>Itemised or total only. Attach a bill photo if you like.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>Note each payment</strong>Full or partial. The balance updates for you.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>Remind and review</strong>Send a reminder, check reports and export your records.{% endblocktrans %}</li>
       </ol></div>
-    <div class="reveal d1"><h2>If you are a customer</h2>
+    <div class="reveal d1"><h2>{% trans "If you are a customer" %}</h2>
       <ol class="flow">
-        <li><strong>Create a verified account</strong>One account works for many shops.</li>
-        <li><strong>Approve the shop link</strong>A shop sees your entries only after you approve.</li>
-        <li><strong>See your entries</strong>View each shop's balance and your combined balance.</li>
-        <li><strong>Confirm or dispute</strong>Agree to an entry, or dispute one that is wrong.</li>
+        <li>{% blocktrans trimmed %}<strong>Create a verified account</strong>One account works for many shops.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>Approve the shop link</strong>A shop sees your entries only after you approve.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>See your entries</strong>View each shop's balance and your combined balance.{% endblocktrans %}</li>
+        <li>{% blocktrans trimmed %}<strong>Confirm or dispute</strong>Agree to an entry, or dispute one that is wrong.{% endblocktrans %}</li>
       </ol></div>
   </div>
 </div></section>
 
 <section class="section alt"><div class="container">
-  <div class="section-head reveal"><h2>The same story, step by step</h2></div>
+  <div class="section-head reveal"><h2>{% trans "The same story, step by step" %}</h2></div>
   <div class="steps reveal">
     <svg class="steps-line" viewBox="0 0 900 56" preserveAspectRatio="none" aria-hidden="true" focusable="false"><path class="a-draw" pathLength="1" vector-effect="non-scaling-stroke" d="M150 28C230 2 300 54 450 28S670 2 750 28"/></svg>
-    <div class="step"><div class="num">1</div><h3>Shopkeeper records</h3><p>Status: Shopkeeper recorded.</p></div>
-    <div class="step"><div class="num">2</div><h3>Customer is asked</h3><p>Status: Awaiting confirmation.</p></div>
-    <div class="step"><div class="num">3</div><h3>Customer decides</h3><p>Status: Customer confirmed, or Disputed.</p></div>
+    <div class="step"><div class="num">1</div><h3>{% trans "Shopkeeper records" %}</h3><p>{% trans "Status: Shopkeeper recorded." %}</p></div>
+    <div class="step"><div class="num">2</div><h3>{% trans "Customer is asked" %}</h3><p>{% trans "Status: Awaiting confirmation." %}</p></div>
+    <div class="step"><div class="num">3</div><h3>{% trans "Customer decides" %}</h3><p>{% trans "Status: Customer confirmed, or Disputed." %}</p></div>
   </div>
-  <p class="center muted" style="margin-top:24px">A shopkeeper can never mark an entry confirmed. Only the customer can.</p>
+  <p class="center muted" style="margin-top:24px">{% trans "A shopkeeper can never mark an entry confirmed. Only the customer can." %}</p>
 </div></section>
 
 <section class="section"><div class="container split two">
-  <div class="reveal"><span class="eyebrow">Offline-first</span><h2>What happens with no internet</h2>
-    <p class="lead">Entries are saved on the phone straight away and synced exactly once when internet returns.</p>
-    <p class="muted">Messages, one-time codes and confirmation links need internet.</p></div>
+  <div class="reveal"><span class="eyebrow">{% trans "Offline-first" %}</span><h2>{% trans "What happens with no internet" %}</h2>
+    <p class="lead">{% trans "Entries are saved on the phone straight away and synced exactly once when internet returns." %}</p>
+    <p class="muted">{% trans "Messages, one-time codes and confirmation links need internet." %}</p></div>
   <div class="reveal d1">{% include "partials/art_sync.html" %}</div>
 </div></section>
 
 <section class="section tint"><div class="container center reveal">
-  <h2>Mistakes happen. Corrections are visible.</h2>
-  <p class="lead" style="margin-inline:auto">If an entry is wrong, it is corrected with a reversal or adjustment and a reason. Entries are never silently edited or deleted, and every change is in the audit trail.</p>
-  <p class="muted">Rs {{ plan.amount_rupees }} per month after your {{ plan.trial_months }}-month free trial.</p>
+  <h2>{% trans "Mistakes happen. Corrections are visible." %}</h2>
+  <p class="lead" style="margin-inline:auto">{% trans "If an entry is wrong, it is corrected with a reversal or adjustment and a reason. Entries are never silently edited or deleted, and every change is in the audit trail." %}</p>
+  <p class="muted">{% blocktrans trimmed with amount_rupees=plan.amount_rupees trial_months=plan.trial_months %}Rs {{ amount_rupees }} per month after your {{ trial_months }}-month free trial.{% endblocktrans %}</p>
 </div></section>
 {% include "partials/cta.html" %}
 {% endblock %}

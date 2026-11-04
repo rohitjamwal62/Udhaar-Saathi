@@ -65,7 +65,13 @@ class EmailOTPAdmin(admin.ModelAdmin):
 class FAQAdmin(admin.ModelAdmin):
     list_display = ("question", "order", "published")
     list_editable = ("order", "published")
-    search_fields = ("question", "answer")
+    search_fields = ("question", "answer", "question_hi", "answer_hi")
+    fieldsets = (
+        ("English", {"fields": ("question", "answer")}),
+        ("हिन्दी (Hindi, optional)", {"fields": ("question_hi", "answer_hi"),
+                                      "description": "Shown instead of the English text when the visitor has chosen Hindi."}),
+        ("Display", {"fields": ("order", "published")}),
+    )
 
 
 from .models import LedgerEntry, Party  # noqa: E402

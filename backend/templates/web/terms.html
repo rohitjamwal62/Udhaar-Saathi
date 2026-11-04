@@ -3,50 +3,6 @@
 {% block description %}{% blocktrans trimmed with site_name=SITE_NAME %}The draft terms for using {{ site_name }}, in plain language.{% endblocktrans %}{% endblock %}
 {% block content %}
 <section class="section"><div class="container prose">
-  <div class="draft-banner" role="note">{% trans "Draft: to be reviewed by legal counsel before launch" %}</div>
-  <h1>{% trans "Terms of use" %}</h1>
-  <p class="muted">{% blocktrans trimmed with year=YEAR %}Last updated: {{ year }}. This is plain-language draft text and may change before launch.{% endblocktrans %}</p>
-
-  <h2>{% blocktrans trimmed with site_name=SITE_NAME %}1. What {{ site_name }} is{% endblocktrans %}</h2>
-  <p>{% blocktrans trimmed with site_name=SITE_NAME %}{{ site_name }} is a digital khata (credit ledger) and sales tracking tool for small shops in India. It has an Android app and this website. It helps you record what was sold, what was paid and what is still due.{% endblocktrans %}</p>
-  <p>{% blocktrans trimmed with site_name=SITE_NAME %}{{ site_name }} is not a bank, lender, credit bureau or debt-collection agency. It is not a GST billing or full point-of-sale product.{% endblocktrans %}</p>
-
-  <h2>{% trans "2. Your account" %}</h2>
-  <ul>
-    <li>{% trans "Give true details and keep your password private. You are responsible for activity on your account." %}</li>
-    <li>{% trans "We verify your email with a one-time code. Codes expire and can be used once." %}</li>
-    <li>{% trans "A customer account can link to a shop only after the customer approves." %}</li>
-  </ul>
-
-  <h2>{% trans "3. Entries and confirmations" %}</h2>
-  <ul>
-    <li>{% trans "Shopkeepers record entries. A shopkeeper cannot mark an entry as confirmed. Only the customer can confirm or dispute it." %}</li>
-    <li>{% trans "Corrections are made by reversal or adjustment with a reason. Entries are not silently edited or deleted." %}</li>
-    <li>{% trans "A confirmation is an acknowledgement and part of an evidence trail. We do not promise that it is legal proof. You should take your own legal advice where needed." %}</li>
-    <li>{% trans "You are responsible for the accuracy of what you record." %}</li>
-  </ul>
-
-  <h2>{% trans "4. Price and payment" %}</h2>
-  <ul>
-    <li>{% blocktrans trimmed with trial_months=PLAN.trial_months %}Registration is free. Each shop gets one {{ trial_months }}-month free trial.{% endblocktrans %}</li>
-    <li>{% blocktrans trimmed with amount_rupees=PLAN.amount_rupees %}After that the plan costs Rs {{ amount_rupees }} per month. Taxes and gateway charges are shown before you pay. You can cancel any time.{% endblocktrans %}</li>
-    <li>{% blocktrans trimmed with grace_days=PLAN.grace_days %}If a renewal fails, you have a {{ grace_days }}-day grace period. After that, paid features become read-only. Your records and exports are not deleted.{% endblocktrans %}</li>
-    <li>{% trans "Payments are planned through a payment gateway (UPI, cards, net banking). We do not store card or UPI details." %}</li>
-  </ul>
-
-  <h2>{% trans "5. Acceptable use" %}</h2>
-  <p>{% trans "Do not use the service to cheat, harass or threaten anyone, to record false entries, to break the law, or to attack or overload our systems." %}</p>
-
-  <h2>{% trans "6. Availability" %}</h2>
-  <p>{% trans "We try to keep the service running, but we cannot promise it will always be available. The app saves entries on your phone when offline. Messages, one-time codes and confirmation links need internet." %}</p>
-
-  <h2>{% trans "7. Limits of responsibility" %}</h2>
-  <p>{% trans "We provide the service as it is. To the extent the law allows, we are not responsible for losses from wrong entries, unpaid dues, or events outside our control. Nothing here limits rights you have under the law." %}</p>
-
-  <h2>{% trans "8. Ending your account" %}</h2>
-  <p>{% blocktrans trimmed with site_name=SITE_NAME %}You may stop using {{ site_name }} at any time. We may suspend accounts that break these terms.{% endblocktrans %}</p>
-
-  <h2>{% trans "9. Contact" %}</h2>
-  <p>{% url 'privacy' as url_privacy %}{% blocktrans trimmed with support_email=SUPPORT_EMAIL %}Questions about these terms: <a href="mailto:{{ support_email }}">{{ support_email }}</a>. See also our <a href="{{ url_privacy }}">Privacy notice</a>.{% endblocktrans %}</p>
+{% if legal_body %}{{ legal_body|safe }}{% else %}{% include "web/_terms_body.html" %}{% endif %}
 </div></section>
 {% endblock %}

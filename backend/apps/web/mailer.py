@@ -5,6 +5,8 @@ import smtplib
 import time
 
 from django.conf import settings
+
+from .context_processors import support_email
 from django.core.mail import EmailMultiAlternatives
 from django.core.mail.backends.base import BaseEmailBackend
 from django.core.mail.backends.smtp import EmailBackend as SmtpBackend
@@ -90,7 +92,7 @@ def send_contact_emails(name: str, email: str, phone: str, subject: str, message
     subject = " ".join(subject.split())[:160]          # one line only: no header injection through the subject
     name = " ".join(name.split())[:120]
     with translation.override("en"):
-        ok = _send(f"[Contact] {subject}", [settings.SUPPORT_EMAIL], "contact_admin",
+        ok = _send(f"[Contact] {subject}", [support_email()], "contact_admin",
                    {"name": name, "email": email, "phone": phone, "subject": subject, "message": message}, reply_to=[email])
     _send(_("We received your message"), [email], "contact_ack", {"name": name, "subject": subject})
     return ok

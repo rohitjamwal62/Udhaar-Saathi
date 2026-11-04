@@ -18,8 +18,8 @@ from django.views.decorators.http import require_POST
 from apps.common.ratelimit import hit
 
 from . import google, mailer, otp
-from .forms import ContactForm, DocumentForm, EmailForm, EntryForm, LoginForm, OTPForm, PartyForm, RegisterForm, ResetForm
-from .models import FAQ, ContactMessage, Document, LedgerEntry, Party, Profile
+from .forms import ProfileForm, ContactForm, DocumentForm, EmailForm, EntryForm, LoginForm, OTPForm, PartyForm, RegisterForm, ResetForm
+from .models import FAQ, ContactMessage, Document, LedgerEntry, LegalPage, Party, Profile
 from .context_processors import current_plan
 
 log = logging.getLogger("web")
@@ -77,12 +77,23 @@ def faq(request):
     return render(request, "web/faq.html", {"faqs": FAQ.objects.filter(published=True)})
 
 
+def _legal(request, slug: str, template: str):
+    """Terms / Privacy: the text stored in the database wins; the built-in template text is the fallback."""
+    from django.utils.translation import get_language
+    page = LegalPage.objects.filter(slug=slug).first()
+    body = ""
+    if page:
+        hindi = (get_language() or "en").startswith("hi") and page.body_hi.strip()
+        body = (page.body_hi if hindi else page.body_en).strip()
+    return render(request, template, {"legal_body": body})
+
+
 def terms(request):
-    return render(request, "web/terms.html")
+    return _legal(request, "terms", "web/terms.html")
 
 
 def privacy(request):
-    return render(request, "web/privacy.html")
+    return _legal(request, "privacy", "web/privacy.html")
 
 
 def contact(request):
@@ -353,3 +364,38 @@ def entry_void(request, pk: int):
         e.save(update_fields=["voided", "voided_at"])
         messages.success(request, _("Entry cancelled. It stays in the history, marked as cancelled."))
     return redirect("party_detail", pk=e.party_id)
+
+
+# ───────────────────────────── edit my profile / a person ─────────────────────────────
+@login_required
+def profile_edit(request):
+    profile, _created = Profile.objects.get_or_create(user=request.user)
+    initial = {"full_name": request.user.first_name, "phone": profile.phone, "shop_name": profile.shop_name}
+    form = ProfileForm(request.POST or None, initial=initial)
+    if request.method == "POST" and form.is_valid():
+        d = form.cleaned_data
+        with transaction.atomic():
+            request.user.first_name = d["full_name"].strip()
+            request.user.save(update_fields=["first_name"])
+            profile.phone, profile.shop_name = d["phone"], d["shop_name"].strip()
+            profile.save(update_fields=["phone", "shop_name", "updated_at"])
+        messages.success(request, _("Your details were saved."))
+        return redirect("dashboard")
+    return render(request, "web/profile.html", {"form": form, "profile": profile})
+
+
+@login_required
+def party_edit(request, pk: int):
+    party = get_object_or_404(Party, pk=pk, owner=request.user)
+    form = PartyForm(request.POST or None, initial={"name": party.name, "phone": party.phone, "note": party.note})
+    if request.method == "POST" and form.is_valid():
+        d = form.cleaned_data
+        name = d["name"].strip()
+        if Party.objects.filter(owner=request.user, name__iexact=name).exclude(pk=party.pk).exists():
+            form.add_error("name", _("You already have a person called %(name)s.") % {"name": name})
+        else:
+            party.name, party.phone, party.note = name, d["phone"].strip(), d["note"].strip()
+            party.save(update_fields=["name", "phone", "note"])
+            messages.success(request, _("Details saved."))
+            return redirect("party_detail", pk=party.pk)
+    return render(request, "web/party_edit.html", {"form": form, "party": party})

@@ -67,7 +67,7 @@
         <li><a href="{% url 'register' %}">{% trans "Start free" %}</a></li><li><a href="{% url 'login' %}">{% trans "Log in" %}</a></li></ul></nav>
       <nav aria-label="{% trans 'Legal' %}"><h2>{% trans "Legal" %}</h2><ul>
         <li><a href="{% url 'terms' %}">{% trans "Terms" %}</a></li><li><a href="{% url 'privacy' %}">{% trans "Privacy" %}</a></li></ul></nav>
-      <div><h2>{% trans "Contact" %}</h2><ul><li><a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a></li></ul>
+      <div><h2>{% trans "Contact" %}</h2><ul><li><a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a></li>{% if SUPPORT_PHONE %}<li><a href="tel:{{ SUPPORT_PHONE }}">{{ SUPPORT_PHONE }}</a></li>{% endif %}{% if SUPPORT_WHATSAPP %}<li><a href="https://wa.me/91{{ SUPPORT_WHATSAPP }}" rel="noopener">WhatsApp</a></li>{% endif %}{% if SUPPORT_ADDRESS %}<li class="muted">{{ SUPPORT_ADDRESS }}</li>{% endif %}</ul>
         <h2 style="margin-top:18px">{% trans "Language" %}</h2>{% include "partials/lang_switch.html" with where="in-foot" %}</div>
     </div>
     <p class="foot-bottom">{% blocktrans trimmed with year=YEAR site_name=SITE_NAME %}&copy; {{ year }} {{ site_name }}. Confirmations in the app are an acknowledgement and evidence trail, not guaranteed legal proof.{% endblocktrans %}</p>

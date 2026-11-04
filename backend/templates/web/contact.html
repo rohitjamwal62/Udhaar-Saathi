@@ -18,7 +18,7 @@
     </form>
   </div>
   <aside class="reveal d1">
-    <div class="card"><h2 style="font-size:1.3rem">{% trans "Email" %}</h2><p><a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a></p>
+    <div class="card"><h2 style="font-size:1.3rem">{% trans "Email" %}</h2><p><a href="mailto:{{ SUPPORT_EMAIL }}">{{ SUPPORT_EMAIL }}</a></p>{% if SUPPORT_PHONE %}<p><a href="tel:{{ SUPPORT_PHONE }}">{{ SUPPORT_PHONE }}</a></p>{% endif %}{% if SUPPORT_WHATSAPP %}<p><a href="https://wa.me/91{{ SUPPORT_WHATSAPP }}" rel="noopener">WhatsApp</a></p>{% endif %}{% if SUPPORT_ADDRESS %}<p class="muted">{{ SUPPORT_ADDRESS }}</p>{% endif %}
       <h2 style="font-size:1.3rem;margin-top:1.2em">{% trans "What to expect" %}</h2>
       <p class="muted">{% trans "We send an acknowledgement to your email address when your message arrives, then reply as soon as we can. Please do not send passwords or one-time codes." %}</p></div>
   </aside>

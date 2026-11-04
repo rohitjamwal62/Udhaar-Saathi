@@ -146,3 +146,47 @@ class LedgerEntry(models.Model):
 
     def __str__(self):
         return f"{self.get_kind_display()} {self.amount_paise / 100:.2f} - {self.party}"
+
+
+class SiteSetting(models.Model):
+    """Public contact details shown on the website. One row; edit it in Django admin. Empty fields fall back to the server settings."""
+    support_email = models.EmailField(blank=True, help_text="Shown in the footer and on the contact page; contact messages are sent here.")
+    support_phone = models.CharField(max_length=30, blank=True)
+    whatsapp_number = models.CharField(max_length=20, blank=True, help_text="10-digit Indian mobile number, shown as a WhatsApp link.")
+    address = models.CharField(max_length=240, blank=True)
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "site contact details"
+        verbose_name_plural = "site contact details"
+
+    def __str__(self):
+        return "Site contact details"
+
+    @classmethod
+    def current(cls):
+        """The one row, cached for a minute (cleared on save). Never raises: the site must render even if the table is not ready."""
+        from django.core.cache import cache
+        row = cache.get("site:setting")
+        if row is None:
+            try:
+                row = cls.objects.order_by("id").first() or cls()
+            except Exception:  # noqa: BLE001
+                row = cls()
+            cache.set("site:setting", row, 60)
+        return row
+
+
+class LegalPage(models.Model):
+    """Terms and Privacy text in English and Hindi, editable in admin. HTML is allowed (admins only). Empty body = built-in text."""
+    SLUGS = [("terms", "Terms of use"), ("privacy", "Privacy notice")]
+    slug = models.CharField(max_length=20, choices=SLUGS, unique=True)
+    body_en = models.TextField(blank=True, help_text="HTML. Leave empty to use the built-in English text.")
+    body_hi = models.TextField(blank=True, help_text="HTML. Leave empty to use the built-in Hindi text.")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    class Meta:
+        verbose_name = "legal page"
+
+    def __str__(self):
+        return self.get_slug_display()

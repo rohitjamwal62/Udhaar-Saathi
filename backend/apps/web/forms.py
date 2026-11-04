@@ -146,3 +146,19 @@ class EntryForm(forms.Form):
         if d > timezone.localdate():
             raise forms.ValidationError(_("The date cannot be in the future."))
         return d
+
+
+class ProfileForm(forms.Form):
+    full_name = forms.CharField(max_length=120, label=gettext_lazy("Full name"))
+    phone = forms.CharField(max_length=20, required=False, label=gettext_lazy("Mobile number (optional)"))
+    shop_name = forms.CharField(max_length=160, required=False, label=gettext_lazy("Shop name (optional)"))
+
+    def clean_phone(self):
+        from .reminders import normalize_mobile
+        raw = self.cleaned_data["phone"].strip()
+        if not raw:
+            return ""
+        m = normalize_mobile(raw)
+        if not m:
+            raise forms.ValidationError(_("Enter a valid 10-digit Indian mobile number."))
+        return "+91" + m

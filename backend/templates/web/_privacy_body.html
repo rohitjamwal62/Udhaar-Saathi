@@ -1,0 +1,46 @@
+{% load i18n %}  <div class="draft-banner" role="note">{% trans "Draft: to be reviewed by legal counsel before launch" %}</div>
+  <h1>{% trans "Privacy notice" %}</h1>
+  <p class="muted">{% blocktrans trimmed with year=YEAR %}Last updated: {{ year }}. This is plain-language draft text and may change before launch.{% endblocktrans %}</p>
+
+  <h2>{% trans "What we collect" %}</h2>
+  <ul>
+    <li>{% blocktrans trimmed %}<strong>Account details:</strong> your name, email address, optional mobile number, optional shop name and your role (shopkeeper or customer).{% endblocktrans %}</li>
+    <li>{% blocktrans trimmed %}<strong>Your password:</strong> stored hashed, never as plain text.{% endblocktrans %}</li>
+    <li>{% blocktrans trimmed %}<strong>Khata and sales records:</strong> customers, entries, payments, items and amounts that you or your customers record.{% endblocktrans %}</li>
+    <li>{% blocktrans trimmed %}<strong>Documents and bill photos</strong> that you upload.{% endblocktrans %}</li>
+    <li>{% blocktrans trimmed %}<strong>Messages</strong> you send us through the contact form.{% endblocktrans %}</li>
+    <li>{% blocktrans trimmed %}<strong>Technical data</strong> needed to run and protect the service, such as security and audit logs.{% endblocktrans %}</li>
+  </ul>
+
+  <h2>{% trans "Why we use it" %}</h2>
+  <ul>
+    <li>{% trans "To create your account and keep it secure." %}</li>
+    <li>{% trans "To run the khata, sales tracking and reminders you ask for." %}</li>
+    <li>{% trans "To show a customer their own entries and let them confirm or dispute." %}</li>
+    <li>{% trans "To reply to you and to prevent misuse." %}</li>
+  </ul>
+  <p>{% trans "We do not sell your data." %}</p>
+
+  <h2>{% trans "Email one-time codes" %}</h2>
+  <p>{% trans "We email you a one-time code to verify your address and to reset your password. The code expires and works only once. We also send a welcome email and replies to your contact messages." %}</p>
+
+  <h2>{% trans "Documents in Google Drive" %}</h2>
+  <p>{% trans "Documents you upload are stored in private storage on Google Drive that we control. They are not public. You can download your own documents from your dashboard. Google processes them as our storage provider." %}</p>
+
+  <h2>{% trans "Who can see your data" %}</h2>
+  <p>{% trans "Each shop's data is kept separate from other shops. A customer sees their own entries. A shopkeeper sees entries for their own shop. A customer's account is linked to a shop only after the customer approves." %}</p>
+
+  <h2>{% trans "How long we keep it" %}</h2>
+  <p>{% trans "We keep your account and records while your account is active. If paid features become read-only, your records and exports are still kept. Audit logs are kept to protect everyone's records. When you ask us to delete your account, we delete or anonymise personal data, except what we must keep for law or to protect other users' records." %}</p>
+
+  <h2>{% trans "Your rights" %}</h2>
+  <p>{% blocktrans trimmed with support_email=SUPPORT_EMAIL %}You can ask to see the personal data we hold about you, to correct it, or to delete it. Write to <a href="mailto:{{ support_email }}">{{ support_email }}</a> from your registered email address. We will reply as soon as we can.{% endblocktrans %}</p>
+
+  <h2>{% trans "Payments" %}</h2>
+  <p>{% blocktrans trimmed with site_name=SITE_NAME %}When payments are available they will go through a payment gateway. {{ site_name }} does not store card or UPI details.{% endblocktrans %}</p>
+
+  <h2>{% trans "Security" %}</h2>
+  <p>{% url 'security' as url_security %}{% blocktrans trimmed %}We use HTTPS, hashed passwords, expiring one-time codes, rate limiting and audit logs. No system is perfectly secure. See our <a href="{{ url_security }}">Security page</a>.{% endblocktrans %}</p>
+
+  <h2>{% trans "Contact" %}</h2>
+  <p>{% url 'terms' as url_terms %}{% blocktrans trimmed with support_email=SUPPORT_EMAIL %}Privacy questions: <a href="mailto:{{ support_email }}">{{ support_email }}</a>. See also our <a href="{{ url_terms }}">Terms</a>.{% endblocktrans %}</p>

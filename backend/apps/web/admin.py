@@ -101,3 +101,32 @@ class LedgerEntryAdmin(admin.ModelAdmin):
 
     def has_delete_permission(self, request, obj=None):
         return False
+
+
+from django.core.cache import cache  # noqa: E402
+from .models import LegalPage, SiteSetting  # noqa: E402
+
+
+@admin.register(SiteSetting)
+class SiteSettingAdmin(admin.ModelAdmin):
+    """Contact details for the footer and contact page. Only one row can exist."""
+    list_display = ("support_email", "support_phone", "whatsapp_number", "address", "updated_at")
+
+    def has_add_permission(self, request):
+        return not SiteSetting.objects.exists()
+
+    def has_delete_permission(self, request, obj=None):
+        return False
+
+    def save_model(self, request, obj, form, change):
+        super().save_model(request, obj, form, change)
+        cache.delete("site:setting")
+
+
+@admin.register(LegalPage)
+class LegalPageAdmin(admin.ModelAdmin):
+    list_display = ("slug", "updated_at")
+    fields = ("slug", "body_en", "body_hi")
+
+    def has_delete_permission(self, request, obj=None):
+        return False

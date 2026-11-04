@@ -7,6 +7,7 @@
 <div class="container dash-head">
   <p><a href="{% url 'ledger' %}">{% trans "&larr; Back to the ledger" %}</a></p>
   <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{{ party.name }}</h1>
+  <p><a class="btn btn-ghost btn-sm" href="{% url 'party_edit' party.pk %}">{% trans "Edit person" %}</a></p>
   <p class="muted">{% if party.phone %}{{ party.phone }}{% endif %}{% if party.phone and party.note %} &middot; {% endif %}{{ party.note }}</p>
   <div class="stats">
     <div class="card stat"><div class="k">{% trans "Balance" %}</div>

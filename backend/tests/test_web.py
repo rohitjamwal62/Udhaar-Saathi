@@ -756,3 +756,101 @@ def test_every_translatable_string_in_the_code_is_in_the_catalogue_and_mo_is_cur
     assert not missing, f"run tools/extract_messages.py (new strings: {missing[:3]})"
     assert build_mo(parse_po(po.read_text(encoding="utf-8"))) == po.with_suffix(".mo").read_bytes(), \
         "django.mo is stale: run python tools/compile_messages.py and commit it"
+
+
+# ───────────── everything editable is stored in the database ─────────────
+def test_profile_edit_saves_to_the_database():
+    c = verified_client()
+    assert c.get(reverse("profile_edit")).status_code == 200
+    r = c.post(reverse("profile_edit"), {"full_name": "Asha Verma", "phone": "98765 43210", "shop_name": "Asha Store"})
+    assert r.status_code == 302
+    u = get_user_model().objects.get(email="asha@example.com")
+    assert u.first_name == "Asha Verma"
+    p = Profile.objects.get(user=u)
+    assert (p.phone, p.shop_name) == ("+919876543210", "Asha Store")
+    assert Client().get(reverse("profile_edit")).status_code == 302          # login required
+
+
+def test_profile_edit_rejects_a_bad_mobile_number():
+    c = verified_client()
+    r = c.post(reverse("profile_edit"), {"full_name": "Asha", "phone": "12345", "shop_name": ""})
+    assert r.status_code == 200 and "valid 10-digit" in r.content.decode()
+    assert Profile.objects.get(user__email="asha@example.com").phone != "+9112345"
+
+
+def test_person_edit_saves_and_is_private_and_keeps_the_money_entries():
+    c = verified_client()
+    p = _add_person(c)
+    _entry(c, p, "gave", "300")
+    r = c.post(reverse("party_edit", args=[p.pk]), {"name": "Ramesh Kumar", "phone": "9123456780", "note": "neighbour"})
+    assert r.status_code == 302
+    from apps.web.models import LedgerEntry, Party
+    p.refresh_from_db()
+    assert (p.name, p.phone, p.note) == ("Ramesh Kumar", "9123456780", "neighbour")
+    assert LedgerEntry.objects.filter(party=p).count() == 1
+    other = verified_client("b@example.com")
+    assert other.get(reverse("party_edit", args=[p.pk])).status_code == 404
+    assert other.post(reverse("party_edit", args=[p.pk]), {"name": "Hacked"}).status_code == 404
+    Party.objects.create(owner=p.owner, name="Suresh")
+    dup = c.post(reverse("party_edit", args=[p.pk]), {"name": "suresh"})
+    assert dup.status_code == 200 and Party.objects.get(pk=p.pk).name == "Ramesh Kumar"
+
+
+def test_site_contact_details_come_from_the_database_and_are_editable():
+    from apps.web.models import SiteSetting
+    from django.core.cache import cache
+    assert SiteSetting.objects.exists()                                          # seeded by the migration
+    row = SiteSetting.objects.first()
+    old = (row.support_email, row.support_phone, row.whatsapp_number, row.address)
+    try:
+        row.support_email, row.support_phone, row.whatsapp_number, row.address = "help@example.org", "+91 11 2345 6789", "9876543210", "12 Market Road, Pune"
+        row.save()
+        cache.clear()
+        page = Client().get(reverse("contact")).content.decode()
+        assert "help@example.org" in page and "+91 11 2345 6789" in page and "wa.me/919876543210" in page and "12 Market Road" in page
+        c = Client()
+        c.post(reverse("contact"), {"name": "Ravi", "email": "ravi@example.com", "subject": "Hello", "message": "A question for you."})
+        assert any(m.to == ["help@example.org"] for m in mail.outbox)            # contact mail goes to the database address
+    finally:
+        row.support_email, row.support_phone, row.whatsapp_number, row.address = old
+        row.save()
+        cache.clear()
+
+
+def test_terms_and_privacy_are_stored_in_the_database_and_override_the_template():
+    from apps.web.models import LegalPage
+    t = LegalPage.objects.get(slug="terms")
+    assert "Terms of use" in t.body_en and t.body_hi.strip()                      # seeded with the built-in text, both languages
+    old = (t.body_en, t.body_hi)
+    try:
+        t.body_en, t.body_hi = "<h1>Custom terms</h1><p>Edited by the owner.</p>", ""
+        t.save()
+        c = Client()
+        assert "Edited by the owner." in c.get(reverse("terms")).content.decode()
+        c.post("/i18n/setlang/", {"language": "hi", "next": "/terms/"})
+        assert "Edited by the owner." in c.get(reverse("terms")).content.decode()   # no Hindi text yet: falls back to English
+        t.body_hi = "<h1>शर्तें</h1>"
+        t.save()
+        assert "शर्तें" in c.get(reverse("terms")).content.decode()
+        t.body_en = t.body_hi = ""
+        t.save()
+        assert "Terms of use" in Client().get(reverse("terms")).content.decode()     # empty body: built-in text again
+    finally:
+        t.body_en, t.body_hi = old
+        t.save()
+
+
+def test_new_pages_render_in_hindi():
+    c = verified_client()
+    c.post("/i18n/setlang/", {"language": "hi", "next": "/"})
+    assert "मेरी जानकारी बदलें" in c.get(reverse("profile_edit")).content.decode()
+    p = _add_person(c)
+    assert "व्यक्ति की जानकारी बदलें" in c.get(reverse("party_edit", args=[p.pk])).content.decode()
+
+
+def test_admin_can_manage_the_new_content_but_cannot_add_a_second_settings_row():
+    get_user_model().objects.create_superuser("Rohit", "boss@example.com", "Test-Admin-Pass-1")
+    a = Client(); a.login(username="Rohit", password="Test-Admin-Pass-1")
+    for url in ("/admin/web/sitesetting/", "/admin/web/legalpage/", "/admin/web/party/", "/admin/web/ledgerentry/"):
+        assert a.get(url).status_code == 200, url
+    assert a.get("/admin/web/sitesetting/add/").status_code == 403

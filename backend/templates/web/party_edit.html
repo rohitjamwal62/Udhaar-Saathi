@@ -1,0 +1,21 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "Edit person" %} | {{ SITE_NAME }}{% endblock %}
+{% block description %}{% trans "Change the name, mobile number or note of a person in your ledger." %}{% endblock %}
+{% block content %}
+<div class="container dash-head">
+  <p><a href="{% url 'party_detail' party.pk %}">&larr; {{ party.name }}</a></p>
+  <h1 style="font-size:clamp(1.6rem,3vw,2.2rem)">{% trans "Edit person" %}</h1>
+  <p class="muted">{% trans "Changing the name does not change any money entries." %}</p>
+</div>
+<div class="container" style="padding-bottom:64px;max-width:640px">
+  <section class="card">
+    <form method="post" novalidate>
+      {% csrf_token %}
+      {% with field=form.name %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.phone %}{% include "partials/field.html" %}{% endwith %}
+      {% with field=form.note %}{% include "partials/field.html" %}{% endwith %}
+      <button class="btn btn-block" type="submit">{% trans "Save" %}</button>
+    </form>
+  </section>
+</div>
+{% endblock %}

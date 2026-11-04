@@ -21,6 +21,16 @@ def current_plan() -> dict:
     return plan
 
 
+def support_email() -> str:
+    """The contact address: the database value (edited in admin) first, then the server setting."""
+    from .models import SiteSetting
+    return SiteSetting.current().support_email or settings.SUPPORT_EMAIL
+
+
 def site(request):
-    return {"SITE_NAME": settings.SITE_NAME, "SUPPORT_EMAIL": settings.SUPPORT_EMAIL, "APP_ENV": settings.APP_ENV,
+    from .models import SiteSetting
+    s = SiteSetting.current()
+    return {"SITE_NAME": settings.SITE_NAME, "SUPPORT_EMAIL": s.support_email or settings.SUPPORT_EMAIL,
+            "SUPPORT_PHONE": s.support_phone, "SUPPORT_WHATSAPP": s.whatsapp_number, "SUPPORT_ADDRESS": s.address,
+            "APP_ENV": settings.APP_ENV,
             "SITE_URL": settings.SITE_URL, "YEAR": timezone.now().year, "PLAN": current_plan()}

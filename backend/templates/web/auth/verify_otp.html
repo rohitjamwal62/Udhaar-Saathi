@@ -5,7 +5,11 @@
 <section class="auth"><div class="container auth-wrap">
   <div class="auth-card">
     <h1>Check your email</h1>
+    {% if send_failed %}
+    <p class="sub"><strong>We could not email the code to {{ email }}.</strong> Email sending is having a problem on our side. Please try "Resend code" in a minute, or <a href="{% url 'contact' %}">contact us</a> and we will help you finish signing up.</p>
+    {% else %}
     <p class="sub">We sent a 6-digit code to <strong>{{ email }}</strong>. It expires soon and works only once.</p>
+    {% endif %}
     <form method="post" novalidate>
       {% csrf_token %}
       {% include "partials/nonfield.html" %}

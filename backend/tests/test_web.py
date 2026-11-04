@@ -426,3 +426,16 @@ def test_contact_subject_cannot_inject_email_headers():
                                        "message": "m", "website": ""})
     admin_mail = next(x for x in mail.outbox if x.to == ["support@example.test"])
     assert chr(10) not in admin_mail.subject and chr(13) not in admin_mail.subject and not admin_mail.bcc
+
+
+@override_settings(ALLOW_DEV_OTP_IN_LOGS=False)
+def test_verify_page_does_not_claim_a_code_was_sent_when_the_email_failed():
+    c = Client()
+    with mock.patch.object(mailer, "send_otp_email", return_value=False):
+        register(c)
+    html = c.get(reverse("verify_otp")).content.decode()
+    assert "We could not email the code" in html and "We sent a 6-digit code" not in html
+    mail.outbox.clear()
+    c.post(reverse("resend_otp"))                                              # email works now
+    html = c.get(reverse("verify_otp")).content.decode()
+    assert "We sent a 6-digit code" in html and "We could not email" not in html

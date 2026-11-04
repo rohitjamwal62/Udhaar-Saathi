@@ -21,6 +21,21 @@ from .models import FAQ, ContactMessage, Document, Profile
 from .context_processors import current_plan
 
 log = logging.getLogger("web")
+
+
+def _send_otp(request, email: str, purpose: str) -> bool:
+    """Send a code and remember on the session whether the email really went out. Returns True if it did."""
+    try:
+        otp.send_code(email, purpose, client_ip(request))
+    except otp.OtpDeliveryError as e:
+        request.session["otp_send_failed"] = True
+        messages.warning(request, str(e))
+        return False
+    except otp.OtpError as e:                       # throttled: nothing new was sent, keep the previous state
+        messages.warning(request, str(e))
+        return False
+    request.session["otp_send_failed"] = False
+    return True
 User = get_user_model()
 BACKEND = "apps.web.auth_backends.EmailOrUsernameBackend"
 
@@ -102,11 +117,8 @@ def register(request):
             profile.terms_accepted_at = timezone.now()
             profile.save()
         request.session["pending_email"] = d["email"]
-        try:
-            otp.send_code(d["email"], "register", client_ip(request))
+        if _send_otp(request, d["email"], "register"):
             messages.success(request, f"We sent a 6-digit code to {mask_email(d['email'])}.")
-        except otp.OtpError as e:
-            messages.warning(request, str(e))
         return redirect("verify_otp")
     return render(request, "web/auth/register.html", {"form": form})
 
@@ -135,7 +147,8 @@ def verify_otp(request):
                 mailer.send_welcome_email(user.email, user.first_name or "there")
                 messages.success(request, "Your email is verified. Welcome to UdhaarSaathi!")
                 return redirect("dashboard")
-    return render(request, "web/auth/verify_otp.html", {"form": form, "email": mask_email(email), "resend_in": otp.seconds_until_resend(email, "register")})
+    return render(request, "web/auth/verify_otp.html", {"form": form, "email": mask_email(email), "resend_in": otp.seconds_until_resend(email, "register"),
+                                                        "send_failed": bool(request.session.get("otp_send_failed"))})
 
 
 @require_POST
@@ -143,11 +156,8 @@ def resend_otp(request):
     email = request.session.get("pending_email")
     if not email:
         return redirect("register")
-    try:
-        otp.send_code(email, "register", client_ip(request))
+    if _send_otp(request, email, "register"):
         messages.success(request, f"A new code was sent to {mask_email(email)}.")
-    except otp.OtpError as e:
-        messages.warning(request, str(e))
     return redirect("verify_otp")
 
 
@@ -165,11 +175,8 @@ def login_view(request):
             if user and user.check_password(form.cleaned_data["password"]):
                 if not user.is_active:                      # right password, but the email was never verified
                     request.session["pending_email"] = user.email
-                    try:
-                        otp.send_code(user.email, "register", client_ip(request))
-                    except otp.OtpError:
-                        pass
-                    messages.info(request, "Please verify your email first. We sent you a new code.")
+                    if _send_otp(request, user.email, "register"):
+                        messages.info(request, "Please verify your email first. We sent you a new code.")
                     return redirect("verify_otp")
                 login(request, user, backend=BACKEND)
                 nxt = request.GET.get("next", "")
@@ -191,10 +198,7 @@ def forgot_password(request):
         email = form.cleaned_data["email"].strip().lower()
         request.session["reset_email"] = email
         if User.objects.filter(email__iexact=email, is_active=True).exists():     # same reply either way
-            try:
-                otp.send_code(email, "reset", client_ip(request))
-            except otp.OtpError as e:
-                messages.warning(request, str(e))
+            _send_otp(request, email, "reset")
         messages.success(request, "If that email has an account, we sent a code to it.")
         return redirect("reset_password")
     return render(request, "web/auth/forgot_password.html", {"form": form})

@@ -16,6 +16,10 @@ from . import mailer
 from .models import EmailOTP
 
 
+class OtpDeliveryError(Exception):
+    """The code was created but the email could not be sent."""
+
+
 class OtpError(Exception):
     """Carries a message that is safe to show to the user."""
 
@@ -53,7 +57,7 @@ def send_code(email: str, purpose: str, ip: str | None = None) -> None:
         print(f"[DEV EMAIL OTP] {email} ({purpose}): {code}", flush=True)
     sent = mailer.send_otp_email(email, code, purpose, settings.EMAIL_OTP_TTL_SECONDS // 60)
     if not sent and not settings.ALLOW_DEV_OTP_IN_LOGS:
-        raise OtpError("We could not send the email right now. Please try again in a moment.")
+        raise OtpDeliveryError("We could not send the email right now. Please try again in a moment.")
 
 
 def verify_code(email: str, purpose: str, code: str) -> None:

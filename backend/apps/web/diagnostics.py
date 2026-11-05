@@ -48,7 +48,7 @@ def email_check(request):
     to = request.GET.get("send", "").strip()
     if to:
         try:
-            n = send_mail("UdhaarSaathi email check", f"Sent from the {settings.APP_ENV} server.",
+            n = send_mail("LenDen Saathi email check", f"Sent from the {settings.APP_ENV} server.",
                           settings.DEFAULT_FROM_EMAIL, [to], fail_silently=False)
             out["test_email"] = {"to": to, "sent": n}
         except Exception as e:  # noqa: BLE001

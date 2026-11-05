@@ -49,7 +49,7 @@ export function LoginScreen({ navigation, route }: P<'Login'>) {
 
   return (
     <Screen>
-      <Header title="UdhaarSaathi" subtitle="Digital khata for your shop" />
+      <Header title="LenDen Saathi" subtitle="Digital khata for your shop" />
       {route.params?.notice ? <Banner tone="success">{route.params.notice}</Banner> : null}
       <TextField label="Mobile number" prefix="+91" keyboardType="phone-pad" autoComplete="tel" value={mobile}
         onChangeText={setMobile} error={mobileErr} maxLength={13} />

@@ -47,7 +47,7 @@ git checkout main    && git merge staging && git push  # promote to production
 
 ## The website (Django templates + admin) on the same services
 The same Django project serves the API (`/api/...`) **and** the website (`/`, `/features/`, `/pricing/`, `/register/`, `/login/`,
-`/dashboard/`, ...) plus Django admin at **`/admin/`**. Each deploy runs `collectstatic` (build) and `migrate` (start).
+`/dashboard/`, ...) plus Django admin at **`/admin/`**. Each deploy runs `collectstatic` and `migrate` during the **build**, so a start only has to boot gunicorn.
 
 | What | Where |
 |---|---|
@@ -71,3 +71,18 @@ after 7 days: publish the OAuth consent screen ("In production") to avoid that.
 
 **Admin user.** `ADMIN_PASSWORD=... python manage.py create_site_admin --username Rohit --email you@example.com` (run once per
 environment database). Change the password after the first login.
+
+
+## Cold starts (why the first visit can take a minute)
+Render's **free** plan stops a web service after 15 minutes without a request. The next visitor waits while Render starts it
+again (they see Render's "waking up" page): measured at about **48 seconds** on staging before the changes below.
+
+What was done:
+- **Faster boot.** Migrations moved from the start command to the build command, and gunicorn runs one worker with 4 threads
+  (`--workers 1 --threads 4 --worker-class gthread`). The service has less to do before it can answer.
+- **Keep-alive.** `.github/workflows/keepalive.yml` requests `/health/live` of **production** every 5 minutes between 06:30 and
+  23:25 India time, so shoppers rarely meet a sleeping server. Render gives 750 free hours a month shared by all three
+  services, so it is deliberately not run 24 hours a day. GitHub scheduled runs are best effort and can be late, and the
+  service still sleeps at night, so the first visit in the morning can still be slow.
+- **The real fix** is the **Starter** plan for the production service: always awake, no cold start, no schedule to maintain.
+  Change the plan on the service's Settings page (or ask the assistant to do it through the API), then delete the keep-alive workflow.

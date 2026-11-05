@@ -31,8 +31,8 @@ export async function openCheckout(
       order_id: order.order_id,
       amount: order.amount_paise,
       currency: order.currency,
-      name: 'UdhaarSaathi',
-      description: 'UdhaarSaathi monthly subscription',
+      name: 'LenDen Saathi',
+      description: 'LenDen Saathi monthly subscription',
       prefill,
       theme: { color: '#0B6E4F' },
     });

@@ -1,4 +1,4 @@
-# UdhaarSaathi
+# LenDen Saathi
 
 A digital udhaar (credit) ledger for Indian shopkeepers and their customers: record who you lent money to, how much,
 and what is still to come back. Works offline on the phone, syncs when online.
@@ -50,7 +50,7 @@ backend/    Django project (API + website + admin). Start here: backend/README.m
 mobile/     Expo app. Start here: mobile/README.md
 database/   create_tables.py (one file creates the schema), copy_data.py, check_neon.py
 deploy/     render_deploy.py, render_update.py, e2e_site.py (live end-to-end test)
-brand/      logo files and make_logo.py (regenerates every icon from one definition)
+brand/      the owner's logo and make_assets.py (regenerates every icon from it)
 render.yaml, DEPLOY_RENDER.md   Render blueprint and deployment guide
 .github/workflows/ci.yml        the "test" environment: runs the suite against a Postgres service
 ```
@@ -132,9 +132,11 @@ FAQ answers have Hindi fields editable in admin.
 
 ## Brand
 
-The logo is a two-tone rupee (₹) built from rounded strokes in brand green `#0B6E4F` and gold `#F2A900`, with cream
-`#FFF8E7`. `python brand/make_logo.py` regenerates the app icon, Android adaptive layers, splash, favicons and the SVG/PNG
-logo files from one definition.
+The product is called **LenDen Saathi** (it was UdhaarSaathi before; that name is taken in the market). The logo is the
+owner's own design, kept unchanged in `brand/lenden-saathi-logo-original.webp`. `python brand/make_assets.py` cuts the
+tile out of its white background and regenerates the app icon, Android adaptive layers, splash, favicons and the website
+logo. Internal identifiers such as the Render service names, URLs, the GitHub repository, the Expo slug and the Android
+package id still say `udhaarsaathi`; they are not shown to users.
 
 ## Security notes
 

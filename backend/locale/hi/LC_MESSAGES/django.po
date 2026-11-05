@@ -1,8 +1,8 @@
-# Hindi translation for UdhaarSaathi.
+# Hindi translation for LenDen Saathi.
 # Written for small shopkeepers in India: simple, everyday Hindi.
 msgid ""
 msgstr ""
-"Project-Id-Version: UdhaarSaathi\n"
+"Project-Id-Version: LenDen Saathi\n"
 "Report-Msgid-Bugs-To: \n"
 "Language: hi\n"
 "MIME-Version: 1.0\n"
@@ -120,8 +120,8 @@ msgid "Customer's email (optional)"
 msgstr "ग्राहक का ईमेल (वैकल्पिक)"
 
 #: apps/web/forms.py:151
-msgid "If the customer has a UdhaarSaathi account with this email or mobile number, it is linked automatically."
-msgstr "अगर ग्राहक का इस ईमेल या मोबाइल नंबर से UdhaarSaathi खाता है, तो वह अपने-आप जुड़ जाता है।"
+msgid "If the customer has a LenDen Saathi account with this email or mobile number, it is linked automatically."
+msgstr "अगर ग्राहक का इस ईमेल या मोबाइल नंबर से LenDen Saathi खाता है, तो वह अपने-आप जुड़ जाता है।"
 
 #: apps/web/forms.py:152 apps/web/forms.py:162
 msgid "Note (optional)"
@@ -214,20 +214,20 @@ msgid "Other"
 msgstr "अन्य"
 
 #: apps/web/mailer.py:87
-msgid "Welcome to UdhaarSaathi"
-msgstr "UdhaarSaathi में आपका स्वागत है"
+msgid "Welcome to LenDen Saathi"
+msgstr "LenDen Saathi में आपका स्वागत है"
 
 #: apps/web/mailer.py:97
 msgid "We received your message"
 msgstr "हमें आपका संदेश मिल गया"
 
 #: apps/web/mailer.py:82
-msgid "Your UdhaarSaathi verification code"
-msgstr "आपका UdhaarSaathi सत्यापन कोड"
+msgid "Your LenDen Saathi verification code"
+msgstr "आपका LenDen Saathi सत्यापन कोड"
 
 #: apps/web/mailer.py:82
-msgid "Reset your UdhaarSaathi password"
-msgstr "अपना UdhaarSaathi पासवर्ड रीसेट करें"
+msgid "Reset your LenDen Saathi password"
+msgstr "अपना LenDen Saathi पासवर्ड रीसेट करें"
 
 #: apps/web/models.py:8
 msgid "Shopkeeper"
@@ -389,8 +389,8 @@ msgstr "आपके पास %(name)s नाम का व्यक्ति �
 
 #: apps/web/views.py:359
 #, python-format
-msgid "%(name)s has a UdhaarSaathi account, so it is now linked. They can see their own balance."
-msgstr "%(name)s का UdhaarSaathi खाता है, इसलिए वह जोड़ दिया गया है। वे अपना बकाया देख सकते हैं।"
+msgid "%(name)s has a LenDen Saathi account, so it is now linked. They can see their own balance."
+msgstr "%(name)s का LenDen Saathi खाता है, इसलिए वह जोड़ दिया गया है। वे अपना बकाया देख सकते हैं।"
 
 #: apps/web/views.py:428
 msgid "Details saved."
@@ -414,8 +414,8 @@ msgid "We sent a 6-digit code to %(email)s."
 msgstr "हमने %(email)s पर 6 अंकों का कोड भेजा है।"
 
 #: apps/web/views.py:165
-msgid "Your email is verified. Welcome to UdhaarSaathi!"
-msgstr "आपका ईमेल सत्यापित हो गया। UdhaarSaathi में आपका स्वागत है!"
+msgid "Your email is verified. Welcome to LenDen Saathi!"
+msgstr "आपका ईमेल सत्यापित हो गया। LenDen Saathi में आपका स्वागत है!"
 
 #: apps/web/views.py:164
 msgid "there"
@@ -426,8 +426,8 @@ msgid "Please verify your email first. We sent you a new code."
 msgstr "कृपया पहले अपना ईमेल सत्यापित करें। हमने आपको नया कोड भेजा है।"
 
 #: templates/404.html:3
-msgid "Page not found | UdhaarSaathi"
-msgstr "पेज नहीं मिला | UdhaarSaathi"
+msgid "Page not found | LenDen Saathi"
+msgstr "पेज नहीं मिला | LenDen Saathi"
 
 #: templates/404.html:7
 msgid "A ledger page with a question mark"
@@ -454,8 +454,8 @@ msgid "Contact us"
 msgstr "हमसे संपर्क करें"
 
 #: templates/500.html:3
-msgid "Something went wrong | UdhaarSaathi"
-msgstr "कुछ गड़बड़ हो गई | UdhaarSaathi"
+msgid "Something went wrong | LenDen Saathi"
+msgstr "कुछ गड़बड़ हो गई | LenDen Saathi"
 
 #: templates/500.html:13
 msgid "A warning sign"
@@ -474,8 +474,8 @@ msgid "Please try again in a few minutes."
 msgstr "कृपया कुछ मिनट बाद फिर कोशिश करें।"
 
 #: templates/base.html:7
-msgid "UdhaarSaathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start."
-msgstr "UdhaarSaathi छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब रखने वाला ऐप है। बिना इंटरनेट भी चलता है। शुरू करना मुफ़्त है।"
+msgid "LenDen Saathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start."
+msgstr "LenDen Saathi छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब रखने वाला ऐप है। बिना इंटरनेट भी चलता है। शुरू करना मुफ़्त है।"
 
 #: templates/base.html:12
 msgid "Record udhaar, track sales and keep honest accounts with your customers. Offline-first Android app."
@@ -718,8 +718,8 @@ msgid "A phone showing a khata list with customers, amounts and status chips, su
 msgstr "फ़ोन में ग्राहकों, रकम और स्थिति के निशानों वाली खाता-सूची, जिसके चारों ओर रुपये के सिक्के और बही-खाता तैर रहे हैं"
 
 #: templates/partials/art_hero.html:2
-msgid "UdhaarSaathi khata on a phone"
-msgstr "फ़ोन पर UdhaarSaathi खाता"
+msgid "LenDen Saathi khata on a phone"
+msgstr "फ़ोन पर LenDen Saathi खाता"
 
 #: templates/partials/art_hero.html:13
 msgid "Total receivable"

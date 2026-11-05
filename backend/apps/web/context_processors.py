@@ -8,7 +8,7 @@ def current_plan() -> dict:
     plan = cache.get("site:plan")
     if plan:
         return plan
-    plan = {"name": "UdhaarSaathi", "amount_rupees": 49, "trial_months": 3, "grace_days": 7, "source": "default"}
+    plan = {"name": "LenDen Saathi", "amount_rupees": 49, "trial_months": 3, "grace_days": 7, "source": "default"}
     try:
         from apps.legacy.models import SubscriptionPlans
         row = SubscriptionPlans.objects.filter(active=True).order_by("amount_paise").first()

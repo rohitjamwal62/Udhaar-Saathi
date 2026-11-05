@@ -1,4 +1,4 @@
-/* UdhaarSaathi site.js - progressive enhancement only; every page works without it. */
+/* LenDen Saathi site.js - progressive enhancement only; every page works without it. */
 (function () {
   'use strict';
   var doc = document;

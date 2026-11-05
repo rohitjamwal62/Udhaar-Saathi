@@ -24,8 +24,8 @@ log = logging.getLogger("web.sms")
 
 # Register these exact texts on the DLT portal (variables in this order: name | shop | amount).
 DLT_TEMPLATES = {
-    "en": "Dear {#var#}, you owe Rs {#var#} at {#var#}. Please pay as soon as possible. Thank you. - UdhaarSaathi",
-    "hi": "प्रिय {#var#}, {#var#} में आपका Rs {#var#} बकाया है। कृपया जल्द से जल्द भुगतान करें। धन्यवाद। - UdhaarSaathi",
+    "en": "Dear {#var#}, you owe Rs {#var#} at {#var#}. Please pay as soon as possible. Thank you. - LenDen Saathi",
+    "hi": "प्रिय {#var#}, {#var#} में आपका Rs {#var#} बकाया है। कृपया जल्द से जल्द भुगतान करें। धन्यवाद। - LenDen Saathi",
 }
 # Note: the variable order above is name, shop, amount for Hindi and name, amount, shop for English; send() orders them per language.
 

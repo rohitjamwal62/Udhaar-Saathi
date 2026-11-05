@@ -1,5 +1,5 @@
 """
-UdhaarSaathi backend settings.
+LenDen Saathi backend settings.
 
 The PostgreSQL schema is owned by ../database/create_tables.py (one file, run it first).
 Django is used as the web/API framework only: there are no Django models or migrations.
@@ -176,8 +176,8 @@ REST_FRAMEWORK = {
 }
 
 SPECTACULAR_SETTINGS = {
-    "TITLE": "UdhaarSaathi API",
-    "DESCRIPTION": "Backend for the UdhaarSaathi Android app. Money is integer paise.",
+    "TITLE": "LenDen Saathi API",
+    "DESCRIPTION": "Backend for the LenDen Saathi Android app. Money is integer paise.",
     "VERSION": "1.0.0",
     "SERVE_INCLUDE_SCHEMA": False,
 }
@@ -249,7 +249,7 @@ LOGIN_REDIRECT_URL = "/dashboard/"
 LOGOUT_REDIRECT_URL = "/"
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
 SESSION_COOKIE_HTTPONLY = True
-SITE_NAME = "UdhaarSaathi"
+SITE_NAME = "LenDen Saathi"
 SITE_URL = env("SITE_URL") or env("RENDER_EXTERNAL_URL") or "http://localhost:8000"
 SUPPORT_EMAIL = env("SUPPORT_EMAIL", "rohitjamwal62@gmail.com")
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in env("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]
@@ -266,7 +266,7 @@ EMAIL_USE_TLS = _bool("EMAIL_USE_TLS", "true")
 EMAIL_HOST_USER = env("EMAIL_HOST_USER", "")
 EMAIL_HOST_PASSWORD = env("EMAIL_HOST_PASSWORD", "").replace(" ", "")   # Gmail shows app passwords in groups of 4
 EMAIL_TIMEOUT = int(env("EMAIL_TIMEOUT", "10"))
-DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "UdhaarSaathi <%s>" % (env("EMAIL_HOST_USER", "no-reply@localhost") or "no-reply@localhost"))
+DEFAULT_FROM_EMAIL = env("DEFAULT_FROM_EMAIL", "LenDen Saathi <%s>" % (env("EMAIL_HOST_USER", "no-reply@localhost") or "no-reply@localhost"))
 EMAIL_OTP_TTL_SECONDS = 600
 EMAIL_OTP_MAX_ATTEMPTS = 5
 EMAIL_OTP_RESEND_SECONDS = int(env("EMAIL_OTP_RESEND_SECONDS", "45"))

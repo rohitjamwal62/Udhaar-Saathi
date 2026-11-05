@@ -1,6 +1,6 @@
 {
   "expo": {
-    "name": "UdhaarSaathi",
+    "name": "LenDen Saathi",
     "slug": "udhaarsaathi",
     "scheme": "udhaarsaathi",
     "version": "1.0.0",
@@ -14,10 +14,9 @@
       "package": "com.udhaarsaathi.app",
       "versionCode": 1,
       "adaptiveIcon": {
-        "backgroundColor": "#0B6E4F",
+        "backgroundColor": "#001A7D",
         "foregroundImage": "./assets/android-icon-foreground.png",
-        "backgroundImage": "./assets/android-icon-background.png",
-        "monochromeImage": "./assets/android-icon-monochrome.png"
+        "backgroundImage": "./assets/android-icon-background.png"
       },
       "predictiveBackGestureEnabled": false,
       "allowBackup": false,
@@ -33,8 +32,8 @@
       [
         "expo-image-picker",
         {
-          "cameraPermission": "UdhaarSaathi uses the camera to photograph bills and receipts you attach to entries.",
-          "photosPermission": "UdhaarSaathi reads photos you choose to attach as bills or receipts."
+          "cameraPermission": "LenDen Saathi uses the camera to photograph bills and receipts you attach to entries.",
+          "photosPermission": "LenDen Saathi reads photos you choose to attach as bills or receipts."
         }
       ],
       "expo-splash-screen",
@@ -42,7 +41,7 @@
         "expo-splash-screen",
         {
           "image": "./assets/splash-icon.png",
-          "backgroundColor": "#0B6E4F",
+          "backgroundColor": "#001A7D",
           "imageWidth": 200
         }
       ]

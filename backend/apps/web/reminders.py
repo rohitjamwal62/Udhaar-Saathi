@@ -13,8 +13,8 @@ from urllib.parse import quote
 LANGS = [("en", "English"), ("hi", "हिन्दी (Hindi)"), ("both", "Hindi + English")]
 
 # Wording kept short: Hindi text is Unicode, so one SMS part holds only 70 characters.
-EN = "Dear {name}, you owe Rs {amount} at {shop}. Please pay as soon as possible. Thank you. - UdhaarSaathi"
-HI = "प्रिय {name}, {shop} में आपका Rs {amount} बकाया है। कृपया जल्द से जल्द भुगतान करें। धन्यवाद। - UdhaarSaathi"
+EN = "Dear {name}, you owe Rs {amount} at {shop}. Please pay as soon as possible. Thank you. - LenDen Saathi"
+HI = "प्रिय {name}, {shop} में आपका Rs {amount} बकाया है। कृपया जल्द से जल्द भुगतान करें। धन्यवाद। - LenDen Saathi"
 
 
 def normalize_mobile(raw: str) -> str | None:

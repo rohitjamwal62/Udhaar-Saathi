@@ -46,7 +46,7 @@ export function SettingsScreen() {
       <Button title={unsynced ? `Sync status (${unsynced} waiting)` : 'Sync status'} variant="secondary" onPress={() => nav.navigate('SyncStatus')} />
       <Button title="Log out" variant="danger" onPress={confirmLogout} />
       <AppText variant="caption" color={colors.textMuted} center>
-        UdhaarSaathi v{config.appVersion}{config.demoMode ? ' · DEMO MODE' : ''}
+        LenDen Saathi v{config.appVersion}{config.demoMode ? ' · DEMO MODE' : ''}
       </AppText>
     </Screen>
   );

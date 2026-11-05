@@ -1,0 +1,30 @@
+# Keeps the PRODUCTION website awake during the day.
+#
+# Render's free plan puts a web service to sleep after 15 minutes without a request, and waking it takes about a minute
+# (visitors see Render's "waking up" page). A small request every 5 minutes prevents that.
+#
+# Why only during the day: Render gives 750 free instance hours a month, SHARED by dev, staging and production. Pinging
+# 24 hours a day would use ~720 of them for production alone and risk all three services being suspended at month end.
+# 01:00-17:55 UTC is 06:30-23:25 India time: about 17.5 hours a day, ~530 hours a month, leaving room for dev and staging.
+#
+# It pings /health/live, which does not touch the database, so the Neon database can still sleep.
+# For a service that is always awake (and no schedule to maintain) upgrade production to Render's Starter plan, then delete this file.
+name: keep production awake
+
+on:
+  schedule:
+    - cron: "*/5 1-17 * * *"
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Request /health/live (waits up to 2 minutes if the service was asleep)
+        run: |
+          curl --silent --show-error --fail --location --max-time 120 --retry 2 --retry-delay 10 \
+            --output /dev/null --write-out "status %{http_code} in %{time_total}s\n" \
+            https://udhaarsaathi-api.onrender.com/health/live

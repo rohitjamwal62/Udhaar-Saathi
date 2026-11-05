@@ -29,8 +29,8 @@ URLS = {"dev": "https://udhaarsaathi-api-dev.onrender.com", "staging": "https://
 KEYS = ["EMAIL_HOST", "EMAIL_PORT", "EMAIL_USE_TLS", "EMAIL_HOST_USER", "EMAIL_HOST_PASSWORD", "DEFAULT_FROM_EMAIL",
         "GOOGLE_CLIENT_ID", "GOOGLE_CLIENT_SECRET", "GOOGLE_DRIVE_FOLDER_ID", "GOOGLE_REFRESH_TOKEN"]
 SECRET = {"EMAIL_HOST_PASSWORD", "GOOGLE_CLIENT_SECRET", "GOOGLE_REFRESH_TOKEN"}
-BUILD = "pip install -r requirements.txt && python manage.py collectstatic --noinput"
-START = "python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -"
+BUILD = "pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput"
+START = "gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4 --worker-class gthread --timeout 60 --access-logfile -"
 
 
 def env_file() -> dict[str, str]:

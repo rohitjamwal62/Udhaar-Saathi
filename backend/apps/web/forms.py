@@ -148,7 +148,7 @@ class PartyForm(forms.Form):
     name = forms.CharField(max_length=120, label=gettext_lazy("Person's name"))
     phone = forms.CharField(max_length=20, required=False, label=gettext_lazy("Mobile number (optional)"))
     email = forms.EmailField(required=False, label=gettext_lazy("Customer's email (optional)"),
-                             help_text=gettext_lazy("If the customer has a UdhaarSaathi account with this email or mobile number, it is linked automatically."))
+                             help_text=gettext_lazy("If the customer has a LenDen Saathi account with this email or mobile number, it is linked automatically."))
     note = forms.CharField(max_length=240, required=False, label=gettext_lazy("Note (optional)"))
 
 

@@ -46,7 +46,7 @@ def verified_client(email="asha@example.com") -> Client:
                                   "register", "login", "forgot_password"])
 def test_public_pages_render(name):
     r = Client().get(reverse(name))
-    assert r.status_code == 200 and b"UdhaarSaathi" in r.content
+    assert r.status_code == 200 and b"LenDen Saathi" in r.content
 
 
 def test_faq_comes_from_the_database_and_is_seeded():
@@ -342,7 +342,7 @@ def test_create_site_admin_command_makes_a_working_superuser(monkeypatch):
 
 # ───────────────────────── email transport + Google client ─────────────────────────
 def _msg():
-    return mail.EmailMessage("Subject", "Body", "UdhaarSaathi <a@b.c>", ["to@example.com"])
+    return mail.EmailMessage("Subject", "Body", "LenDen Saathi <a@b.c>", ["to@example.com"])
 
 
 @override_settings(EMAIL_HOST_USER="a@b.c", EMAIL_HOST_PASSWORD="x")
@@ -594,7 +594,7 @@ def test_pages_switch_to_hindi_and_back(name, hindi, english):
     html = page(c, name)
     assert '<html lang="hi">' in html and hindi in html
     assert english not in main_of(html)                            # no untranslated msgid leaks through
-    assert "UdhaarSaathi" in html                                  # the brand stays as it is
+    assert "LenDen Saathi" in html                                  # the brand stays as it is
     choose(c, "en", reverse(name))
     html = page(c, name)
     assert '<html lang="en">' in html and english in html
@@ -656,18 +656,18 @@ def test_language_switch_is_post_only_and_csrf_protected():
 
 def test_otp_email_goes_out_in_the_chosen_language():
     register(Client(), "eng@example.com")
-    assert mail.outbox[-1].subject.startswith("Your UdhaarSaathi verification code")
+    assert mail.outbox[-1].subject.startswith("Your LenDen Saathi verification code")
     assert "Use this code to verify your email" in mail.outbox[-1].body
     c = Client()
     choose(c, "hi")
     register(c, "hindi@example.com")
     m = mail.outbox[-1]
-    assert m.subject.startswith("आपका UdhaarSaathi सत्यापन कोड: ") and re.search(r"\d{6}", m.subject)
+    assert m.subject.startswith("आपका LenDen Saathi सत्यापन कोड: ") and re.search(r"\d{6}", m.subject)
     assert "सत्यापित करने के लिए यह कोड इस्तेमाल करें" in m.body and "मिनट" in m.body
     assert "सत्यापित" in m.alternatives[0][0] and "Use this code" not in m.body
     assert last_code() == re.search(r"\b(\d{6})\b", m.subject).group(1)
     r = c.post(reverse("verify_otp"), {"code": last_code()})           # the welcome email follows the same language
-    assert r.status_code == 302 and mail.outbox[-1].subject == "UdhaarSaathi में आपका स्वागत है"
+    assert r.status_code == 302 and mail.outbox[-1].subject == "LenDen Saathi में आपका स्वागत है"
 
 
 def test_reset_email_and_contact_ack_in_hindi_but_team_copy_stays_english():
@@ -675,7 +675,7 @@ def test_reset_email_and_contact_ack_in_hindi_but_team_copy_stays_english():
     c2 = Client()
     choose(c2, "hi")
     c2.post(reverse("forgot_password"), {"email": "reset@example.com"})
-    assert mail.outbox[-1].subject.startswith("अपना UdhaarSaathi पासवर्ड रीसेट करें")
+    assert mail.outbox[-1].subject.startswith("अपना LenDen Saathi पासवर्ड रीसेट करें")
     n = len(mail.outbox)
     c2.post(reverse("contact"), {"name": "Ravi", "email": "ravi@example.com", "phone": "", "subject": "Help", "message": "Please call", "website": ""})
     team, ack = mail.outbox[n], mail.outbox[n + 1]

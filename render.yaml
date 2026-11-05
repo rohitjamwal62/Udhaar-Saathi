@@ -7,6 +7,8 @@
 #
 # The "test" environment is GitHub Actions (.github/workflows/ci.yml): the test suite runs on every push and pull request.
 # Dashboard -> New -> Blueprint -> pick this repo. See DEPLOY_RENDER.md.
+# Start-up speed (free plan wakes a sleeping service in about a minute): migrations run during the BUILD, not on every start,
+# and one gunicorn worker with 4 threads boots faster and uses less memory than two workers. See DEPLOY_RENDER.md, "Cold starts".
 services:
   - type: web
     name: udhaarsaathi-api-dev
@@ -15,8 +17,8 @@ services:
     region: singapore
     branch: dev
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4 --worker-class gthread --timeout 60 --access-logfile -
     healthCheckPath: /health/ready
     autoDeployTrigger: commit
     envVars:
@@ -67,8 +69,8 @@ services:
     region: singapore
     branch: staging
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4 --worker-class gthread --timeout 60 --access-logfile -
     healthCheckPath: /health/ready
     autoDeployTrigger: checksPass
     envVars:
@@ -119,8 +121,8 @@ services:
     region: singapore
     branch: main
     rootDir: backend
-    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput
-    startCommand: python manage.py migrate --noinput && gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 2 --timeout 60 --access-logfile -
+    buildCommand: pip install -r requirements.txt && python manage.py collectstatic --noinput && python manage.py migrate --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4 --worker-class gthread --timeout 60 --access-logfile -
     healthCheckPath: /health/ready
     autoDeployTrigger: checksPass
     envVars:

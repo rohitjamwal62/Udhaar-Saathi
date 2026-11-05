@@ -98,7 +98,7 @@ def main(env: str) -> int:
     check(bool(link) and "Credit taken" in cd and "Payment made" in cd and "UPI" in cd and "Rs 1,000.25" in cd, "customer's history shows credit, payment, method and balance")
 
     # 5 proof for one customer
-    files = {"file": ("e2e-proof.txt", b"UdhaarSaathi roles end-to-end proof", "text/plain")}
+    files = {"file": ("e2e-proof.txt", b"LenDen Saathi roles end-to-end proof", "text/plain")}
     shop.s.post(base + f"/ledger/people/{pid}/documents/upload/", data={"csrfmiddlewaretoken": shop.token(page_url), "title": "E2E receipt", "category": "bill", "visible_to_customer": "on"},
                 files=files, headers={"Referer": base + page_url}, timeout=240)
     pd = shop.get(page_url).text
@@ -107,7 +107,7 @@ def main(env: str) -> int:
     dl = re.search(r'href="(/dashboard/documents/\d+/download/)"', cd)
     check(bool(dl) and "E2E receipt" in cd, "the customer sees the shared proof")
     got = cust.get(dl.group(1)) if dl else None
-    check(bool(got) and got.status_code == 200 and got.content.startswith(b"UdhaarSaathi roles"), "the customer downloads the same bytes")
+    check(bool(got) and got.status_code == 200 and got.content.startswith(b"LenDen Saathi roles"), "the customer downloads the same bytes")
 
     # 6 isolation
     check(cust.get(f"/my/shops/{int(pid) + 99999}/").status_code == 404, "a customer cannot open a page that is not theirs")

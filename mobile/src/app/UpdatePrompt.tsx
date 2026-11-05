@@ -41,8 +41,8 @@ export function UpdatePrompt({ refreshKey }: { refreshKey: string }) {
           <AppText variant="title">{decision === 'required' ? 'Update required' : 'Update available'}</AppText>
           <AppText color={colors.textMuted}>
             {q.data.message ?? (decision === 'required'
-              ? 'This version is no longer supported. Please update to keep using UdhaarSaathi. Your data is safe.'
-              : 'A new version of UdhaarSaathi is available with improvements and fixes.')}
+              ? 'This version is no longer supported. Please update to keep using LenDen Saathi. Your data is safe.'
+              : 'A new version of LenDen Saathi is available with improvements and fixes.')}
           </AppText>
           <Button title="Update now" onPress={() => void openStore()} />
           {decision === 'optional' ? <Button title="Later" variant="ghost" onPress={() => setDismissed(true)} /> : null}

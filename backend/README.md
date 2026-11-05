@@ -1,4 +1,4 @@
-# UdhaarSaathi backend (Django + DRF + PostgreSQL)
+# LenDen Saathi backend (Django + DRF + PostgreSQL)
 
 The database schema is owned by `../database/create_tables.py`. Django has no models or migrations: it runs
 plain SQL against those tables, so the constraints and append-only triggers in PostgreSQL always apply.

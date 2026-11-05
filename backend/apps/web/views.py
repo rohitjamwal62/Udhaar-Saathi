@@ -162,7 +162,7 @@ def verify_otp(request):
                 request.session.pop("pending_email", None)
                 login(request, user, backend=BACKEND)
                 mailer.send_welcome_email(user.email, user.first_name or _("there"))
-                messages.success(request, _("Your email is verified. Welcome to UdhaarSaathi!"))
+                messages.success(request, _("Your email is verified. Welcome to LenDen Saathi!"))
                 return redirect("dashboard")
     return render(request, "web/auth/verify_otp.html", {"form": form, "email": mask_email(email), "resend_in": otp.seconds_until_resend(email, "register"),
                                                         "send_failed": bool(request.session.get("otp_send_failed"))})
@@ -356,7 +356,7 @@ def party_add(request):
         return redirect("ledger")
     p = Party.objects.create(owner=request.user, name=name, phone=d["phone"].strip(), email=d["email"], note=d["note"].strip())
     if linking.link_party(p):
-        messages.info(request, _("%(name)s has a UdhaarSaathi account, so it is now linked. They can see their own balance.") % {"name": p.name})
+        messages.info(request, _("%(name)s has a LenDen Saathi account, so it is now linked. They can see their own balance.") % {"name": p.name})
     messages.success(request, _("%(name)s was added. Now record the money you gave.") % {"name": p.name})
     return redirect("party_detail", pk=p.pk)
 

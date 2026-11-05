@@ -96,7 +96,7 @@ def main(env: str) -> int:
     check(not r2.url.endswith("/verify/") or "incorrect" in r2.text or r2.url.endswith("/register/"), "the code cannot be used twice")
 
     # 3 document upload (works only once Google Drive is connected)
-    files = {"file": ("e2e-note.txt", b"UdhaarSaathi end-to-end test document", "text/plain")}
+    files = {"file": ("e2e-note.txt", b"LenDen Saathi end-to-end test document", "text/plain")}
     tok = token(base + "/dashboard/")
     r = s.post(base + "/dashboard/documents/upload/", data={"csrfmiddlewaretoken": tok, "title": "E2E note", "category": "other"}, files=files,
                headers={"Referer": base + "/dashboard/"}, timeout=180, allow_redirects=True)
@@ -105,7 +105,7 @@ def main(env: str) -> int:
         check(True, "document upload: stored in Google Drive")
         link = re.search(r'href="(/dashboard/documents/\d+/download/)"', dash)
         dl = s.get(base + link.group(1), timeout=120) if link else None
-        check(bool(dl) and dl.status_code == 200 and dl.content.startswith(b"UdhaarSaathi end-to-end"), "document download returns the same bytes")
+        check(bool(dl) and dl.status_code == 200 and dl.content.startswith(b"LenDen Saathi end-to-end"), "document download returns the same bytes")
     else:
         check("not connected yet" in dash or "could not store" in dash, "document upload: Google Drive not connected yet (clear message shown, nothing saved)")
 

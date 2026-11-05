@@ -90,11 +90,11 @@ def collect() -> list:
     return found
 
 
-HEADER = """# Hindi translation for UdhaarSaathi.
+HEADER = """# Hindi translation for LenDen Saathi.
 # Written for small shopkeepers in India: simple, everyday Hindi.
 msgid ""
 msgstr ""
-"Project-Id-Version: UdhaarSaathi\\n"
+"Project-Id-Version: LenDen Saathi\\n"
 "Report-Msgid-Bugs-To: \\n"
 "Language: hi\\n"
 "MIME-Version: 1.0\\n"

@@ -1,9 +1,0 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 560 140" role="img" aria-label="UdhaarSaathi">
-  <title>UdhaarSaathi</title>
-  <rect width="140" height="140" rx="32" fill="#0B6E4F"/>
-  <g fill="none" stroke-width="12" stroke-linecap="round" stroke-linejoin="round">
-    <path d="M45 30 H67 C94 30 94 74 62 74 M41 30 H97" stroke="#FFF8E7"/>
-    <path d="M41 54 H97 M62 74 L94 112" stroke="#F2A900"/>
-  </g>
-  <text x="170" y="92" font-family="'Segoe UI','Noto Sans',Arial,sans-serif" font-size="68" font-weight="700"><tspan fill="#0B6E4F">Udhaar</tspan><tspan fill="#C48200">Saathi</tspan></text>
-</svg>

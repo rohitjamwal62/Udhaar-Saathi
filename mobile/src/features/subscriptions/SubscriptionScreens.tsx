@@ -62,7 +62,7 @@ export function SubscriptionScreen() {
   return (
     <Screen>
       <Card>
-        <AppText variant="heading">UdhaarSaathi plan</AppText>
+        <AppText variant="heading">LenDen Saathi plan</AppText>
         <AppText variant="display" color={colors.primary}>₹49 <AppText color={colors.textMuted}>/ month</AppText></AppText>
         <AppText color={colors.textMuted}>Registration is free. Every new shop gets one 3-month free trial, then ₹49 per month. Cancel any time.</AppText>
         <AppText variant="caption" color={colors.textMuted}>{s?.taxes_note ?? 'Applicable taxes and gateway charges are shown before you pay.'}</AppText>

@@ -1,7 +1,7 @@
-# UdhaarSaathi: Android app (React Native + TypeScript)
+# LenDen Saathi: Android app (React Native + TypeScript)
 
 Android-first, offline-first digital khata and sales tracking for small shops. Built from the
-UdhaarSaathi Master Blueprint V4. This folder is the mobile client only; it talks to the Django
+LenDen Saathi Master Blueprint V4. This folder is the mobile client only; it talks to the Django
 `/api/v1` backend (not included here).
 
 ## Run and test with Expo

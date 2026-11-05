@@ -79,12 +79,12 @@ def _send(subject: str, to: list[str], template: str, context: dict, reply_to: l
 
 def send_otp_email(email: str, code: str, purpose: str, minutes: int) -> bool:
     """The code email goes out in the language the visitor has chosen on the website (English by default)."""
-    subject = {"register": _("Your UdhaarSaathi verification code"), "reset": _("Reset your UdhaarSaathi password")}[purpose]
+    subject = {"register": _("Your LenDen Saathi verification code"), "reset": _("Reset your LenDen Saathi password")}[purpose]
     return _send(f"{subject}: {code}", [email], "otp", {"code": code, "purpose": purpose, "minutes": minutes})
 
 
 def send_welcome_email(email: str, name: str) -> bool:
-    return _send(_("Welcome to UdhaarSaathi"), [email], "welcome", {"name": name})
+    return _send(_("Welcome to LenDen Saathi"), [email], "welcome", {"name": name})
 
 
 def send_contact_emails(name: str, email: str, phone: str, subject: str, message: str) -> bool:

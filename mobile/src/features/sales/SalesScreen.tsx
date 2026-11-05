@@ -76,7 +76,7 @@ export function SalesScreen() {
 
       <SectionHeader title={`Sales (${sales.data?.length ?? 0})`} />
       {sales.data?.length === 0 ? (
-        <EmptyState title="No sales in this period" body="Sales appear here only when you enter them. UdhaarSaathi does not know about sales you have not recorded." />
+        <EmptyState title="No sales in this period" body="Sales appear here only when you enter them. LenDen Saathi does not know about sales you have not recorded." />
       ) : (
         <View style={{ gap: spacing.sm }}>
           {sales.data?.map((x) => (

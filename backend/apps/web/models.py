@@ -123,7 +123,7 @@ class Party(models.Model):
     email = models.EmailField(blank=True, help_text="The email the customer registered with (most reliable way to link).")
     note = models.CharField(max_length=240, blank=True)
     customer = models.ForeignKey(settings.AUTH_USER_MODEL, null=True, blank=True, on_delete=models.SET_NULL, related_name="linked_parties",
-                                 help_text="The customer's own UdhaarSaathi account. Set automatically; the customer sees only their own entries.")
+                                 help_text="The customer's own LenDen Saathi account. Set automatically; the customer sees only their own entries.")
     link_method = models.CharField(max_length=8, blank=True, editable=False)
     linked_at = models.DateTimeField(null=True, blank=True, editable=False)
     link_blocked = models.BooleanField(default=False, help_text="Set when the shopkeeper unlinks the account: stops automatic re-linking.")

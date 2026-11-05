@@ -25,7 +25,7 @@ Run lint and typecheck before declaring any task done.
 
 ## Navigation & Routing
 
-- This project uses **React Navigation** (per the UdhaarSaathi V4 blueprint), NOT Expo Router. Navigators live in `src/app/navigation.tsx`; route param types in `src/app/types.ts`.
+- This project uses **React Navigation** (per the LenDen Saathi V4 blueprint), NOT Expo Router. Navigators live in `src/app/navigation.tsx`; route param types in `src/app/types.ts`.
 - Money is integer paise everywhere. Never use floating point for amounts (see `src/core/money.ts`).
 - Posted ledger rows are never edited or deleted; corrections are reversal/adjustment events.
 - All local writes go through `src/core/db/repo.ts` so the outbox entry is written in the same transaction.

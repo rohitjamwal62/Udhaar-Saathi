@@ -44,15 +44,36 @@ docker run --rm -i --network lenden-saathi-lb_default -e BASE_URL=http://haproxy
 
 Run the k6 test once with `--scale app=1` and once with `--scale app=4` and compare requests per second and the 95th percentile.
 
-> **Not run by the author.** Docker could not be started in the session where this was written. What *was* checked:
-> both Compose files parse and merge (`docker compose config`), the application changes pass their automated tests, and
-> one app process was benchmarked (below). The HAProxy configuration has **not** been run through HAProxy. Before relying on it:
->
-> ```bash
-> docker run --rm -v "%cd%/haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro" -e RATE_PER_10S=300 -e AUTH_POSTS_PER_MIN=20 \
->     -e BEHIND_CLOUDFLARE=0 haproxy:2.9-alpine haproxy -c -f /usr/local/etc/haproxy/haproxy.cfg
-> ```
-> then bring the stack up and run the k6 test above. Fix anything they report.
+## What was verified (6 November 2026, Docker 26 on a Windows laptop with 8 logical CPUs)
+
+The whole stack was built and run with `docker-compose.localdb.yml`: HAProxy 2.9, Redis 7, PostgreSQL 16, and the app image.
+
+| Check | Result |
+|---|---|
+| HAProxy accepts `haproxy.cfg` | **Yes**, no warnings (see the note below on how to run this check) |
+| Image builds, database setup job runs, site answers through HAProxy | **Yes**: home page 200 in 0.19 s, HAProxy shows the copy `UP` |
+| `--scale app=4` is discovered with no config change | **Yes**: all 4 copies `UP` within about 15 s |
+| Shared Redis is used by the copies | **Yes**: the shared plan and site-setting cache keys appear in Redis |
+| Sign-in rate limit at the balancer, with a forged `X-Forwarded-For` on every request | **Yes**: the 21st POST in a minute got `429` whatever address the request claimed |
+| A copy is killed while requests are flowing | **Yes**: 151 of 151 requests succeeded; HAProxy dropped the dead copy and kept serving |
+| Load: 50 simulated visitors, 70 s, public pages (`loadtest.js`) | **1 copy: 148 requests/s, 95 % answered within 0.38 s, 0 failures out of 10,366.  4 copies: 277 requests/s, 95 % within 0.23 s, 0 failures out of 19,412.** |
+
+Four copies gave **1.9 times** the throughput, not 4 times. That is this laptop, not the design: k6 (the load generator),
+HAProxy, Redis, PostgreSQL and eight worker processes were all sharing the same 8 CPUs, and the database was local. On separate
+machines the gain is close to linear until the database becomes the limit. What the test does show is that the design works:
+no errors, lower latency with more copies, automatic discovery, and survival of a failed copy.
+
+Not tested: HTTPS/Cloudflare in front, a real hosted database, sign-in and ledger pages under load (only public pages), and
+more than 4 copies.
+
+**Checking the HAProxy file yourself.** The official image's startup script turns `-c` into "start the server", so the plain
+check never ends, and HAProxy also tries to look up the name `app` 20 times, which is slow outside Docker's network. This works:
+
+```bash
+sed 's/init-addr libc,none/init-addr none/' haproxy.cfg > /tmp/haproxy-check.cfg      # skip the name lookups, for the check only
+docker run --rm --network none --entrypoint haproxy -v /tmp/haproxy-check.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro     -e RATE_PER_10S=300 -e AUTH_POSTS_PER_MIN=20 -e BEHIND_CLOUDFLARE=0 haproxy:2.9-alpine -c -f /usr/local/etc/haproxy/haproxy.cfg
+echo $?      # 0 means valid
+```
 
 ## Real numbers: what one app process can do
 
@@ -65,7 +86,8 @@ with no network or TLS**, local PostgreSQL:
 | Latency | mean 4.6 ms, 95th percentile 6.6 ms, 99th 7.6 ms |
 
 A real server will do less (network, TLS, a database over the internet, heavier pages such as the ledger, password hashing on
-sign-in). For planning use **100 to 150 requests per second per CPU core** for ordinary pages, and much less for sign-ins.
+sign-in). Inside Docker with everything sharing one laptop, one app copy (2 workers) served **148 requests per second**, about 75 per core.
+For planning use **75 to 150 requests per second per CPU core** for ordinary pages, and much less for sign-ins.
 
 ## What "10 million users" actually needs
 
@@ -79,7 +101,7 @@ sign-in). For planning use **100 to 150 requests per second per CPU core** for o
 | Requests per visit | 25 |
 | Busiest hour | 3.75 million requests = about 1,040 per second on average, **about 3,000 per second at the peak** |
 
-At 100 to 150 requests per second per core that is **20 to 30 CPU cores of app servers**, about 10 to 15 copies with 2 cores each,
+At 75 to 150 requests per second per core that is **20 to 40 CPU cores of app servers**, about 10 to 20 copies with 2 cores each,
 behind the load balancer. The balancer itself is not the problem: one HAProxy instance handles tens of thousands of requests per second.
 
 The parts that this folder does **not** solve, and where the real cost is:
@@ -113,7 +135,7 @@ The parts that this folder does **not** solve, and where the real cost is:
 | Now | up to tens of thousands | Render free or Starter, one instance, as today. Optionally the keep-alive ping. |
 | 1 | up to ~100,000 | Render Starter or Standard, 2 instances, a free Redis (Render Key Value or Upstash) in `REDIS_URL`, Neon paid plan, Cloudflare in front. |
 | 2 | up to ~1 million | This Compose stack on 1 to 2 VMs (or Render with 3 to 5 instances), pooled database endpoint, background queue for email, object storage for documents. |
-| 3 | 10 million registered | 10 to 15 app copies across several VMs or a Kubernetes cluster (the same image runs there; HAProxy or the cloud's balancer in front), managed PostgreSQL with a replica, Redis cluster, CDN, background workers, monitoring and alerting. |
+| 3 | 10 million registered | 10 to 20 app copies across several VMs or a Kubernetes cluster (the same image runs there; HAProxy or the cloud's balancer in front), managed PostgreSQL with a replica, Redis cluster, CDN, background workers, monitoring and alerting. |
 
 ## Using this on Render instead
 

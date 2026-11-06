@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.http import HttpResponse
 
+from apps.common.net import client_ip
 from apps.common.ratelimit import hit
 
 
@@ -12,8 +13,7 @@ class AdminLoginThrottleMiddleware:
 
     def __call__(self, request):
         if request.method == "POST" and request.path.rstrip("/").endswith("/admin/login"):
-            fwd = request.META.get("HTTP_X_FORWARDED_FOR", "")
-            ip = (fwd.split(",")[0].strip() if fwd else request.META.get("REMOTE_ADDR", "?"))
+            ip = client_ip(request) or "?"
             if not hit(f"adminlogin:{ip}", settings.ADMIN_LOGIN_MAX_ATTEMPTS, 900):
                 return HttpResponse("Too many login attempts. Please wait 15 minutes.", status=429)
         return self.get_response(request)

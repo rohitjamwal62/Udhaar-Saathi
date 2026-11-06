@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-UdhaarSaathi - create the complete PostgreSQL schema in ONE file.
+LenDen Saathi - create the complete PostgreSQL schema in ONE file.
 
 Usage (from this folder):
     pip install psycopg2-binary
@@ -657,7 +657,7 @@ GROUP BY c.shop_id, c.id, c.name;
 
 -- ============================== SEED DATA ===================================
 INSERT INTO subscription_plans (code, name, amount_paise, trial_months, grace_days)
-VALUES ('udhaarsaathi_monthly', 'UdhaarSaathi', 4900, 3, 7)
+VALUES ('udhaarsaathi_monthly', 'LenDen Saathi', 4900, 3, 7)
 ON CONFLICT (code) DO NOTHING;
 
 INSERT INTO app_config (id) VALUES (1) ON CONFLICT (id) DO NOTHING;

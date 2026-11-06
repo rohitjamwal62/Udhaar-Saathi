@@ -43,9 +43,7 @@ User = get_user_model()
 BACKEND = "apps.web.auth_backends.EmailOrUsernameBackend"
 
 
-def client_ip(request) -> str | None:
-    fwd = request.META.get("HTTP_X_FORWARDED_FOR", "")
-    return (fwd.split(",")[0].strip() if fwd else request.META.get("REMOTE_ADDR")) or None
+from apps.common.net import client_ip  # noqa: E402  (one shared definition; see apps/common/net.py)
 
 
 def mask_email(email: str) -> str:

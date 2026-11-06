@@ -1,0 +1,17 @@
+# Keep the build context small and, above all, keep secrets out of the image.
+.git
+.github
+mobile
+docs
+brand
+deploy
+node_modules
+**/__pycache__
+**/*.pyc
+**/.pytest_cache
+backend/staticfiles
+backend/tests
+# every kind of secrets file (the *.example files are fine to keep out too: nothing in the image needs them)
+**/.env
+**/.env.*
+**/*.local.txt

@@ -86,3 +86,8 @@ What was done:
   service still sleeps at night, so the first visit in the morning can still be slow.
 - **The real fix** is the **Starter** plan for the production service: always awake, no cold start, no schedule to maintain.
   Change the plan on the service's Settings page (or ask the assistant to do it through the API), then delete the keep-alive workflow.
+
+## Running more than one instance
+Render has its own load balancer, so no HAProxy is needed here. More than one instance needs a paid plan. When you do that, set
+`REDIS_URL` (Render Key Value or Upstash) so all instances share rate limits and OTP cool-downs, and use the database's pooled
+endpoint. Details, capacity numbers and the self-hosted HAProxy option: `deploy/loadbalancer/README.md`.

@@ -111,7 +111,9 @@ def _database_from_env() -> dict:
                 "PASSWORD": env("PGPASSWORD", ""),
                 "HOST": env("PGHOST", "localhost"),
                 "PORT": env("PGPORT", "5432"),
-                "CONN_MAX_AGE": 60,
+                # DB_POOLED=1 when a transaction pooler (PgBouncer) sits in between: do not reuse connections
+                "CONN_MAX_AGE": 0 if env("DB_POOLED", "") == "1" else 60,
+                "DISABLE_SERVER_SIDE_CURSORS": env("DB_POOLED", "") == "1",
             }
         from django.core.exceptions import ImproperlyConfigured
         raise ImproperlyConfigured(
@@ -122,7 +124,7 @@ def _database_from_env() -> dict:
     u = urlparse(url)
     options = {k: v for k, v in parse_qsl(u.query) if k in ("sslmode", "channel_binding", "sslrootcert")}
     options.setdefault("sslmode", "require")  # hosted databases must use TLS
-    pooled = "-pooler" in (u.hostname or "")   # Neon's PgBouncer endpoint (transaction pooling)
+    pooled = "-pooler" in (u.hostname or "") or env("DB_POOLED", "") == "1"   # Neon's PgBouncer endpoint, or your own PgBouncer
     return {
         "ENGINE": "django.db.backends.postgresql",
         "NAME": (u.path or "/").lstrip("/") or "postgres",
@@ -157,7 +159,20 @@ PASSWORD_HASHERS = [
     "django.contrib.auth.hashers.PBKDF2PasswordHasher",
 ]
 
-CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}  # use Redis in production
+# ── Running more than one copy of the app (load balancer) ─────────────────────────────────────────────────────
+# Rate limits, the OTP cooldowns and cached lookups live in the cache. With several app copies each copy would keep its own
+# private numbers (so a limit of 5 becomes 5 x copies, and a blocked IP is only blocked on one copy). REDIS_URL switches
+# them to ONE shared Redis. Without REDIS_URL the per-process cache is used (fine for a single instance, as on Render today).
+REDIS_URL = env("REDIS_URL", "").strip()
+if REDIS_URL:
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.redis.RedisCache", "LOCATION": REDIS_URL, "KEY_PREFIX": "lenden",
+                          "OPTIONS": {"socket_connect_timeout": 2, "socket_timeout": 2}}}
+    SESSION_ENGINE = "django.contrib.sessions.backends.cached_db"      # reads from Redis, still stored in the database
+else:
+    CACHES = {"default": {"BACKEND": "django.core.cache.backends.locmem.LocMemCache"}}
+
+# How many proxies you control sit in front of the app (see apps/common/net.py). 0 keeps the old behaviour.
+TRUSTED_PROXY_COUNT = int(env("TRUSTED_PROXY_COUNT", "0") or 0)
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": ["apps.common.auth.JWTAuthentication"],
@@ -165,6 +180,7 @@ REST_FRAMEWORK = {
     "DEFAULT_RENDERER_CLASSES": ["rest_framework.renderers.JSONRenderer"],
     "DEFAULT_PARSER_CLASSES": ["rest_framework.parsers.JSONParser"],
     "UNAUTHENTICATED_USER": None,
+    "NUM_PROXIES": TRUSTED_PROXY_COUNT or None,          # DRF's own throttles must read the same client address
     "EXCEPTION_HANDLER": "apps.common.errors.exception_handler",
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
     "DEFAULT_THROTTLE_RATES": {

@@ -49,7 +49,7 @@ backend/    Django project (API + website + admin). Start here: backend/README.m
   tests/          pytest suite (123 tests)
 mobile/     Expo app. Start here: mobile/README.md
 database/   create_tables.py (one file creates the schema), copy_data.py, check_neon.py
-deploy/     render_deploy.py, render_update.py, e2e_site.py (live end-to-end test)
+deploy/     render_deploy.py, render_update.py, e2e_*.py (live tests), loadbalancer/ (HAProxy + Redis stack for running many copies)
 brand/      the owner's logo and make_assets.py (regenerates every icon from it)
 render.yaml, DEPLOY_RENDER.md   Render blueprint and deployment guide
 .github/workflows/ci.yml        the "test" environment: runs the suite against a Postgres service
@@ -122,6 +122,13 @@ Android test build (points at staging):
 cd mobile
 npm run eas:me -- build --profile preview --platform android
 ```
+
+## Scaling
+
+One instance is enough today. To run many identical copies behind a free, open-source load balancer (HAProxy) with a shared
+Redis for rate limits and sessions, see [deploy/loadbalancer/README.md](deploy/loadbalancer/README.md). It also explains, with
+numbers, what 10 million registered users would really require (the database is the expensive part, not the balancer).
+New optional settings: `REDIS_URL`, `TRUSTED_PROXY_COUNT`, `DB_POOLED`.
 
 ## Languages
 

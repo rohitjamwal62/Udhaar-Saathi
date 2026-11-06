@@ -1,0 +1,61 @@
+# Load-balanced LenDen Saathi: HAProxy -> N identical app copies -> Redis (shared limits + sessions) -> your database.
+#
+#   cp .env.example .env          # fill in DJANGO_SECRET_KEY and DATABASE_URL
+#   docker compose up -d --build --scale app=4
+#   open http://localhost:8080  (the site)   http://127.0.0.1:8404/stats  (live balancer status)
+#
+# Self-contained trial with its own throw-away PostgreSQL (no Neon needed), for load tests:
+#   docker compose -f docker-compose.yml -f docker-compose.localdb.yml up -d --build --scale app=4
+#
+# Add or remove capacity without downtime:   docker compose up -d --no-recreate --scale app=8
+name: lenden-saathi-lb
+
+services:
+  haproxy:
+    image: haproxy:2.9-alpine
+    ports:
+      - "${LB_PORT:-8080}:80"
+      - "127.0.0.1:8404:8404"            # status page: this machine only
+    environment:
+      RATE_PER_10S: "${RATE_PER_10S:-300}"                  # requests per address per 10 s before answering 429
+      AUTH_POSTS_PER_MIN: "${AUTH_POSTS_PER_MIN:-20}"       # sign-in / OTP / reset POSTs per address per minute
+      BEHIND_CLOUDFLARE: "${BEHIND_CLOUDFLARE:-0}"
+    volumes:
+      - ./haproxy.cfg:/usr/local/etc/haproxy/haproxy.cfg:ro
+    depends_on:
+      - app
+    restart: unless-stopped
+
+  app:
+    build:
+      context: ../..
+      dockerfile: backend/Dockerfile
+    env_file:
+      - path: .env
+        required: false
+    environment:
+      TRUSTED_PROXY_COUNT: "1"                              # HAProxy is the one proxy we trust (it overwrites X-Forwarded-For)
+      REDIS_URL: redis://redis:6379/0                       # one shared cache for rate limits, OTP cooldowns, sessions
+      # "localhost" must stay: the container health check and HAProxy's checks use it. Put your real domain in SITE_HOSTS.
+      DJANGO_ALLOWED_HOSTS: "${SITE_HOSTS:-localhost},localhost,127.0.0.1,haproxy"
+      WEB_CONCURRENCY: "${WEB_CONCURRENCY:-2}"              # worker processes per copy (about the number of CPU cores)
+      GUNICORN_THREADS: "${GUNICORN_THREADS:-4}"
+    expose:
+      - "8000"
+    deploy:
+      replicas: ${APP_REPLICAS:-2}
+    depends_on:
+      redis:
+        condition: service_healthy
+    restart: unless-stopped
+
+  redis:
+    image: redis:7-alpine
+    # A cache, not a database: nothing here is the only copy of anything, so it may be flushed or restarted safely.
+    command: ["redis-server", "--maxmemory", "256mb", "--maxmemory-policy", "allkeys-lru", "--save", "", "--appendonly", "no"]
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+    restart: unless-stopped

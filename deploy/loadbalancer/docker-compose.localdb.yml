@@ -1,0 +1,50 @@
+# Optional add-on for TRIALS and LOAD TESTS ONLY: runs a throw-away PostgreSQL next to the app so nothing touches Neon.
+#   docker compose -f docker-compose.yml -f docker-compose.localdb.yml up -d --build --scale app=4
+# Real deployments use a hosted database (DATABASE_URL, ideally its pooled endpoint), not this.
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_PASSWORD: "${PGPASSWORD:-localtest}"
+      POSTGRES_DB: udhaar_saathi
+    command: ["postgres", "-c", "max_connections=300"]
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d udhaar_saathi"]
+      interval: 5s
+      timeout: 3s
+      retries: 20
+
+  # Runs once: creates the app tables (database/create_tables.py) and the website tables (Django migrations), then exits.
+  init:
+    build:
+      context: ../..
+      dockerfile: backend/Dockerfile
+    command: ["sh", "-c", "python /app/database/create_tables.py && python manage.py migrate --noinput"]
+    environment: &localdb
+      DATABASE_URL: ""
+      USE_LOCAL_DB: "1"
+      PGHOST: postgres
+      PGPORT: "5432"
+      PGUSER: postgres
+      PGPASSWORD: "${PGPASSWORD:-localtest}"
+      PGDATABASE: udhaar_saathi
+      DJANGO_SECRET_KEY: "${DJANGO_SECRET_KEY:-local-trial-secret-change-me}"
+    depends_on:
+      postgres:
+        condition: service_healthy
+
+  app:
+    environment:
+      <<: *localdb
+      SECURE_SSL_REDIRECT: "false"          # this trial speaks plain HTTP
+      APP_ENV: development
+    depends_on:
+      redis:
+        condition: service_healthy
+      init:
+        condition: service_completed_successfully
+
+volumes:
+  pgdata: {}

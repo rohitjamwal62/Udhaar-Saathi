@@ -1,5 +1,6 @@
 import uuid
 
+from django.conf import settings
 from django.contrib.auth.hashers import check_password, make_password
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -16,6 +17,13 @@ from .serializers import (ForgotSerializer, LoginSerializer, OtpRequestSerialize
 
 # Used to spend the same time hashing when the account does not exist (no timing oracle).
 _DUMMY_HASH = make_password("dummy-password-for-timing")
+
+
+def _delivery(email: str | None = None) -> dict:
+    """Tells the app where the code went. Built only from what the caller supplied, so it never reveals whether an account exists."""
+    if settings.OTP_SENDER == "email":
+        return {"delivery": "email", **({"sent_to": otp.mask_email(email)} if email else {})}
+    return {"delivery": "sms"}
 
 
 def _user_payload(row: dict) -> dict:
@@ -38,20 +46,21 @@ class SignupView(_Public):
         existing = q1("SELECT id, status FROM users WHERE mobile_e164 = %s", [d["mobile"]])
         if existing and existing["status"] != "pending":
             # Same response as a fresh signup so numbers cannot be enumerated; nothing is sent.
-            return Response({"challenge_id": otp.create_challenge(d["mobile"], "signup", send=False)})
+            return Response({"challenge_id": otp.create_challenge(d["mobile"], "signup", send=False), **_delivery(d.get("email"))})
         with atomic():
             if existing:
-                x("""UPDATE users SET name=%s, password_hash=%s, preferred_language=%s,
+                x("""UPDATE users SET name=%s, password_hash=%s, preferred_language=%s, email=%s,
                             accepted_terms_version=%s, accepted_terms_at=now(), updated_at=now() WHERE id=%s""",
-                  [d["name"], make_password(d["password"]), d["language"], d["accepted_terms_version"], existing["id"]])
+                  [d["name"], make_password(d["password"]), d["language"], d.get("email") or None, d["accepted_terms_version"], existing["id"]])
             else:
-                x("""INSERT INTO users(mobile_e164, password_hash, name, status, preferred_language,
+                x("""INSERT INTO users(mobile_e164, email, password_hash, name, status, preferred_language,
                                       accepted_terms_version, accepted_terms_at)
-                     VALUES (%s,%s,%s,'pending',%s,%s,now())""",
-                  [d["mobile"], make_password(d["password"]), d["name"], d["language"], d["accepted_terms_version"]])
+                     VALUES (%s,%s,%s,%s,'pending',%s,%s,now())""",
+                  [d["mobile"], d.get("email") or None, make_password(d["password"]), d["name"], d["language"], d["accepted_terms_version"]])
             user = q1("SELECT id FROM users WHERE mobile_e164 = %s", [d["mobile"]])
             x("INSERT INTO user_roles(user_id, role) VALUES (%s,%s) ON CONFLICT DO NOTHING", [user["id"], d["role"]])
-        return Response({"challenge_id": otp.create_challenge(d["mobile"], "signup")})
+        return Response({"challenge_id": otp.create_challenge(d["mobile"], "signup", email=d.get("email"), language=d["language"]),
+                         **_delivery(d.get("email"))})
 
 
 class OtpRequestView(_Public):
@@ -59,10 +68,13 @@ class OtpRequestView(_Public):
         s = OtpRequestSerializer(data=request.data)
         s.is_valid(raise_exception=True)
         mobile, purpose = s.validated_data["mobile"], s.validated_data["purpose"]
-        user = q1("SELECT status FROM users WHERE mobile_e164 = %s", [mobile])
+        user = q1("SELECT status, email, preferred_language FROM users WHERE mobile_e164 = %s", [mobile])
         ok = bool(user) and ((purpose == "signup" and user["status"] == "pending")
                              or (purpose in ("login", "recovery") and user["status"] == "active"))
-        return Response({"challenge_id": otp.create_challenge(mobile, purpose, send=ok)})
+        if ok and settings.OTP_SENDER == "email" and not user["email"]:
+            ok = False                      # an account with no email on file cannot receive an emailed code (and we say nothing about it)
+        return Response({"challenge_id": otp.create_challenge(mobile, purpose, send=ok, email=user and user["email"],
+                                                              language=(user or {}).get("preferred_language", "en")), **_delivery()})
 
 
 class OtpVerifyView(_Public):
@@ -76,8 +88,13 @@ class OtpVerifyView(_Public):
         user = q1("SELECT id, name, mobile_e164, status FROM users WHERE mobile_e164 = %s", [d["mobile"]])
         if not user or user["status"] not in ("pending", "active"):
             raise ApiProblem("That OTP is incorrect or has expired.", "invalid_otp")
-        x("UPDATE users SET status='active', mobile_verified_at=COALESCE(mobile_verified_at, now()), updated_at=now() "
-          "WHERE id=%s", [user["id"]])
+        # Proving the code proves what it was sent to. An emailed code proves the EMAIL, not the mobile number, so the
+        # mobile is only marked verified when the code really went to that number by SMS.
+        if settings.OTP_SENDER == "email":
+            x("UPDATE users SET status='active', updated_at=now() WHERE id=%s", [user["id"]])
+        else:
+            x("UPDATE users SET status='active', mobile_verified_at=COALESCE(mobile_verified_at, now()), updated_at=now() "
+              "WHERE id=%s", [user["id"]])
         session = tokens.issue_session(user["id"], str(d.get("device_id") or uuid.uuid4()))
         return Response({**session, "user": _user_payload(user)})
 
@@ -120,8 +137,10 @@ class ForgotPasswordView(_Public):
         s = ForgotSerializer(data=request.data)
         s.is_valid(raise_exception=True)
         mobile = s.validated_data["mobile"]
-        user = q1("SELECT id FROM users WHERE mobile_e164 = %s AND status = 'active'", [mobile])
-        return Response({"challenge_id": otp.create_challenge(mobile, "recovery", send=bool(user))})
+        user = q1("SELECT id, email, preferred_language FROM users WHERE mobile_e164 = %s AND status = 'active'", [mobile])
+        send = bool(user) and (settings.OTP_SENDER != "email" or bool(user["email"]))
+        return Response({"challenge_id": otp.create_challenge(mobile, "recovery", send=send, email=user and user["email"],
+                                                              language=(user or {}).get("preferred_language", "en")), **_delivery()})
 
 
 class ResetPasswordView(_Public):

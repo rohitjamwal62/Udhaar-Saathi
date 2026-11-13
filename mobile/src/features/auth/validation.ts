@@ -6,6 +6,19 @@ export function normalizeMobile(input: string): string | null {
   return null;
 }
 
+/** Trims and lower-cases an email address. */
+export function normalizeEmail(input: string): string {
+  return input.trim().toLowerCase();
+}
+
+/** null when the address looks valid; otherwise the message to show. The server does the real check. */
+export function emailProblem(input: string): string | null {
+  const e = normalizeEmail(input);
+  if (!e) return 'Enter your email address: we send your verification code there';
+  if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(e)) return 'Enter a valid email address';
+  return null;
+}
+
 export function passwordProblem(pw: string): string | null {
   if (pw.length < 8) return 'Use at least 8 characters';
   if (!/[A-Za-z]/.test(pw) || !/\d/.test(pw)) return 'Include both letters and numbers';

@@ -9,18 +9,25 @@ export interface AuthSession {
   user: { id: string; name: string; mobile: string; roles: string[] };
 }
 
+/** Where the verification code went. `sent_to` is a masked email (ra***@gmail.com) and only appears at sign-up. */
+export interface CodeSent {
+  challenge_id: string;
+  delivery?: 'email' | 'sms';
+  sent_to?: string;
+}
+
 export const authApi = {
-  signup: (b: { mobile: string; name: string; password: string; role: 'shopkeeper' | 'customer'; language: string; accepted_terms_version: string }) =>
-    api<{ challenge_id: string }>('/auth/signup', { method: 'POST', body: b, auth: false }),
+  signup: (b: { mobile: string; email: string; name: string; password: string; role: 'shopkeeper' | 'customer'; language: string; accepted_terms_version: string }) =>
+    api<CodeSent>('/auth/signup', { method: 'POST', body: b, auth: false }),
   requestOtp: (b: { mobile: string; purpose: 'signup' | 'login' | 'recovery' }) =>
-    api<{ challenge_id: string }>('/auth/otp/request', { method: 'POST', body: b, auth: false }),
+    api<CodeSent>('/auth/otp/request', { method: 'POST', body: b, auth: false }),
   verifyOtp: (b: { mobile: string; challenge_id: string; otp: string }) =>
     api<AuthSession>('/auth/otp/verify', { method: 'POST', body: b, auth: false }),
   login: (b: { mobile: string; password: string; device_id: string }) =>
     api<AuthSession>('/auth/login', { method: 'POST', body: b, auth: false }),
   logout: () => api<void>('/auth/logout', { method: 'POST' }),
   forgotPassword: (b: { mobile: string }) =>
-    api<{ challenge_id: string }>('/auth/password/forgot', { method: 'POST', body: b, auth: false }),
+    api<CodeSent>('/auth/password/forgot', { method: 'POST', body: b, auth: false }),
   resetPassword: (b: { mobile: string; challenge_id: string; otp: string; new_password: string }) =>
     api<void>('/auth/password/reset', { method: 'POST', body: b, auth: false }),
 };

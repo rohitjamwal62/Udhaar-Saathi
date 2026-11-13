@@ -11,7 +11,7 @@ import { authApi } from '../../core/api/endpoints';
 import { ApiError } from '../../core/api/client';
 import { config } from '../../core/config';
 import { useAction } from '../../shared/hooks';
-import { normalizeMobile, passwordProblem, TERMS_VERSION } from './validation';
+import { emailProblem, normalizeEmail, normalizeMobile, passwordProblem, TERMS_VERSION } from './validation';
 
 type P<K extends keyof RootStackParamList> = NativeStackScreenProps<RootStackParamList, K>;
 
@@ -70,6 +70,7 @@ export function LoginScreen({ navigation, route }: P<'Login'>) {
 export function SignupScreen({ navigation }: P<'Signup'>) {
   const [name, setName] = useState('');
   const [mobile, setMobile] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [language, setLanguage] = useState<'en' | 'hi'>('en');
@@ -81,6 +82,8 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
     const m = normalizeMobile(mobile);
     if (!name.trim()) e.name = 'Enter your name';
     if (!m) e.mobile = 'Enter a valid 10-digit mobile number';
+    const emErr = emailProblem(email);
+    if (emErr) e.email = emErr;
     const pwErr = passwordProblem(password);
     if (pwErr) e.password = pwErr;
     if (password !== confirm) e.confirm = 'Passwords do not match';
@@ -89,10 +92,10 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
     if (Object.keys(e).length || !m) return;
     try {
       const res = await authApi.signup({
-        mobile: m, name: name.trim(), password, role: 'shopkeeper', language,
+        mobile: m, email: normalizeEmail(email), name: name.trim(), password, role: 'shopkeeper', language,
         accepted_terms_version: TERMS_VERSION,
       });
-      navigation.navigate('Otp', { mobile: m, challengeId: res.challenge_id });
+      navigation.navigate('Otp', { mobile: m, challengeId: res.challenge_id, delivery: res.delivery, sentTo: res.sent_to });
     } catch (err) {
       throw new Error(friendly(err, 'Could not create the account. Check your details and try again.'));
     }
@@ -103,7 +106,9 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
       <Header title="Create account" subtitle="Registration is free. Your first 3 months are free too." />
       <TextField label="Your name" value={name} onChangeText={setName} error={errs.name} autoComplete="name" />
       <TextField label="Mobile number" prefix="+91" keyboardType="phone-pad" value={mobile} onChangeText={setMobile}
-        error={errs.mobile} maxLength={13} helper="We will send an OTP to verify this number." />
+        error={errs.mobile} maxLength={13} helper="This is your login. Customers and your shop use it." />
+      <TextField label="Email address" keyboardType="email-address" autoCapitalize="none" autoCorrect={false} autoComplete="email"
+        value={email} onChangeText={setEmail} error={errs.email} helper="We email your verification code here. Check Spam if it is slow." />
       <TextField label="Password" secureTextEntry value={password} onChangeText={setPassword} error={errs.password}
         helper="At least 8 characters with letters and numbers." />
       <TextField label="Confirm password" secureTextEntry value={confirm} onChangeText={setConfirm} error={errs.confirm} />
@@ -121,7 +126,7 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
       </View>
       {submit.error ? <Banner tone="danger">{submit.error}</Banner> : null}
       {submit.busy ? <AppText variant="caption" color={colors.textMuted}>Connecting to the server. The first request after a quiet period can take up to a minute.</AppText> : null}
-      <Button title="Send OTP" loading={submit.busy} onPress={() => submit.run()} />
+      <Button title="Send verification code" loading={submit.busy} onPress={() => submit.run()} />
     </Screen>
   );
 }
@@ -130,11 +135,13 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
 const RESEND_SECONDS = 30;
 
 export function OtpScreen({ route }: P<'Otp'>) {
-  const { mobile } = route.params;
+  const { mobile, delivery, sentTo } = route.params;
+  const byEmail = delivery === 'email';
   const { signIn } = useAuth();
   const [challengeId, setChallengeId] = useState(route.params.challengeId);
   const [otp, setOtp] = useState('');
   const [cooldown, setCooldown] = useState(RESEND_SECONDS);
+  const [resent, setResent] = useState(false);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -143,27 +150,30 @@ export function OtpScreen({ route }: P<'Otp'>) {
   }, [cooldown]);
 
   const verify = useAction(async () => {
-    if (!/^\d{6}$/.test(otp)) throw new Error('Enter the 6-digit OTP');
+    if (!/^\d{6}$/.test(otp)) throw new Error('Enter the 6-digit code');
     try {
       await signIn(await authApi.verifyOtp({ mobile, challenge_id: challengeId, otp }));
     } catch (e) {
-      throw new Error(friendly(e, 'That OTP is incorrect or has expired'));
+      throw new Error(friendly(e, 'That code is incorrect or has expired'));
     }
   });
   const resend = useAction(async () => {
     const r = await authApi.requestOtp({ mobile, purpose: 'signup' });
     setChallengeId(r.challenge_id);
     setCooldown(RESEND_SECONDS);
+    setResent(true);
   });
 
   return (
     <Screen>
-      <Header title="Verify your number" subtitle={`Enter the 6-digit OTP sent to ${mobile}`} />
-      <TextField label="OTP" keyboardType="number-pad" maxLength={6} value={otp} onChangeText={setOtp}
+      <Header title={byEmail ? 'Check your email' : 'Verify your number'}
+        subtitle={byEmail ? `Enter the 6-digit code we emailed to ${sentTo ?? 'your email address'}. It can take a minute: also look in Spam or Promotions.` : `Enter the 6-digit OTP sent to ${mobile}`} />
+      <TextField label={byEmail ? 'Verification code' : 'OTP'} keyboardType="number-pad" maxLength={6} value={otp} onChangeText={setOtp}
         autoComplete="sms-otp" textContentType="oneTimeCode" />
       {verify.error || resend.error ? <Banner tone="danger">{verify.error ?? resend.error}</Banner> : null}
+      {resent && !resend.error ? <Banner tone="success">{byEmail ? 'A new code was emailed to you.' : 'A new OTP was sent.'}</Banner> : null}
       <Button title="Verify and continue" loading={verify.busy} onPress={() => verify.run()} />
-      <Button title={cooldown > 0 ? `Resend OTP in ${cooldown}s` : 'Resend OTP'} variant="ghost"
+      <Button title={cooldown > 0 ? `Resend code in ${cooldown}s` : 'Resend code'} variant="ghost"
         disabled={cooldown > 0} loading={resend.busy} onPress={() => resend.run()} />
     </Screen>
   );
@@ -177,14 +187,14 @@ export function ForgotScreen({ navigation }: P<'Forgot'>) {
     if (!m) throw new Error('Enter a valid 10-digit mobile number');
     try {
       const r = await authApi.forgotPassword({ mobile: m });
-      navigation.navigate('ResetPassword', { mobile: m, challengeId: r.challenge_id });
+      navigation.navigate('ResetPassword', { mobile: m, challengeId: r.challenge_id, delivery: r.delivery });
     } catch (e) {
       throw new Error(friendly(e, 'Could not start password reset'));
     }
   });
   return (
     <Screen>
-      <Header title="Reset password" subtitle="We will send an OTP to your registered mobile number." />
+      <Header title="Reset password" subtitle="Enter your mobile number. We email a reset code to the email address on your account." />
       <TextField label="Mobile number" prefix="+91" keyboardType="phone-pad" value={mobile} onChangeText={setMobile} maxLength={13} />
       {submit.error ? <Banner tone="danger">{submit.error}</Banner> : null}
       <Button title="Send OTP" loading={submit.busy} onPress={() => submit.run()} />
@@ -193,12 +203,12 @@ export function ForgotScreen({ navigation }: P<'Forgot'>) {
 }
 
 export function ResetPasswordScreen({ route, navigation }: P<'ResetPassword'>) {
-  const { mobile, challengeId } = route.params;
+  const { mobile, challengeId, delivery } = route.params;
   const [otp, setOtp] = useState('');
   const [pw, setPw] = useState('');
   const [confirm, setConfirm] = useState('');
   const submit = useAction(async () => {
-    if (!/^\d{6}$/.test(otp)) throw new Error('Enter the 6-digit OTP');
+    if (!/^\d{6}$/.test(otp)) throw new Error('Enter the 6-digit code');
     const pe = passwordProblem(pw);
     if (pe) throw new Error(pe);
     if (pw !== confirm) throw new Error('Passwords do not match');
@@ -211,8 +221,9 @@ export function ResetPasswordScreen({ route, navigation }: P<'ResetPassword'>) {
   });
   return (
     <Screen>
-      <Header title="Choose a new password" subtitle={`OTP sent to ${mobile}`} />
-      <TextField label="OTP" keyboardType="number-pad" maxLength={6} value={otp} onChangeText={setOtp} />
+      <Header title="Choose a new password"
+        subtitle={delivery === 'email' ? 'If this number has an account, a code was emailed to its address. Enter it below.' : `OTP sent to ${mobile}`} />
+      <TextField label={delivery === 'email' ? 'Code from your email' : 'OTP'} keyboardType="number-pad" maxLength={6} value={otp} onChangeText={setOtp} />
       <TextField label="New password" secureTextEntry value={pw} onChangeText={setPw} />
       <TextField label="Confirm new password" secureTextEntry value={confirm} onChangeText={setConfirm} />
       {submit.error ? <Banner tone="danger">{submit.error}</Banner> : null}

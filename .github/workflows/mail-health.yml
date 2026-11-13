@@ -1,0 +1,27 @@
+# Warns you (GitHub emails the repository owner when a scheduled workflow fails) as soon as the server can no longer send
+# email: for example when Google's refresh token expires. Verification codes for the phone app and the website go out by email,
+# so a broken Google connection means nobody can sign up.
+#
+# While the Google consent screen is in "Testing" mode the token expires every 7 days. Publish the consent screen
+# (Google Cloud Console > APIs & Services > OAuth consent screen > Publish app) so it stops expiring, then connect once more.
+name: email health
+
+on:
+  schedule:
+    - cron: "17 3 * * *"        # every day, around 08:45 India time
+  workflow_dispatch: {}
+
+permissions: {}
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Ask production whether it can still send email
+        run: |
+          set -o pipefail
+          body=$(curl --silent --show-error --location --max-time 120 --retry 2 --retry-delay 10 \
+                 --write-out '\nHTTP %{http_code}' https://udhaarsaathi-api.onrender.com/health/mail)
+          echo "$body"
+          echo "$body" | grep -q 'HTTP 200' || { echo "::error::The server cannot send email (see the line above). Reconnect Google: python manage.py google_consent --redirect https://www.google.com"; exit 1; }

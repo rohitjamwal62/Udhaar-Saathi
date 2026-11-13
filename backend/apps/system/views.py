@@ -41,3 +41,13 @@ class AppConfigView(APIView):
         if row["update_message"]:
             out["message"] = row["update_message"]
         return Response(out)
+
+
+def mail_health(request):
+    """Can the server still send email? 200 while Google's token works, 503 once it has expired (re-consent needed).
+    Kept apart from /health/ready so an email problem never takes the site out of a load balancer."""
+    from django.http import JsonResponse
+
+    from apps.web import google
+    state = google.token_status()
+    return JsonResponse({"email": state}, status=503 if state in ("token_expired", "unreachable") else 200)

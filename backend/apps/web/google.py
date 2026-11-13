@@ -50,6 +50,26 @@ def access_token() -> str:
     return _token["value"]
 
 
+def token_status() -> str:
+    """'ok', 'not_configured', 'token_expired' (re-consent needed) or 'unreachable'. Cached so health checks stay cheap."""
+    from django.core.cache import cache
+    cached = cache.get("google:token_status")
+    if cached:
+        return cached
+    if not configured():
+        state = "not_configured"
+    else:
+        try:
+            access_token()
+            state = "ok"
+        except GoogleError as e:
+            state = "token_expired" if "invalid_grant" in str(e) else "unreachable"
+        except requests.RequestException:
+            state = "unreachable"
+    cache.set("google:token_status", state, 300 if state == "ok" else 60)
+    return state
+
+
 def _auth() -> dict:
     return {"Authorization": f"Bearer {access_token()}"}
 

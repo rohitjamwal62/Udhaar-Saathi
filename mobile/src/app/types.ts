@@ -12,9 +12,9 @@ export type RootStackParamList = {
   // auth
   Login: { notice?: string } | undefined;
   Signup: undefined;
-  Otp: { mobile: string; challengeId: string };
+  Otp: { mobile: string; challengeId: string; delivery?: 'email' | 'sms'; sentTo?: string };
   Forgot: undefined;
-  ResetPassword: { mobile: string; challengeId: string };
+  ResetPassword: { mobile: string; challengeId: string; delivery?: 'email' | 'sms' };
   // onboarding
   ShopSetup: undefined;
   // app

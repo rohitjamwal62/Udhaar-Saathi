@@ -71,6 +71,7 @@ def main() -> None:
     values["EMAIL_HOST_PASSWORD"] = values.get("EMAIL_HOST_PASSWORD", "").replace(" ", "")
     values["SUPPORT_EMAIL"] = local.get("SUPPORT_EMAIL") or local.get("EMAIL_HOST_USER", "")
     values["EMAIL_TRANSPORT"] = "auto"
+    values["OTP_SENDER"] = "email"          # the phone app's verification codes go to the email given at sign-up
     for env, sid in SERVICES.items():
         if a.only and env != a.only:
             continue

@@ -91,3 +91,28 @@ What was done:
 Render has its own load balancer, so no HAProxy is needed here. More than one instance needs a paid plan. When you do that, set
 `REDIS_URL` (Render Key Value or Upstash) so all instances share rate limits and OTP cool-downs, and use the database's pooled
 endpoint. Details, capacity numbers and the self-hosted HAProxy option: `deploy/loadbalancer/README.md`.
+
+
+## Verification codes by email (phone app and website)
+Both the phone app and the website send their one-time codes **by email**, because there is no SMS provider (SMS in India needs DLT
+registration). The app asks for an email address at sign-up (`OTP_SENDER=email`, set on all three services by
+`python deploy/render_update.py`), and the code goes there through the same mailer as the website.
+
+- Email leaves the server over HTTPS through the **Gmail API** (Render blocks the SMTP ports). That needs the Google token in
+  `GOOGLE_REFRESH_TOKEN` to be alive.
+- **While the Google consent screen is in "Testing" mode the token dies after 7 days** (`invalid_grant`). Then no code can be sent
+  and sign-up fails with "We could not send the code right now". To fix it for good: Google Cloud Console > APIs & Services >
+  OAuth consent screen > **Publish app** (status "In production"), then connect once more:
+  ```bash
+  cd backend
+  python manage.py google_consent --redirect https://www.google.com                      # open the printed link, approve both permissions
+  python manage.py google_consent --redirect https://www.google.com --code <code=...>    # saves the new token in backend/.env
+  python deploy/render_update.py                                                         # sends it to all three services
+  ```
+  then redeploy the services (a changed variable does not redeploy by itself).
+- **How you will know it broke:** `https://<service>/health/mail` answers `{"email": "ok"}` or 503 `{"email": "token_expired"}`;
+  the GitHub workflow *email health* checks it every day and GitHub emails you if it fails; the admin home page shows a warning;
+  `/admin/email-check/` shows the details and can send a test message.
+- On **dev and staging** only (`ALLOW_DEV_OTP_IN_LOGS`), if the email cannot be sent the code is printed in the Render log so testing
+  can go on. Production never does that: it says so instead.
+- One email address can receive at most 5 codes an hour, so the endpoint cannot be used to flood somebody's inbox.

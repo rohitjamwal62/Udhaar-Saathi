@@ -4,7 +4,7 @@ Live smoke test of the phone app's REST API and offline sync on dev or staging.
 
     python deploy/e2e_api.py staging
 
-Journey: signup + OTP (read from the Render log) -> create shop and customer through /sync/batch -> credit and payment ->
+Journey: signup with an email (the code is emailed; on dev/staging, if email fails, it is read from the Render log) -> create shop and customer through /sync/batch -> credit and payment ->
 a retry of the same batch is reported as duplicate and posts nothing twice -> a reversal -> customers list, ledger
 (running balance), dashboard and receivables report -> a second account cannot see the first one's customer.
 
@@ -49,9 +49,9 @@ def uid() -> str:
     return str(uuid.uuid4())
 
 
-def signup(api: str, owner: str, service: str, mobile: str, name: str) -> requests.Session | None:
+def signup(api: str, owner: str, service: str, mobile: str, name: str, email: str) -> requests.Session | None:
     s = requests.Session()
-    r = s.post(f"{api}/auth/signup", json={"mobile": mobile, "name": name, "password": PW, "role": "shopkeeper", "language": "en",
+    r = s.post(f"{api}/auth/signup", json={"mobile": mobile, "email": email, "name": name, "password": PW, "role": "shopkeeper", "language": "en",
                                            "accepted_terms_version": "v1"}, timeout=180)
     if r.status_code != 200:
         print("signup failed", r.status_code, r.text[:200])
@@ -94,7 +94,9 @@ def main(env: str) -> int:
     check(requests.get(base + "/health/ready", timeout=120).json().get("status") == "ok", "server and database are ready")
     check(requests.get(api + "/shops", timeout=60).status_code in (401, 403), "the API refuses requests without a login")
 
-    a = signup(api, owner, service, mob1, "E2E API Owner")
+    mail = requests.get(base + "/health/mail", timeout=120)
+    check(mail.status_code == 200, f"the server can send email (Google connection: {mail.json().get('email')})")
+    a = signup(api, owner, service, mob1, "E2E API Owner", f"rohitjamwal62+api{stamp}a@gmail.com")
     if not check(a is not None, "signup and OTP verification work"):
         return finish()
     sid, cid = uid(), uid()
@@ -125,7 +127,7 @@ def main(env: str) -> int:
     rec = a.get(f"{api}/shops/{sid}/reports/receivables", timeout=120).json()
     check(rec["total_paise"] == 150050 and rec["results"][0]["customer_id"] == cid, "receivables report is right")
 
-    b = signup(api, owner, service, mob2, "E2E API Other")
+    b = signup(api, owner, service, mob2, "E2E API Other", f"rohitjamwal62+api{stamp}b@gmail.com")
     if check(b is not None, "a second account signs up"):
         check(b.get(f"{api}/shops/{sid}/customers", timeout=120).status_code == 404, "the second account cannot see the first shop")
         check(b.get(f"{api}/shops/{sid}/customers/{cid}/ledger", timeout=120).status_code == 404, "nor its customer ledger")

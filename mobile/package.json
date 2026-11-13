@@ -34,7 +34,7 @@
     "start": "node scripts/start.js",
     "android": "expo run:android",
     "typecheck": "tsc --noEmit",
-    "test": "node --import tsx --test src/__tests__/money.test.ts src/__tests__/appUpdate.test.ts src/__tests__/dates.test.ts",
+    "test": "node --import tsx --test src/__tests__/money.test.ts src/__tests__/appUpdate.test.ts src/__tests__/dates.test.ts src/__tests__/validation.test.ts",
     "start:dev": "node scripts/start.js --dev-client",
     "start:tunnel": "node scripts/start.js --tunnel",
     "start:online": "node scripts/start.js --online",

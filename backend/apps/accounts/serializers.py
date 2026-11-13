@@ -40,9 +40,19 @@ class SignupSerializer(serializers.Serializer):
     role = serializers.ChoiceField(choices=["shopkeeper", "customer"])
     language = serializers.ChoiceField(choices=["en", "hi", "pa"], default="en")
     accepted_terms_version = serializers.CharField(max_length=20)
+    email = serializers.EmailField(required=False, allow_blank=True, max_length=254)
 
     def validate_password(self, v):
         return validate_password_strength(v)
+
+    def validate_email(self, v):
+        return (v or "").strip().lower()
+
+    def validate(self, attrs):
+        from django.conf import settings
+        if settings.OTP_SENDER == "email" and not attrs.get("email"):
+            raise serializers.ValidationError({"email": "Enter your email address: we send your verification code there."})
+        return attrs
 
 
 class OtpRequestSerializer(serializers.Serializer):

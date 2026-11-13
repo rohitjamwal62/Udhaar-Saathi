@@ -79,6 +79,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "apps.common.middleware.RequestIdMiddleware",
     "apps.web.middleware.AdminLoginThrottleMiddleware",
+    "apps.web.middleware.GoogleConnectionNoticeMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -205,6 +206,7 @@ OTP_TTL_SECONDS = 300
 OTP_MAX_ATTEMPTS = 5
 OTP_RESEND_COOLDOWN_SECONDS = int(env("OTP_RESEND_COOLDOWN_SECONDS", "30"))
 OTP_MAX_PER_HOUR = 6
+OTP_MAX_PER_EMAIL_HOUR = 5      # codes one email address may receive per hour (stops inbox flooding)
 LOGIN_MAX_FAILURES = int(env("LOGIN_MAX_FAILURES", "10"))        # per mobile, per 15 minutes
 # 'console' prints the OTP to this server's stdout (development only, needs DEBUG).
 # Production must plug in a real SMS provider (DLT registered); see apps/accounts/otp.py.
@@ -217,6 +219,8 @@ if LEDGER_BACKEND not in ("legacy", "unified"):
     from django.core.exceptions import ImproperlyConfigured
     raise ImproperlyConfigured("LEDGER_BACKEND must be 'legacy' or 'unified'")
 
+# OTP_SENDER: "email" sends the app's verification codes to the email address given at sign-up (works with no SMS provider);
+#             "console" prints them in the server log (development / test servers only); "memory" is for automated tests.
 OTP_SENDER = env("OTP_SENDER", "console")
 # TEST DEPLOYMENTS ONLY: lets the 'console' sender print OTPs into the server log when DEBUG is off (for example
 # on Render before an SMS provider exists). Anyone who can read the log can read the OTPs. Turn it OFF for real users.

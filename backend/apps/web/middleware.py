@@ -29,3 +29,24 @@ class IgnoreAcceptLanguageMiddleware:
     def __call__(self, request):
         request.META.pop("HTTP_ACCEPT_LANGUAGE", None)
         return self.get_response(request)
+
+
+class GoogleConnectionNoticeMiddleware:
+    """Shows administrators a warning on the admin home page when Google's token has expired, because emails
+    (verification codes) and Drive uploads stop working until Google is connected again."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        if request.method == "GET" and request.path == "/admin/" and getattr(request, "user", None) and request.user.is_superuser:
+            from django.contrib import messages
+
+            from apps.web import google
+            state = google.token_status()
+            if state == "token_expired":
+                messages.warning(request, "Google is disconnected (the refresh token expired), so verification emails and "
+                                          "document uploads are not working. Run: python manage.py google_consent --redirect "
+                                          "https://www.google.com  (see DEPLOY_RENDER.md), and publish the Google consent "
+                                          "screen so it does not expire again.")
+        return self.get_response(request)

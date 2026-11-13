@@ -36,11 +36,10 @@ def _deliver_by_email(mobile: str, code: str, email: str | None, purpose: str, l
     check(f"otp:email:{email.lower()}", settings.OTP_MAX_PER_EMAIL_HOUR, 3600, "Too many codes were sent to this email. Try again later.")
     with translation.override(language if language in ("en", "hi") else "en"):
         ok = mailer.send_otp_email(email, code, "reset" if purpose == "recovery" else "register", max(1, settings.OTP_TTL_SECONDS // 60))
-    if not ok:
-        if settings.DEBUG or settings.ALLOW_DEV_OTP_IN_LOGS:
-            print(f"[DEV OTP] {mobile}: {code}", flush=True)       # TEST SERVERS ONLY: email was not possible, so the log stands in
-        else:
-            raise ApiProblem("We could not send the code right now. Please try again in a few minutes.", "otp_unavailable", 503)
+    if settings.DEBUG or settings.ALLOW_DEV_OTP_IN_LOGS:
+        print(f"[DEV OTP] {mobile}: {code}", flush=True)           # TEST SERVERS ONLY (never production): lets automated tests read the code
+    elif not ok:
+        raise ApiProblem("We could not send the code right now. Please try again in a few minutes.", "otp_unavailable", 503)
 
 
 def _deliver(mobile: str, code: str, *, email: str | None = None, purpose: str = "signup", language: str = "en") -> None:

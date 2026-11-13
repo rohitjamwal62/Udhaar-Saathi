@@ -206,3 +206,19 @@ def test_the_admin_home_warns_administrators_when_google_must_be_reconnected():
     assert "Google is disconnected" in c.get("/admin/").content.decode()
     cache.set("google:token_status", "ok", 60)
     assert "Google is disconnected" not in c.get("/admin/").content.decode()
+
+
+@email_mode
+@override_settings(DEBUG=False, ALLOW_DEV_OTP_IN_LOGS=True)
+def test_on_a_test_server_the_code_is_also_logged_when_the_email_goes_out(capsys):
+    r = _signup(new_client())
+    assert r.status_code == 200 and len(_outbox()) == 1                                              # the email was sent
+    assert re.search(r"\[DEV OTP\] \+919876500200: \d{6}", capsys.readouterr().out)                  # and the test server logged it too
+
+
+@email_mode
+@override_settings(DEBUG=False, ALLOW_DEV_OTP_IN_LOGS=False)
+def test_production_never_logs_the_code(capsys):
+    r = _signup(new_client())
+    assert r.status_code == 200 and len(_outbox()) == 1
+    assert "[DEV OTP]" not in capsys.readouterr().out and _code() not in capsys.readouterr().out

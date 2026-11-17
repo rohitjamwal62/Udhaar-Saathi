@@ -295,6 +295,9 @@ EMAIL_OTP_RESEND_SECONDS = int(env("EMAIL_OTP_RESEND_SECONDS", "45"))
 GOOGLE_CLIENT_ID = env("GOOGLE_CLIENT_ID", "")
 GOOGLE_CLIENT_SECRET = env("GOOGLE_CLIENT_SECRET", "")
 GOOGLE_REFRESH_TOKEN = env("GOOGLE_REFRESH_TOKEN", "")
+# Where the refresh token in use is remembered between refreshes (see apps/web/google_token.py). Default: the database, because
+# Render erases local files on every deploy. Set GOOGLE_TOKEN_FILE=/path/google_token.json on a machine with a permanent disk to use a JSON file.
+GOOGLE_TOKEN_FILE = env("GOOGLE_TOKEN_FILE", "")
 GOOGLE_DRIVE_FOLDER_ID = env("GOOGLE_DRIVE_FOLDER_ID", "")
 DOCUMENT_MAX_BYTES = 10 * 1024 * 1024
 DOCUMENT_ALLOWED_EXTENSIONS = ("pdf", "png", "jpg", "jpeg", "docx", "xlsx", "txt", "csv")

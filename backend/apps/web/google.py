@@ -11,6 +11,8 @@ import uuid
 import requests
 from django.conf import settings
 
+from . import google_token
+
 log = logging.getLogger("google")
 TOKEN_URL = "https://oauth2.googleapis.com/token"
 DRIVE = "https://www.googleapis.com/drive/v3"
@@ -32,20 +34,39 @@ def drive_configured() -> bool:
     return configured() and bool(settings.GOOGLE_DRIVE_FOLDER_ID)
 
 
+def _refresh_call(refresh_token: str) -> requests.Response:
+    return requests.post(TOKEN_URL, data={
+        "client_id": settings.GOOGLE_CLIENT_ID, "client_secret": settings.GOOGLE_CLIENT_SECRET,
+        "refresh_token": refresh_token, "grant_type": "refresh_token"}, timeout=20)
+
+
+def _error_of(r: requests.Response) -> str:
+    return r.json().get("error", "") if r.headers.get("content-type", "").startswith("application/json") else ""
+
+
 def access_token() -> str:
-    """A valid access token, refreshed from the refresh token when it is about to expire."""
+    """A valid access token, refreshed from the refresh token when it is about to expire.
+
+    The refresh token is read from the store (apps/web/google_token.py), and saved back after every successful refresh,
+    replacing the previous copy; if Google ever sends a new refresh token it is saved and used from then on.
+    """
     if _token["value"] and time.time() < _token["exp"] - 60:
         return _token["value"]
     if not configured():
         raise GoogleError("Google is not connected yet (missing refresh token).")
-    r = requests.post(TOKEN_URL, data={
-        "client_id": settings.GOOGLE_CLIENT_ID, "client_secret": settings.GOOGLE_CLIENT_SECRET,
-        "refresh_token": settings.GOOGLE_REFRESH_TOKEN, "grant_type": "refresh_token"}, timeout=20)
+    used = google_token.current()
+    r = _refresh_call(used)
+    if r.status_code != 200 and used != settings.GOOGLE_REFRESH_TOKEN and _error_of(r) == "invalid_grant":
+        # the saved copy failed: fall back once to the token in the settings (and heal the store if that one works)
+        log.warning("the saved Google token was refused; trying the one in the settings")
+        used = settings.GOOGLE_REFRESH_TOKEN
+        r = _refresh_call(used)
     if r.status_code != 200:
-        err = r.json().get("error", "") if r.headers.get("content-type", "").startswith("application/json") else ""
+        err = _error_of(r)
         hint = " The refresh token has expired or was revoked: connect Google again." if err == "invalid_grant" else ""
         raise GoogleError(f"Google refused the token request ({r.status_code} {err}).{hint}")
     data = r.json()
+    google_token.record(used, data.get("refresh_token"))
     _token.update(value=data["access_token"], exp=time.time() + int(data.get("expires_in", 3600)))
     return _token["value"]
 

@@ -214,3 +214,20 @@ class LegalPage(models.Model):
 
     def __str__(self):
         return self.get_slug_display()
+
+
+class GoogleToken(models.Model):
+    """The Google refresh token currently in use (one row), kept in the database because Render erases local files on every deploy.
+
+    Google normally keeps the same refresh token and returns only a new access token when it is refreshed. This row exists so that
+    (1) the token is saved after every refresh and read back next time, and (2) if Google ever does send a replacement, the new one
+    replaces the old one and is used from then on. It is deliberately NOT shown in the admin: it is a secret.
+    """
+    refresh_token = models.TextField()
+    seed_hash = models.CharField(max_length=64, help_text="sha256 of the GOOGLE_REFRESH_TOKEN setting this row started from. "
+                                 "When the setting is changed (a new consent) the row restarts from the new value.")
+    rotations = models.PositiveIntegerField(default=0, help_text="How many times Google replaced the token.")
+    updated_at = models.DateTimeField(auto_now=True)
+
+    def __str__(self):
+        return "Google refresh token (hidden)"

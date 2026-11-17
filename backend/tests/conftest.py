@@ -47,7 +47,7 @@ def _clean():
     assert connection.settings_dict["NAME"].endswith("_test")
     with connection.cursor() as cur:
         cur.execute("TRUNCATE users, otp_challenges, gateway_webhook_events, auth_user, web_emailotp, "
-                    "web_contactmessage, django_session, django_admin_log CASCADE")
+                    "web_contactmessage, web_googletoken, django_session, django_admin_log CASCADE")
     cache.clear()
     otp.MEMORY_OUTBOX.clear()
     mail.outbox.clear() if hasattr(mail, "outbox") else None

@@ -36,6 +36,8 @@ def email_check(request):
         "network": [_probe("smtp.gmail.com", 587), _probe("smtp.gmail.com", 465), _probe("gmail.googleapis.com", 443)],
     }
     out["smtp_possible_here"] = any(p["reachable"] for p in out["network"][:2])
+    from . import google_token
+    out["google_token_store"] = google_token.describe()          # where the refresh token is kept; never the token itself
     if google.configured():
         try:
             info = requests.get("https://oauth2.googleapis.com/tokeninfo",

@@ -116,3 +116,17 @@ registration). The app asks for an email address at sign-up (`OTP_SENDER=email`,
 - On **dev and staging** only (`ALLOW_DEV_OTP_IN_LOGS`), if the email cannot be sent the code is printed in the Render log so testing
   can go on. Production never does that: it says so instead.
 - One email address can receive at most 5 codes an hour, so the endpoint cannot be used to flood somebody's inbox.
+
+### How the refresh token is kept (and what "never expires" really means)
+`backend/apps/web/google_token.py` implements this structure: **every time an access token is fetched, the refresh token is read from
+a store and, after a successful refresh, saved back, replacing the previous copy.** If Google ever sends a *new* refresh token it is
+saved and used from then on. The store is the database table `web_googletoken` (Render erases local files on every deploy, so a JSON
+file would be lost there); set `GOOGLE_TOKEN_FILE=/path/google_token.json` to use a JSON file instead on a machine with a permanent disk.
+After a re-consent (a changed `GOOGLE_REFRESH_TOKEN`) the new value always wins over an older saved copy.
+
+What Google really does (verified by calling it): a refresh returns only a new **access** token (`access_token`, `expires_in`, `scope`,
+`token_type`), never a new refresh token. So the saved token normally stays identical, and this store does **not** make it last longer.
+What keeps the connection alive is: the consent screen is **In production**, the token is used regularly, the access is not removed in
+the Google account's security settings, and the Gmail password is not changed (that revokes tokens with Gmail permission). If it still
+breaks, `/health/mail`, the daily *email health* workflow and the admin warning tell you, and the fix is the short re-consent above.
+`/admin/email-check/` shows where the token is stored and how often Google replaced it, never the token itself.

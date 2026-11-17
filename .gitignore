@@ -7,6 +7,10 @@
 !**/.env.example
 !**/.env.*.example
 
+# The Google refresh token kept by apps/web/google_token.py when GOOGLE_TOKEN_FILE is used
+google_token.json
+**/google_token.json
+
 # Python
 __pycache__/
 *.pyc

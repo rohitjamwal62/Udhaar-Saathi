@@ -84,6 +84,9 @@ def _legal(request, slug: str, template: str):
     if page:
         hindi = (get_language() or "en").startswith("hi") and page.body_hi.strip()
         body = (page.body_hi if hindi else page.body_en).strip()
+        if hindi:                                   # text written in the admin links to plain addresses: keep readers in Hindi
+            import re
+            body = re.sub(r'href="/(?!hi/|static/|admin/|api/)', 'href="/hi/', body)
     return render(request, template, {"legal_body": body})
 
 

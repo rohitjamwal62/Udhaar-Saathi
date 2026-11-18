@@ -1,6 +1,6 @@
 from django.urls import path
 
-from . import seo_views, views
+from . import views
 
 urlpatterns = [
     path("", views.home, name="home"),
@@ -33,8 +33,4 @@ urlpatterns = [
     path("ledger/people/add/", views.party_add, name="party_add"),
     path("ledger/people/<int:pk>/", views.party_detail, name="party_detail"),
     path("ledger/entries/<int:pk>/cancel/", views.entry_void, name="entry_void"),
-    path("robots.txt", seo_views.robots_txt, name="robots_txt"),
-    path("sitemap.xml", seo_views.sitemap_xml, name="sitemap_xml"),
-    path("site.webmanifest", seo_views.web_manifest, name="web_manifest"),
-    path("favicon.ico", seo_views.favicon_ico, name="favicon_ico"),
 ]

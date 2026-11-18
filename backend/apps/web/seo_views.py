@@ -19,7 +19,7 @@ def robots_txt(request):
     if not seo.is_production():
         body = "User-agent: *\nDisallow: /\n"
     else:
-        lines = ["User-agent: *", "Allow: /"] + [f"Disallow: {p}" for p in seo.ROBOTS_DISALLOW]
+        lines = ["User-agent: *", "Allow: /"] + [f"Disallow: {p}" for p in seo.robots_disallow()]
         lines += ["", f"Sitemap: {seo.absolute('/sitemap.xml')}"]
         body = "\n".join(lines) + "\n"
     return HttpResponse(body, content_type="text/plain; charset=utf-8")
@@ -33,10 +33,13 @@ def sitemap_xml(request):
         raise Http404
     urls = []
     for name, priority, freq in seo.PUBLIC_PAGES:
-        urls.append(f"  <url>\n    <loc>{escape(seo.absolute(reverse(name)))}</loc>\n"
-                    f"    <changefreq>{freq}</changefreq>\n    <priority>{priority}</priority>\n  </url>")
-    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n'
-           + "\n".join(urls) + "\n</urlset>\n")
+        alts = seo.alternates(name)
+        links = "".join(f'    <xhtml:link rel="alternate" hreflang="{lang}" href="{escape(href)}"/>\n' for lang, href in alts)
+        for lang in ("en", "hi"):                                  # one entry per language version, each listing both alternates
+            urls.append(f"  <url>\n    <loc>{escape(seo.language_url(name, lang))}</loc>\n{links}"
+                        f"    <changefreq>{freq}</changefreq>\n    <priority>{priority}</priority>\n  </url>")
+    xml = ('<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9" '
+           'xmlns:xhtml="http://www.w3.org/1999/xhtml">\n' + "\n".join(urls) + "\n</urlset>\n")
     return HttpResponse(xml, content_type="application/xml; charset=utf-8")
 
 

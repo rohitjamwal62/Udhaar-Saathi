@@ -42,6 +42,24 @@ def _schema():
 
 
 @pytest.fixture(autouse=True)
+def _english_between_requests():
+    """The site's language now decides addresses (/hi/...). A request activates its language for the thread, and in a real server the
+    next request sets its own. In a test the thread would stay 'in Hindi' after a Hindi request and every later reverse() would
+    return /hi/ addresses, so go back to English after each request."""
+    from django.core.signals import request_finished
+    from django.utils import translation
+
+    def reset(**_):
+        translation.activate("en")
+
+    translation.activate("en")
+    request_finished.connect(reset, weak=False)
+    yield
+    request_finished.disconnect(reset)
+    translation.activate("en")
+
+
+@pytest.fixture(autouse=True)
 def _clean():
     from apps.accounts import otp
     assert connection.settings_dict["NAME"].endswith("_test")

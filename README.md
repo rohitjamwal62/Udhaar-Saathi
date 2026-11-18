@@ -23,7 +23,7 @@ The free Render plan sleeps after about 15 minutes idle, so the first request af
 - A **mobile number is mandatory** for every account (one number per account); older accounts without one are asked to add it. Sign up with an **email OTP** (6 digits, hashed, 10-minute expiry, 5 attempts, resend cooldown, rate limits), login, logout, password reset by email code.
 - **Udhaar ledger** at `/ledger/`: add people, record money you gave and money you got back, see each person's balance and the total still to collect. Entries are never edited or deleted; a mistake is cancelled and stays in the history.
 - **Documents** on the dashboard: upload ID/shop proof/bills to a private **Google Drive** folder. Only a reference is kept in the database, and only the owner can download.
-- **English / हिन्दी switch** in the header and footer. English is the default; Hindi appears only after the visitor picks it.
+- **English / हिन्दी switch** in the header and footer. English keeps the normal addresses; Hindi has its own under `/hi/` (e.g. `/hi/pricing/`) with hreflang, so Google can index both. The switcher is plain links; a cookie only remembers the choice.
 - **Django admin** at `/admin/` to manage users, profiles, FAQs, documents, ledger and the whole app database. A superuser-only page at `/admin/email-check/` tests email delivery from inside the live server.
 
 **Backend API** (`/api/v1/`, Swagger at `/api/docs/`): phone-OTP login with JWT, shops, customers, ledger sync with idempotent push/pull, subscription and payments. Append-only ledger tables are protected by database triggers.

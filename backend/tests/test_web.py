@@ -18,6 +18,13 @@ User = get_user_model()
 PW = "Sup3rSecret"
 
 
+def url(c, name, *args, **kw):
+    """The address of a page in the language this client browses in (English unless it chose Hindi: Hindi lives under /hi/)."""
+    from django.utils import translation
+    with translation.override(getattr(c, "lang", "en")):
+        return reverse(name, args=args or None, kwargs=kw or None)
+
+
 def phone_for(email: str) -> str:
     """A different valid mobile number for every email, because a mobile number belongs to exactly one account."""
     import zlib
@@ -27,7 +34,7 @@ def phone_for(email: str) -> str:
 def register(c: Client, email="asha@example.com", **extra):
     data = {"full_name": "Asha Verma", "email": email, "phone": phone_for(email), "shop_name": "Asha Kirana", "role": "shopkeeper",
             "password1": PW, "password2": PW, "accept_terms": "on", "website": "", **extra}
-    return c.post(reverse("register"), data)
+    return c.post(url(c, "register"), data)
 
 
 def last_code() -> str:
@@ -540,12 +547,17 @@ def test_duplicate_person_names_are_refused_and_rupee_formatting_is_indian():
 
 # ───────────────────────── English / Hindi language switch ─────────────────────────
 def choose(c: Client, lang: str, nxt: str = "/"):
+    """The visitor picks a language: from now on this client browses the addresses of that language."""
+    c.lang = lang
     return c.post("/i18n/setlang/", {"language": lang, "next": nxt})
 
 
 def page(c: Client, name: str, **kw) -> str:
-    r = c.get(reverse(name, **kw))
-    assert r.status_code == 200
+    from django.utils import translation
+    with translation.override(getattr(c, "lang", "en")):
+        address = reverse(name, **kw)
+    r = c.get(address)
+    assert r.status_code == 200, address
     return r.content.decode()
 
 
@@ -559,18 +571,28 @@ def test_default_language_is_english_even_if_the_browser_asks_for_hindi():
         assert '<html lang="en">' in html and "LenDen Saathi: your shop's udhaar" in html and "उधार" not in main_of(html)
 
 
-def test_language_switcher_is_in_the_header_and_the_footer():
+def _switch_links(html):
+    return re.findall(r'<a href="([^"]*)" hreflang="(en|hi)"[^>]*?(aria-current="true")?>', html)
+
+
+def test_language_switcher_is_made_of_plain_links_in_the_header_and_the_footer():
     html = page(Client(), "home")
-    assert html.count('name="language"') == 4                      # English + Hindi buttons, in the header and in the footer
-    assert html.count('action="/i18n/setlang/"') == 2
-    en_btn = re.search(r'<button[^>]*value="en"[^>]*>', html).group(0)
-    hi_btn = re.search(r'<button[^>]*value="hi"[^>]*>', html).group(0)
-    assert 'aria-current="true"' in en_btn and "aria-current" not in hi_btn and 'lang="hi"' in hi_btn
+    assert html.count('class="lang-switch') == 2 and "<form class=\"lang-switch" not in html     # links, not a form: crawlers can follow them
+    links = _switch_links(html)
+    assert [(a, b) for a, b, _ in links] == [("/", "en"), ("/hi/", "hi")] * 2
+    assert [bool(c) for _, _, c in links] == [True, False] * 2                                   # English is the current language
     c = Client()
     choose(c, "hi")
-    html = page(c, "home")
-    hi_btn = re.search(r'<button[^>]*value="hi"[^>]*>', html).group(0)
-    assert 'aria-current="true"' in hi_btn and "csrfmiddlewaretoken" in html
+    links = _switch_links(page(c, "pricing"))
+    assert [(a, b) for a, b, _ in links] == [("/pricing/", "en"), ("/hi/pricing/", "hi")] * 2      # the same page in the other language
+    assert [bool(c2) for _, _, c2 in links] == [False, True] * 2
+
+
+def test_the_switcher_keeps_dynamic_pages_and_query_strings():
+    c = verified_client()
+    p = _add_person(c)
+    html = c.get(f"/ledger/people/{p.pk}/?tab=1").content.decode()
+    assert [(a, b) for a, b, _ in _switch_links(html)][:2] == [(f"/ledger/people/{p.pk}/?tab=1", "en"), (f"/hi/ledger/people/{p.pk}/?tab=1", "hi")]
 
 
 @pytest.mark.parametrize("name,hindi,english", [
@@ -590,12 +612,12 @@ def test_language_switcher_is_in_the_header_and_the_footer():
 def test_pages_switch_to_hindi_and_back(name, hindi, english):
     c = Client()
     r = choose(c, "hi", reverse(name))
-    assert r.status_code == 302 and r["Location"] == reverse(name)
+    assert r.status_code == 302 and r["Location"] == "/hi" + reverse(name)                      # the switch lands on the Hindi address
     html = page(c, name)
     assert '<html lang="hi">' in html and hindi in html
     assert english not in main_of(html)                            # no untranslated msgid leaks through
     assert "LenDen Saathi" in html                                  # the brand stays as it is
-    choose(c, "en", reverse(name))
+    choose(c, "en", url(c, name))
     html = page(c, name)
     assert '<html lang="en">' in html and english in html
 
@@ -615,10 +637,10 @@ def test_ledger_and_person_pages_in_hindi():
     html = page(c, "ledger")
     assert '<html lang="hi">' in html and "आपका उधार बही-खाता" in html and "वसूली बाकी" in html
     assert "Your udhaar ledger" not in html and "To collect" not in html
-    c.post(reverse("party_add"), {"name": "Ramesh", "phone": "", "note": ""})
+    c.post(url(c, "party_add"), {"name": "Ramesh", "phone": "", "note": ""})
     from apps.web.models import Party
     p = Party.objects.get(name="Ramesh")
-    c.post(reverse("party_detail", args=[p.pk]), {"kind": "gave", "amount": "250", "entry_date": timezone.localdate().isoformat(), "note": ""})
+    c.post(url(c, "party_detail", p.pk), {"kind": "gave", "amount": "250", "entry_date": timezone.localdate().isoformat(), "note": ""})
     html = page(c, "party_detail", args=[p.pk])
     assert "पैसे लिखें" in html and "Rs 250.00" in html and "इतिहास" in html and "Record money" not in html
     assert "मैंने पैसे दिए (उधार)" in html
@@ -629,9 +651,9 @@ def test_ledger_and_person_pages_in_hindi():
 def test_flash_messages_and_form_errors_follow_the_language():
     c = Client()
     choose(c, "hi")
-    r = c.post(reverse("login"), {"identifier": "nobody@example.com", "password": "wrong-pass1"})
+    r = c.post(url(c, "login"), {"identifier": "nobody@example.com", "password": "wrong-pass1"})
     assert "ईमेल या पासवर्ड गलत है।" in r.content.decode()
-    r = c.post(reverse("register"), {"full_name": "A", "email": "a@example.com", "password1": "abc", "password2": "abd", "accept_terms": "on"})
+    r = c.post(url(c, "register"), {"full_name": "A", "email": "a@example.com", "password1": "abc", "password2": "abd", "accept_terms": "on"})
     html = r.content.decode()
     assert "8 से 128 अक्षर रखें।" in html and "The two passwords" not in html
     r = Client().post(reverse("login"), {"identifier": "nobody@example.com", "password": "wrong-pass1"})
@@ -666,7 +688,7 @@ def test_otp_email_goes_out_in_the_chosen_language():
     assert "सत्यापित करने के लिए यह कोड इस्तेमाल करें" in m.body and "मिनट" in m.body
     assert "सत्यापित" in m.alternatives[0][0] and "Use this code" not in m.body
     assert last_code() == re.search(r"\b(\d{6})\b", m.subject).group(1)
-    r = c.post(reverse("verify_otp"), {"code": last_code()})           # the welcome email follows the same language
+    r = c.post(url(c, "verify_otp"), {"code": last_code()})           # the welcome email follows the same language
     assert r.status_code == 302 and mail.outbox[-1].subject == "LenDen Saathi में आपका स्वागत है"
 
 
@@ -674,10 +696,10 @@ def test_reset_email_and_contact_ack_in_hindi_but_team_copy_stays_english():
     verified_client("reset@example.com")
     c2 = Client()
     choose(c2, "hi")
-    c2.post(reverse("forgot_password"), {"email": "reset@example.com"})
+    c2.post(url(c2, "forgot_password"), {"email": "reset@example.com"})
     assert mail.outbox[-1].subject.startswith("अपना LenDen Saathi पासवर्ड रीसेट करें")
     n = len(mail.outbox)
-    c2.post(reverse("contact"), {"name": "Ravi", "email": "ravi@example.com", "phone": "", "subject": "Help", "message": "Please call", "website": ""})
+    c2.post(url(c2, "contact"), {"name": "Ravi", "email": "ravi@example.com", "phone": "", "subject": "Help", "message": "Please call", "website": ""})
     team, ack = mail.outbox[n], mail.outbox[n + 1]
     assert team.subject == "[Contact] Help" and "New contact message" in team.body
     assert ack.subject == "हमें आपका संदेश मिल गया" and "नमस्ते Ravi" in ack.body
@@ -713,8 +735,9 @@ def test_faq_hindi_fields_are_editable_in_admin():
 def test_404_page_follows_the_language():
     c = Client()
     choose(c, "hi")
-    html = c.get("/no-such-page-here/").content.decode()
+    html = c.get("/hi/no-such-page-here/").content.decode()                     # the language of the address decides
     assert '<html lang="hi">' in html and "पेज नहीं मिला" in html
+    assert '<html lang="en">' in c.get("/no-such-page-here/").content.decode()
 
 
 # ───────────────────────── translation catalogue health ─────────────────────────
@@ -833,11 +856,11 @@ def test_terms_and_privacy_are_stored_in_the_database_and_override_the_template(
         t.save()
         c = Client()
         assert "Edited by the owner." in c.get(reverse("terms")).content.decode()
-        c.post("/i18n/setlang/", {"language": "hi", "next": "/terms/"})
-        assert "Edited by the owner." in c.get(reverse("terms")).content.decode()   # no Hindi text yet: falls back to English
+        choose(c, "hi", "/terms/")
+        assert "Edited by the owner." in c.get(url(c, "terms")).content.decode()   # no Hindi text yet: falls back to English
         t.body_hi = "<h1>शर्तें</h1>"
         t.save()
-        assert "शर्तें" in c.get(reverse("terms")).content.decode()
+        assert "शर्तें" in c.get(url(c, "terms")).content.decode()
         t.body_en = t.body_hi = ""
         t.save()
         assert "Terms of use" in Client().get(reverse("terms")).content.decode()     # empty body: built-in text again
@@ -848,10 +871,10 @@ def test_terms_and_privacy_are_stored_in_the_database_and_override_the_template(
 
 def test_new_pages_render_in_hindi():
     c = verified_client()
-    c.post("/i18n/setlang/", {"language": "hi", "next": "/"})
-    assert "मेरी जानकारी बदलें" in c.get(reverse("profile_edit")).content.decode()
+    choose(c, "hi")
+    assert "मेरी जानकारी बदलें" in c.get(url(c, "profile_edit")).content.decode()
     p = _add_person(c)
-    assert "व्यक्ति की जानकारी बदलें" in c.get(reverse("party_edit", args=[p.pk])).content.decode()
+    assert "व्यक्ति की जानकारी बदलें" in c.get(url(c, "party_edit", p.pk)).content.decode()
 
 
 def test_admin_can_manage_the_new_content_but_cannot_add_a_second_settings_row():

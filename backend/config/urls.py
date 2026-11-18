@@ -1,3 +1,4 @@
+from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.urls import include, path
 from django.views.i18n import set_language
@@ -21,5 +22,9 @@ urlpatterns = [
     path("api/v1/", include("apps.sync.urls")),
     path("api/v1/", include("apps.subscriptions.urls")),
     path("i18n/setlang/", set_language, name="set_language"),   # POST: language + next (safe redirect)
-    path("", include("apps.web.urls")),              # the website: last, so the paths above always win
+    path("", include("apps.web.seo_urls")),          # robots.txt, sitemap.xml, manifest, favicon: one address each
 ]
+
+# The website. English keeps its addresses (/pricing/); Hindi lives under /hi/ (/hi/pricing/), so each language has its own
+# addresses that search engines can index. Last, so the paths above always win.
+urlpatterns += i18n_patterns(path("", include("apps.web.urls")), prefix_default_language=False)

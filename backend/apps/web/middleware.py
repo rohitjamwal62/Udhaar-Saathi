@@ -66,3 +66,57 @@ class SeoHeadersMiddleware:
         if directive == seo.NOINDEX_DIRECTIVE and "X-Robots-Tag" not in response:
             response["X-Robots-Tag"] = directive
         return response
+
+
+class LanguageMemoryMiddleware:
+    """The language now lives in the address (/hi/...). The cookie only REMEMBERS the choice, for two small conveniences:
+
+    1. when a page is opened in a language, remember it;
+    2. a visitor who earlier chose Hindi and opens an ENGLISH public page directly (a bookmark, a typed address, a search result)
+       is sent to the Hindi twin of that page.
+
+    Search engine crawlers carry no cookie, so they are never redirected and always see the page at the address they asked for.
+    Someone who clicks "EN" inside the site is not redirected either (their request has a Referer from this site), so the English
+    link always works.
+    """
+
+    SKIP = ("/admin/", "/api/", "/health/", "/static/", "/i18n/")
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def _public_english_page(self, request) -> bool:
+        from django.urls import Resolver404, resolve
+
+        from apps.web import seo
+        if request.path.startswith(seo.HINDI_PREFIX + "/") or request.path == seo.HINDI_PREFIX:
+            return False
+        try:
+            return resolve(request.path_info).url_name in seo.PUBLIC_NAMES
+        except Resolver404:
+            return False
+
+    def _same_site_referer(self, request) -> bool:
+        from urllib.parse import urlsplit
+        ref = request.META.get("HTTP_REFERER", "")
+        return bool(ref) and urlsplit(ref).netloc == request.get_host()
+
+    def __call__(self, request):
+        cookie = request.COOKIES.get(settings.LANGUAGE_COOKIE_NAME)
+        ua = request.META.get("HTTP_USER_AGENT", "").lower()
+        if (request.method == "GET" and cookie == "hi" and not any(w in ua for w in ("bot", "crawl", "spider", "slurp"))
+                and not self._same_site_referer(request) and self._public_english_page(request)):
+            from django.http import HttpResponseRedirect
+            from django.urls import translate_url
+            from django.utils.cache import patch_vary_headers
+            response = HttpResponseRedirect(translate_url(request.get_full_path(), "hi"))
+            patch_vary_headers(response, ("Cookie",))
+            return response
+        response = self.get_response(request)
+        if (request.method == "GET" and response.status_code == 200 and "text/html" in response.get("Content-Type", "")
+                and getattr(request, "resolver_match", None) is not None and not request.path.startswith(self.SKIP)):
+            lang = getattr(request, "LANGUAGE_CODE", "en")
+            if lang in ("en", "hi") and cookie != lang:
+                response.set_cookie(settings.LANGUAGE_COOKIE_NAME, lang, max_age=settings.LANGUAGE_COOKIE_AGE,
+                                    samesite=settings.LANGUAGE_COOKIE_SAMESITE, path="/")
+        return response

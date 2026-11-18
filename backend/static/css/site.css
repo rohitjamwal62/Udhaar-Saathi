@@ -388,3 +388,10 @@ svg [class*="a-"] { transform-box: fill-box; transform-origin: center; }
 .crumbs a { color: var(--primary); text-decoration: none; }
 .crumbs a:hover { text-decoration: underline; }
 .crumbs [aria-current] { color: var(--muted); }
+
+
+/* the language switcher is made of plain links (so search engines can follow them to the Hindi pages) */
+.lang-switch a { display: inline-flex; align-items: center; justify-content: center; font: inherit; font-size: .85rem; font-weight: 700; line-height: 1; min-height: 32px; min-width: 40px; padding: 0 12px; border-radius: 999px; background: none; color: var(--muted); text-decoration: none; }
+.lang-switch a:hover { color: var(--ink); background: var(--soft); }
+.lang-switch a[aria-current="true"] { background: var(--primary); color: var(--on-primary); cursor: default; }
+.lang-switch a:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }

@@ -13,6 +13,7 @@ import json
 from django.conf import settings
 from django.templatetags.static import static
 from django.utils.html import strip_tags
+from django.utils import translation
 from django.utils.translation import get_language, gettext as _
 
 BRAND = "LenDen Saathi"
@@ -21,6 +22,10 @@ NAME_VARIANTS = ["Lenden Saathi", "Len Den Saathi", "LenDenSaathi", "लेन�
 KEYWORDS = ("LenDen Saathi, Lenden Saathi, Len Den Saathi, LenDenSaathi, लेनदेन साथी, digital khata app, udhaar khata app, "
             "udhar khata, khata book for shopkeepers, credit ledger app India, baki hisab app, digital bahi khata, "
             "offline khata app, shop credit tracking")
+
+KEYWORDS_HI = ("लेनदेन साथी, LenDen Saathi, Lenden Saathi, Len Den Saathi, डिजिटल खाता ऐप, उधार खाता, उधार बही, दुकान का हिसाब, "
+               "बही खाता ऐप, दुकानदारों के लिए उधार ऐप, उधार का हिसाब, बिना इंटरनेट खाता ऐप")
+HINDI_PREFIX = "/hi"
 
 # Never indexed. (Crawling of login/register stays allowed so the noindex tag can be seen.)
 PRIVATE_PREFIXES = ("/admin/", "/api/", "/dashboard/", "/my/", "/ledger/", "/login/", "/register/", "/verify/",
@@ -53,8 +58,49 @@ def is_production() -> bool:
     return settings.APP_ENV == "production"
 
 
+def strip_language_prefix(path: str) -> str:
+    """/hi/ledger/ -> /ledger/ ; /pricing/ -> /pricing/. A Hindi address is as private (or as public) as its English twin."""
+    if path == HINDI_PREFIX or path.startswith(HINDI_PREFIX + "/"):
+        return path[len(HINDI_PREFIX):] or "/"
+    return path
+
+
 def is_private_path(path: str) -> bool:
+    path = strip_language_prefix(path)
     return any(path == p.rstrip("/") or path.startswith(p) for p in PRIVATE_PREFIXES)
+
+
+def robots_disallow() -> list[str]:
+    """The robots.txt Disallow lines. The website's private areas also exist under /hi/."""
+    site_private = [p for p in ROBOTS_DISALLOW if p not in ("/admin/", "/api/", "/i18n/", "/health/")]
+    return list(ROBOTS_DISALLOW) + [HINDI_PREFIX + p for p in site_private]
+
+
+PUBLIC_NAMES = {name for name, _p, _f in PUBLIC_PAGES}
+
+
+def language_url(url_name: str, lang: str) -> str:
+    """The absolute address of a public page in a given language."""
+    from django.urls import reverse
+    with translation.override(lang):
+        return absolute(reverse(url_name))
+
+
+def alternates(url_name: str | None) -> list[tuple[str, str]]:
+    """hreflang entries: this page in English and in Hindi (each version lists both, itself included), English as the default."""
+    if url_name not in PUBLIC_NAMES:
+        return []
+    en, hi = language_url(url_name, "en"), language_url(url_name, "hi")
+    return [("en-IN", en), ("hi-IN", hi), ("x-default", en)]
+
+
+def switch_links(request) -> dict:
+    """The same page in the other language, as plain addresses (so crawlers can follow them)."""
+    from django.urls import translate_url
+    if getattr(request, "resolver_match", None) is None:                  # a 404 page: send people to the home page of each language
+        return {"en": "/", "hi": HINDI_PREFIX + "/"}
+    full = request.get_full_path()
+    return {"en": translate_url(full, "en"), "hi": translate_url(full, "hi")}
 
 
 def robots_directive(path: str) -> str:
@@ -123,7 +169,7 @@ def _software_application() -> dict:
         "url": absolute("/"), "publisher": {"@id": absolute("/#organization")},
         "offers": {"@type": "Offer", "price": str(plan["amount_rupees"]), "priceCurrency": "INR",
                    "description": f"Free to register, {plan['trial_months']} months free, then Rs {plan['amount_rupees']} per month.",
-                   "url": absolute("/pricing/"), "availability": "https://schema.org/InStock"},
+                   "url": language_url("pricing", (get_language() or "en")[:2]), "availability": "https://schema.org/InStock"},
     }
 
 
@@ -134,7 +180,7 @@ def _faq_page() -> dict | None:
         q, a = " ".join(strip_tags(f.display_question).split()), " ".join(strip_tags(f.display_answer).split())
         if q and a:
             items.append({"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}})
-    return {"@type": "FAQPage", "@id": absolute("/faq/#faq"), "mainEntity": items} if items else None
+    return {"@type": "FAQPage", "@id": language_url("faq", (get_language() or "en")[:2]) + "#faq", "mainEntity": items} if items else None
 
 
 def _breadcrumb_list(crumbs: list[tuple[str, str]]) -> dict:
@@ -183,7 +229,8 @@ def context(request) -> dict:
     indexable = robots == INDEX_DIRECTIVE
     hindi = (get_language() or "en").startswith("hi")
     seo = {
-        "robots": robots, "indexable": indexable, "canonical": absolute(path), "keywords": KEYWORDS,
+        "robots": robots, "indexable": indexable, "canonical": absolute(path), "keywords": KEYWORDS_HI if hindi else KEYWORDS,
+        "alternates": alternates(url_name) if indexable else [], "switch": switch_links(request),
         "og_image": og_image_url(), "og_locale": "hi_IN" if hindi else "en_IN", "og_locale_alt": "en_IN" if hindi else "hi_IN",
         "google_verification": getattr(settings, "GOOGLE_SITE_VERIFICATION", ""), "bing_verification": getattr(settings, "BING_SITE_VERIFICATION", ""),
         "crumbs": breadcrumbs(url_name or ""), "jsonld": "",

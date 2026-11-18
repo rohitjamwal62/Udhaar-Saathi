@@ -60,7 +60,7 @@ Keep production awake (the daytime ping, or a paid plan: see `DEPLOY_RENDER.md`)
 - Rankings differ by place, language and device. Use Search Console, not a guess, to see the real position.
 
 ## 4. Next improvements (not done yet)
-- **Hindi pages with their own addresses** (for example `/hi/pricing/`). Today the language is a cookie on the same address, so Google sees the English text only. Separate addresses plus `hreflang` tags would let the Hindi pages rank for Hindi searches. This changes the URL structure of the whole site, so it is a separate piece of work.
+- ~~Hindi pages with their own addresses~~ **Done.** Hindi lives under `/hi/` (for example `/hi/pricing/`), English keeps its addresses. Every public page declares `hreflang` (en-IN, hi-IN, x-default) and is its own canonical; `sitemap.xml` lists both languages (20 addresses); the switcher is made of plain links. After deploying to production, in Search Console submit the sitemap again and request indexing of `/hi/`, `/hi/about/` and `/hi/pricing/`. Still open: a native Hindi reader should review the copy.
 - Real **screenshots** of the app (with descriptions) on Features and How it works, and a short demo video.
 - A small **blog or guide section** answering questions shopkeepers search (what is a digital khata, how to stop udhaar from piling up, udhaar reminder messages), each as its own page.
 - Add the **Play Store address** to the structured data (`installUrl`) once the app is published.

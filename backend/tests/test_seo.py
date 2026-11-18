@@ -279,12 +279,19 @@ def test_sitemap_is_valid_complete_and_only_lists_pages_that_deserve_indexing():
     r = Client().get("/sitemap.xml")
     assert r.status_code == 200 and r["Content-Type"].startswith("application/xml")
     root = ET.fromstring(r.content)
-    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9"}
+    ns = {"s": "http://www.sitemaps.org/schemas/sitemap/0.9", "x": "http://www.w3.org/1999/xhtml"}
     locs = [e.find("s:loc", ns).text for e in root.findall("s:url", ns)]
-    assert sorted(locs) == sorted(SITE + reverse(n) for n in PUBLIC) and len(set(locs)) == len(locs)
+    english = [SITE + reverse(n) for n in PUBLIC]
+    hindi = [SITE + "/hi" + reverse(n) for n in PUBLIC]
+    assert sorted(locs) == sorted(english + hindi) and len(set(locs)) == len(locs)             # every page in both languages
     for e in root.findall("s:url", ns):
         assert e.find("s:changefreq", ns).text in ("always", "hourly", "daily", "weekly", "monthly", "yearly", "never")
         assert 0.0 <= float(e.find("s:priority", ns).text) <= 1.0
+        alts = {l.get("hreflang"): l.get("href") for l in e.findall("x:link", ns)}
+        loc = e.find("s:loc", ns).text
+        path = loc[len(SITE):]
+        twin_en = SITE + (path[3:] or "/") if path.startswith("/hi/") or path == "/hi" else loc
+        assert alts["en-IN"] == twin_en and alts["hi-IN"] == SITE + "/hi" + twin_en[len(SITE):] and alts["x-default"] == alts["en-IN"]
     for loc in locs:                                                                         # every listed address is a real, indexable, self-canonical page
         path = loc[len(SITE):]
         resp = Client().get(path)
@@ -305,14 +312,13 @@ def test_canonical_comes_from_site_url_ignores_the_query_string_and_the_host_hea
 
 # ───────────── Hindi ─────────────
 @PROD
-def test_hindi_pages_declare_hindi_and_keep_the_same_canonical():
-    c = Client()
-    c.post("/i18n/setlang/", {"language": "hi", "next": "/"})
-    _, p = get("pricing", client=c)
-    assert p.lang == "hi" and p.one("og:locale") == "hi_IN" and p.one("og:locale:alternate") == "en_IN"
+def test_hindi_pages_declare_hindi_and_have_their_own_canonical():
+    r = Client().get("/hi/pricing/")
+    p = Page(r.content.decode())
+    assert r.status_code == 200 and p.lang == "hi" and p.one("og:locale") == "hi_IN" and p.one("og:locale:alternate") == "en_IN"
     assert re.search("[ऀ-ॿ]", p.title) and re.search("[ऀ-ॿ]", p.one("description"))
-    assert p.canonical() == [SITE + "/pricing/"]
-    assert "LenDen Saathi" in p.title                                                        # the brand stays in Latin letters
+    assert p.canonical() == [SITE + "/hi/pricing/"]                                           # its own address, not the English one
+    assert "LenDen Saathi" in p.one("og:site_name")                                          # the brand stays in Latin letters
 
 
 # ───────────── verification tags ─────────────

@@ -10,6 +10,7 @@
 <meta name="keywords" content="{% block keywords %}{{ SEO.keywords }}{% endblock %}">
 <meta name="robots" content="{{ SEO.robots }}">
 {% if SEO.indexable %}<link rel="canonical" href="{{ SEO.canonical }}">{% endif %}
+{% for code, address in SEO.alternates %}<link rel="alternate" hreflang="{{ code }}" href="{{ address }}">{% endfor %}
 <meta name="application-name" content="{{ SITE_NAME }}">
 <meta name="apple-mobile-web-app-title" content="{{ SITE_NAME }}">
 <meta name="theme-color" content="#0B6E4F">

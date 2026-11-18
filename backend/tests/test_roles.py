@@ -316,7 +316,7 @@ def test_changes_by_the_shopkeeper_show_for_the_customer_straight_away():
 def test_customer_portal_works_in_hindi():
     cust = signed_in("cust@example.com", "customer")
     cust.post("/i18n/setlang/", {"language": "hi", "next": "/my/"})
-    html = page(cust, "customer_home")
+    html = cust.get("/hi/my/").content.decode()                                                  # Hindi lives under /hi/
     assert "अभी आपका बकाया" in html and "लिया गया उधार" in html and 'lang="hi"' in html
 
 

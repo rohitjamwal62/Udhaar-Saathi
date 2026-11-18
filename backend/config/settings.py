@@ -80,6 +80,7 @@ MIDDLEWARE = [
     "apps.common.middleware.RequestIdMiddleware",
     "apps.web.middleware.AdminLoginThrottleMiddleware",
     "apps.web.middleware.GoogleConnectionNoticeMiddleware",
+    "apps.web.middleware.LanguageMemoryMiddleware",
     "apps.web.middleware.SeoHeadersMiddleware",
 ]
 

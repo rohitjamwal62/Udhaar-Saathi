@@ -31,6 +31,7 @@ jobs:
           cache: pip
           cache-dependency-path: backend/requirements.txt
       - run: pip install -r backend/requirements.txt
+      - run: pip install pillow   # only the image-size test needs it; not a runtime dependency
       - name: Run the test suite
         working-directory: backend
         run: python -m pytest

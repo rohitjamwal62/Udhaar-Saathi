@@ -50,3 +50,19 @@ class GoogleConnectionNoticeMiddleware:
                                           "https://www.google.com  (see DEPLOY_RENDER.md), and publish the Google consent "
                                           "screen so it does not expire again.")
         return self.get_response(request)
+
+
+class SeoHeadersMiddleware:
+    """X-Robots-Tag on every response: only public pages of the production site may be indexed. This also covers responses
+    that have no HTML head (file downloads, JSON), which a meta tag could never protect."""
+
+    def __init__(self, get_response):
+        self.get_response = get_response
+
+    def __call__(self, request):
+        response = self.get_response(request)
+        from apps.web import seo
+        directive = seo.robots_directive(request.path)
+        if directive == seo.NOINDEX_DIRECTIVE and "X-Robots-Tag" not in response:
+            response["X-Robots-Tag"] = directive
+        return response

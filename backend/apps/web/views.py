@@ -491,3 +491,7 @@ def customer_shop(request, pk: int):
     return render(request, "web/customer_shop.html", {
         "party": party, "shop": _shop_label(party.owner), "rows": list(reversed(rows)), "gave": gave, "got": got, "balance": gave - got,
         "documents": party.documents.filter(visible_to_customer=True)})
+
+
+def about(request):
+    return render(request, "web/about.html", {"plan": current_plan(), "faqs": FAQ.objects.filter(published=True)[:4]})

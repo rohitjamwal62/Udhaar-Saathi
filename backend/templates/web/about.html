@@ -1,0 +1,39 @@
+{% extends 'base.html' %}{% load i18n %}
+{% block title %}{% trans "About LenDen Saathi: digital khata for Indian shopkeepers" %}{% endblock %}
+{% block description %}{% trans "About LenDen Saathi (Lenden Saathi, Len Den Saathi): what it is, what the name means, who it is for, how it works and what it costs." %}{% endblock %}
+{% block content %}
+<section class="section"><div class="container prose">
+  <h1>{% trans "About LenDen Saathi" %}</h1>
+  <p class="lead">{% trans "LenDen Saathi helps small shops in India keep honest accounts of udhaar (credit): what was sold, what was paid and what is still due." %}</p>
+
+  <h2>{% trans "What is LenDen Saathi?" %}</h2>
+  <p>{% blocktrans trimmed %}<strong>LenDen Saathi</strong> (लेनदेन साथी), also written <em>Lenden Saathi</em> or <em>Len Den Saathi</em>, is a digital khata and sales tracker. A shopkeeper records udhaar and payments on an Android phone, even without internet, and the customer can see and confirm the same entry.{% endblocktrans %}</p>
+
+  <h2>{% trans "What does the name mean?" %}</h2>
+  <p>{% blocktrans trimmed %}LenDen (लेन-देन) is the Hindi word for give and take: the money that goes out and comes back. Saathi (साथी) means companion. LenDen Saathi is the companion for every give-and-take in your shop.{% endblocktrans %}</p>
+
+  <h2>{% trans "Who is it for?" %}</h2>
+  <ul>
+    <li>{% trans "Kirana and general stores that sell on credit." %}</li>
+    <li>{% trans "Medical, hardware, cloth and other small shops with regular customers." %}</li>
+    <li>{% trans "Customers who want to see, in one place, what they owe each shop and what they have already paid." %}</li>
+  </ul>
+
+  <h2>{% trans "What it is not" %}</h2>
+  <p>{% trans "LenDen Saathi is a record-keeping tool. It is not a bank, a lender or a debt-collection agency, and it does not give or collect loans." %}</p>
+
+  <h2>{% trans "What does it cost?" %}</h2>
+  <p>{% blocktrans trimmed with trial_months=plan.trial_months amount=plan.amount_rupees %}Registration is free and every shop gets {{ trial_months }} months free. After that there is one plan at Rs {{ amount }} a month.{% endblocktrans %}
+    <a href="{% url 'pricing' %}">{% trans "See pricing" %}</a></p>
+
+  <h2>{% trans "Learn more about LenDen Saathi" %}</h2>
+  <ul>
+    <li><a href="{% url 'features' %}">{% trans "Features of the digital khata" %}</a></li>
+    <li><a href="{% url 'how_it_works' %}">{% trans "How it works for shopkeepers and customers" %}</a></li>
+    <li><a href="{% url 'security' %}">{% trans "How your records are protected" %}</a></li>
+    <li><a href="{% url 'faq' %}">{% trans "Frequently asked questions" %}</a></li>
+    <li><a href="{% url 'contact' %}">{% trans "Contact the LenDen Saathi team" %}</a></li>
+  </ul>
+  <p><a class="btn" href="{% url 'register' %}">{% trans "Start free" %}</a></p>
+</div></section>
+{% endblock %}

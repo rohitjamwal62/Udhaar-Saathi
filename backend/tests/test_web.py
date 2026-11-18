@@ -556,7 +556,7 @@ def main_of(html: str) -> str:
 def test_default_language_is_english_even_if_the_browser_asks_for_hindi():
     for hdr in ({}, {"HTTP_ACCEPT_LANGUAGE": "hi-IN,hi;q=0.9"}):
         html = Client().get(reverse("home"), **hdr).content.decode()
-        assert '<html lang="en">' in html and "Your shop's udhaar" in html and "उधार" not in main_of(html)
+        assert '<html lang="en">' in html and "LenDen Saathi: your shop's udhaar" in html and "उधार" not in main_of(html)
 
 
 def test_language_switcher_is_in_the_header_and_the_footer():

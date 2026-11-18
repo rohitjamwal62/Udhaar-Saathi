@@ -80,6 +80,7 @@ MIDDLEWARE = [
     "apps.common.middleware.RequestIdMiddleware",
     "apps.web.middleware.AdminLoginThrottleMiddleware",
     "apps.web.middleware.GoogleConnectionNoticeMiddleware",
+    "apps.web.middleware.SeoHeadersMiddleware",
 ]
 
 ROOT_URLCONF = "config.urls"
@@ -95,6 +96,7 @@ TEMPLATES = [{
         "django.contrib.auth.context_processors.auth",
         "django.contrib.messages.context_processors.messages",
         "apps.web.context_processors.site",
+        "apps.web.seo.context",
     ]},
 }]
 
@@ -270,6 +272,14 @@ LOGOUT_REDIRECT_URL = "/"
 SESSION_COOKIE_AGE = 60 * 60 * 24 * 14
 SESSION_COOKIE_HTTPONLY = True
 SITE_NAME = "LenDen Saathi"
+# Search engines. Paste the token Google Search Console / Bing Webmaster Tools give you (the content="..." value of their meta tag).
+GOOGLE_SITE_VERIFICATION = env("GOOGLE_SITE_VERIFICATION", "")
+BING_SITE_VERIFICATION = env("BING_SITE_VERIFICATION", "")
+# Official profile addresses of the brand, comma separated (YouTube, Instagram, Facebook, LinkedIn, Play Store...). They go into the
+# structured data as "sameAs", which helps Google connect those profiles to this site. Leave empty until they really exist.
+SOCIAL_PROFILES = env("SOCIAL_PROFILES", "")
+# Static files (logo, icons, share picture) may be cached by browsers and CDNs for a day.
+WHITENOISE_MAX_AGE = 86400
 SITE_URL = env("SITE_URL") or env("RENDER_EXTERNAL_URL") or "http://localhost:8000"
 SUPPORT_EMAIL = env("SUPPORT_EMAIL", "rohitjamwal62@gmail.com")
 CSRF_TRUSTED_ORIGINS = [o.strip() for o in env("CSRF_TRUSTED_ORIGINS", "").split(",") if o.strip()]

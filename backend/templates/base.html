@@ -1,18 +1,41 @@
-{% load i18n %}{% load static %}<!doctype html>
+{% load i18n %}{% load static %}{% load seo_tags %}<!doctype html>
 <html lang="{{ LANGUAGE_CODE|default:'en' }}">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>{% block title %}{{ SITE_NAME }}{% endblock %}</title>
-<meta name="description" content="{% block description %}{% trans "LenDen Saathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start." %}{% endblock %}">
+{% capture as page_title %}{% block title %}{{ SITE_NAME }}{% endblock %}{% endcapture %}
+{% capture as page_description %}{% block description %}{% trans "LenDen Saathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start." %}{% endblock %}{% endcapture %}
+<title>{{ page_title }}</title>
+<meta name="description" content="{{ page_description }}">
+<meta name="keywords" content="{% block keywords %}{{ SEO.keywords }}{% endblock %}">
+<meta name="robots" content="{{ SEO.robots }}">
+{% if SEO.indexable %}<link rel="canonical" href="{{ SEO.canonical }}">{% endif %}
+<meta name="application-name" content="{{ SITE_NAME }}">
+<meta name="apple-mobile-web-app-title" content="{{ SITE_NAME }}">
 <meta name="theme-color" content="#0B6E4F">
+{% if SEO.google_verification %}<meta name="google-site-verification" content="{{ SEO.google_verification }}">{% endif %}
+{% if SEO.bing_verification %}<meta name="msvalidate.01" content="{{ SEO.bing_verification }}">{% endif %}
 <meta property="og:site_name" content="{{ SITE_NAME }}">
 <meta property="og:type" content="website">
-<meta property="og:title" content="{% block og_title %}{% blocktrans trimmed with site_name=SITE_NAME %}{{ site_name }}: digital khata for small shops{% endblocktrans %}{% endblock %}">
-<meta property="og:description" content="{% block og_description %}{% trans "Record udhaar, track sales and keep honest accounts with your customers. Offline-first Android app." %}{% endblock %}">
-<meta property="og:image" content="{% static 'img/logo.png' %}">
-<link rel="icon" href="{% static 'img/favicon.png' %}">
-<link rel="apple-touch-icon" href="{% static 'img/logo.png' %}">
+<meta property="og:url" content="{{ SEO.canonical }}">
+<meta property="og:title" content="{{ page_title }}">
+<meta property="og:description" content="{{ page_description }}">
+<meta property="og:image" content="{{ SEO.og_image }}">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="{% trans 'LenDen Saathi: digital khata and udhaar ledger app for shopkeepers' %}">
+<meta property="og:locale" content="{{ SEO.og_locale }}">
+<meta property="og:locale:alternate" content="{{ SEO.og_locale_alt }}">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="{{ page_title }}">
+<meta name="twitter:description" content="{{ page_description }}">
+<meta name="twitter:image" content="{{ SEO.og_image }}">
+<meta name="twitter:image:alt" content="{% trans 'LenDen Saathi: digital khata and udhaar ledger app for shopkeepers' %}">
+<link rel="icon" href="/favicon.ico" sizes="any">
+<link rel="icon" type="image/png" sizes="32x32" href="{% static 'img/favicon-32.png' %}">
+<link rel="apple-touch-icon" sizes="180x180" href="{% static 'img/apple-touch-icon.png' %}">
+<link rel="manifest" href="{% url 'web_manifest' %}">
+{% if SEO.jsonld %}<script type="application/ld+json">{{ SEO.jsonld|safe }}</script>{% endif %}
 <script>document.documentElement.className+=' js';</script>
 <link rel="stylesheet" href="{% static 'css/site.css' %}">
 {% block head %}{% endblock %}
@@ -23,7 +46,7 @@
 {% with u=request.resolver_match.url_name %}
 <header class="site-header">
   <div class="container bar">
-    <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="" width="36" height="36"><span>{{ SITE_NAME }}</span></a>
+    <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/logo-72.png' %}" alt="" width="36" height="36"><span>{{ SITE_NAME }}</span></a>
     <button class="nav-toggle" id="nav-toggle" type="button" aria-expanded="false" aria-controls="site-nav" aria-label="{% trans 'Open menu' %}" data-label-open="{% trans 'Open menu' %}" data-label-close="{% trans 'Close menu' %}"><span class="bars"></span></button>
     <nav class="nav" id="site-nav" aria-label="{% trans 'Main' %}">
       <a href="{% url 'features' %}"{% if u == 'features' %} aria-current="page"{% endif %}>{% trans "Features" %}</a>
@@ -51,19 +74,21 @@
   {% for m in messages %}<div class="toast toast-{{ m.tags|default:'info' }}" role="{% if m.tags == 'error' or m.tags == 'warning' %}alert{% else %}status{% endif %}"><p>{{ m }}</p><button type="button" hidden aria-label="{% trans 'Dismiss message' %}">&times;</button></div>{% endfor %}
 </div>
 {% endif %}
-<main id="main">{% block content %}{% endblock %}</main>
+<main id="main">
+{% if SEO.crumbs %}<nav class="crumbs container" aria-label="{% trans 'Breadcrumb' %}"><ol>{% for label, path in SEO.crumbs %}<li>{% if forloop.last %}<span aria-current="page">{{ label }}</span>{% else %}<a href="{{ path }}">{{ label }}</a>{% endif %}</li>{% endfor %}</ol></nav>{% endif %}
+{% block content %}{% endblock %}</main>
 <footer class="site-footer">
   <div class="container">
     <div class="foot-grid">
       <div class="about">
-        <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/logo.png' %}" alt="" width="36" height="36"><span>{{ SITE_NAME }}</span></a>
+        <a class="brand" href="{% url 'home' %}"><img src="{% static 'img/logo-72.png' %}" alt="" width="36" height="36"><span>{{ SITE_NAME }}</span></a>
         <p class="muted" style="margin-top:8px;max-width:34ch">{% trans "A digital khata and sales tracker for small shops in India. Not a bank, lender or debt-collection agency." %}</p>
       </div>
       <nav aria-label="{% trans 'Product' %}"><h2>{% trans "Product" %}</h2><ul>
         <li><a href="{% url 'features' %}">{% trans "Features" %}</a></li><li><a href="{% url 'how_it_works' %}">{% trans "How it works" %}</a></li>
         <li><a href="{% url 'pricing' %}">{% trans "Pricing" %}</a></li><li><a href="{% url 'security' %}">{% trans "Security" %}</a></li></ul></nav>
       <nav aria-label="{% trans 'Company' %}"><h2>{% trans "Company" %}</h2><ul>
-        <li><a href="{% url 'faq' %}">{% trans "FAQ" %}</a></li><li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
+        <li><a href="{% url 'about' %}">{% trans "About" %}</a></li><li><a href="{% url 'faq' %}">{% trans "FAQ" %}</a></li><li><a href="{% url 'contact' %}">{% trans "Contact" %}</a></li>
         <li><a href="{% url 'register' %}">{% trans "Start free" %}</a></li><li><a href="{% url 'login' %}">{% trans "Log in" %}</a></li></ul></nav>
       <nav aria-label="{% trans 'Legal' %}"><h2>{% trans "Legal" %}</h2><ul>
         <li><a href="{% url 'terms' %}">{% trans "Terms" %}</a></li><li><a href="{% url 'privacy' %}">{% trans "Privacy" %}</a></li></ul></nav>

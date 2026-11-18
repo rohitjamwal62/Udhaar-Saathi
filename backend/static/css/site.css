@@ -379,3 +379,12 @@ svg [class*="a-"] { transform-box: fill-box; transform-origin: center; }
 /* ledger */
 .stat .v.owes { color: var(--danger); }
 .stat .v.paid { color: var(--primary); }
+
+
+/* breadcrumbs (also read by search engines through the structured data) */
+.crumbs { padding-top: 14px; padding-bottom: 0; font-size: .88rem; }
+.crumbs ol { list-style: none; display: flex; flex-wrap: wrap; gap: 6px; margin: 0; padding: 0; color: var(--muted); }
+.crumbs li + li::before { content: "/"; margin-right: 6px; opacity: .6; }
+.crumbs a { color: var(--primary); text-decoration: none; }
+.crumbs a:hover { text-decoration: underline; }
+.crumbs [aria-current] { color: var(--muted); }

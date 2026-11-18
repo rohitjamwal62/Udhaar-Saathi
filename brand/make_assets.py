@@ -11,7 +11,7 @@ Re-run it after replacing the original file; nothing else needs editing.
 from pathlib import Path
 
 import numpy as np
-from PIL import Image, ImageDraw, ImageFilter
+from PIL import Image, ImageDraw, ImageFilter, ImageFont
 
 ROOT = Path(__file__).resolve().parent.parent
 SRC = ROOT / "brand" / "lenden-saathi-logo-original.webp"
@@ -97,8 +97,48 @@ def main() -> None:
     save(fit(tile, 48), "mobile/assets/favicon.png")
 
     # website
-    save(fit(tile, 512), "backend/static/img/logo.png")
+    save(fit(tile, 512), "backend/static/img/logo.png")                  # the Organization logo in the structured data (512 x 512)
+    save(fit(tile, 192), "backend/static/img/logo-192.png")             # web app manifest
+    save(fit(tile, 72), "backend/static/img/logo-72.png")               # the small logo in every page header and footer (a few KB, not 230 KB)
+    save(canvas_with(tile, 180, 180, gradient(180)), "backend/static/img/apple-touch-icon.png")
     save(fit(tile, 64), "backend/static/img/favicon.png")
+    save(fit(tile, 32), "backend/static/img/favicon-32.png")
+    ico = fit(tile, 256)
+    ico.save(ROOT / "backend/static/img/favicon.ico", sizes=[(16, 16), (32, 32), (48, 48)])
+    print("wrote backend/static/img/favicon.ico (16, 32, 48)")
+    save(social_card(tile), "backend/static/img/og-image.png")          # 1200 x 630: the picture shown when the site is shared
+
+
+def _font(size: int, bold: bool = True):
+    for name in (("segoeuib.ttf", "arialbd.ttf") if bold else ("segoeui.ttf", "arial.ttf")):
+        try:
+            return ImageFont.truetype(name, size)
+        except OSError:
+            continue
+    return ImageFont.load_default()
+
+
+def social_card(tile: Image.Image) -> Image.Image:
+    """1200 x 630 share picture: the owner's logo and the one-line promise, on the logo's own blue.
+    Every line shrinks until it fits, so a longer sentence can never run off the edge."""
+    w, h = 1200, 630
+    card = Image.new("RGBA", (w, h))
+    card.alpha_composite(gradient(max(w, h), 0, h).crop((0, 0, w, h)))
+    card.alpha_composite(fit(tile, 440), (90, 95))
+    d = ImageDraw.Draw(card)
+    x, room = 590, w - 590 - 50
+
+    def line(y: int, text: str, size: int, fill, bold: bool = True) -> None:
+        while size > 18 and d.textlength(text, font=_font(size, bold)) > room:
+            size -= 2
+        d.text((x, y), text, font=_font(size, bold), fill=fill)
+
+    line(150, "LenDen Saathi", 86, (255, 255, 255, 255))
+    line(262, "Digital khata & udhaar ledger", 44, (184, 255, 90, 255))
+    line(332, "for Indian shopkeepers", 44, (255, 255, 255, 255))
+    line(440, "Works offline  |  Hindi & English", 34, (205, 222, 255, 255), bold=False)
+    line(492, "Free to register, 3 months free", 34, (205, 222, 255, 255), bold=False)
+    return card
 
 
 if __name__ == "__main__":

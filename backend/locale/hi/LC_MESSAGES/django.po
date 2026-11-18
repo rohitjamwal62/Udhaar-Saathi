@@ -291,137 +291,177 @@ msgstr "यह पेज केवल दुकानदार खातों �
 msgid "That page is only for customer accounts."
 msgstr "यह पेज केवल ग्राहक खातों के लिए है।"
 
-#: apps/web/roles.py:33 apps/web/views.py:250
+#: apps/web/roles.py:33 apps/web/views.py:248
 msgid "Please add your mobile number to continue. It is required for every account."
 msgstr "आगे बढ़ने के लिए कृपया अपना मोबाइल नंबर जोड़ें। हर खाते के लिए यह ज़रूरी है।"
 
-#: apps/web/views.py:208
+#: apps/web/seo.py:77 templates/base.html:52 templates/base.html:88 templates/web/features.html:5
+msgid "Features"
+msgstr "विशेषताएँ"
+
+#: apps/web/seo.py:77 templates/base.html:53 templates/base.html:88 templates/web/home.html:58
+msgid "How it works"
+msgstr "यह कैसे काम करता है"
+
+#: apps/web/seo.py:77 templates/base.html:54 templates/base.html:89 templates/web/home.html:99
+msgid "Pricing"
+msgstr "कीमत"
+
+#: apps/web/seo.py:77 templates/base.html:91
+msgid "About"
+msgstr "हमारे बारे में"
+
+#: apps/web/seo.py:78 templates/base.html:56 templates/base.html:91 templates/web/faq.html:5
+msgid "FAQ"
+msgstr "सवाल-जवाब"
+
+#: apps/web/seo.py:78 templates/base.html:55 templates/base.html:89 templates/web/_privacy_body.html:42
+msgid "Security"
+msgstr "सुरक्षा"
+
+#: apps/web/seo.py:78 templates/base.html:57 templates/base.html:91 templates/base.html:95
+msgid "Contact"
+msgstr "संपर्क"
+
+#: apps/web/seo.py:78 templates/base.html:94
+msgid "Terms"
+msgstr "नियम व शर्तें"
+
+#: apps/web/seo.py:78 templates/base.html:94
+msgid "Privacy"
+msgstr "गोपनीयता"
+
+#: apps/web/seo.py:87
+msgid "Home"
+msgstr "होम"
+
+#: apps/web/views.py:206
 msgid "You are logged out."
 msgstr "आप लॉग आउट हो गए हैं।"
 
-#: apps/web/views.py:466 templates/web/customer_home.html:21 templates/web/customer_home.html:25
+#: apps/web/views.py:464 templates/web/customer_home.html:21 templates/web/customer_home.html:25
 msgid "Shop"
 msgstr "दुकान"
 
-#: apps/web/views.py:145
+#: apps/web/views.py:143
 msgid "Please register first."
 msgstr "कृपया पहले रजिस्टर करें।"
 
-#: apps/web/views.py:219
+#: apps/web/views.py:217
 msgid "If that email has an account, we sent a code to it."
 msgstr "अगर इस ईमेल से खाता है, तो हमने उस पर कोड भेज दिया है।"
 
-#: apps/web/views.py:274
+#: apps/web/views.py:272
 msgid "Document storage is not connected yet. Please try again later."
 msgstr "दस्तावेज़ रखने की सुविधा अभी जुड़ी नहीं है। कृपया बाद में कोशिश करें।"
 
-#: apps/web/views.py:277
+#: apps/web/views.py:275
 msgid "Upload limit reached. Please try again later."
 msgstr "अपलोड की सीमा पूरी हो गई है। कृपया बाद में कोशिश करें।"
 
-#: apps/web/views.py:294
+#: apps/web/views.py:292
 #, python-format
 msgid "“%(title)s” was uploaded and stored safely."
 msgstr "“%(title)s” अपलोड हो गया और सुरक्षित रख लिया गया है।"
 
-#: apps/web/views.py:355
+#: apps/web/views.py:353
 msgid "You have reached the limit of 2000 people."
 msgstr "आप 2000 लोगों की सीमा तक पहुँच गए हैं।"
 
-#: apps/web/views.py:360
+#: apps/web/views.py:358
 #, python-format
 msgid "%(name)s was added. Now record the money you gave."
 msgstr "%(name)s जुड़ गए हैं। अब जो पैसे दिए हैं वह लिखें।"
 
-#: apps/web/views.py:373
+#: apps/web/views.py:371
 msgid "Entry saved."
 msgstr "एंट्री सेव हो गई।"
 
-#: apps/web/views.py:392
+#: apps/web/views.py:390
 msgid "Entry cancelled. It stays in the history, marked as cancelled."
 msgstr "एंट्री रद्द हो गई। वह इतिहास में \"रद्द\" के निशान के साथ बनी रहेगी।"
 
-#: apps/web/views.py:410
+#: apps/web/views.py:408
 msgid "Your details were saved."
 msgstr "आपकी जानकारी सहेज ली गई।"
 
-#: apps/web/views.py:452
+#: apps/web/views.py:450
 msgid "The customer account was unlinked. They can no longer see this ledger."
 msgstr "ग्राहक का खाता अलग कर दिया गया। अब वे यह बही-खाता नहीं देख सकते।"
 
-#: apps/web/views.py:104
+#: apps/web/views.py:102
 msgid "Too many messages from this connection. Please try again later."
 msgstr "इस कनेक्शन से बहुत ज़्यादा संदेश भेजे गए हैं। कृपया बाद में फिर कोशिश करें।"
 
-#: apps/web/views.py:150
+#: apps/web/views.py:148
 msgid "Too many attempts. Please wait a few minutes."
 msgstr "बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट रुकें।"
 
-#: apps/web/views.py:177
+#: apps/web/views.py:175
 #, python-format
 msgid "A new code was sent to %(email)s."
 msgstr "नया कोड %(email)s पर भेज दिया गया है।"
 
-#: apps/web/views.py:189
+#: apps/web/views.py:187
 msgid "Too many login attempts. Please try again in a few minutes."
 msgstr "लॉग इन की बहुत ज़्यादा कोशिशें हो गईं। कृपया कुछ मिनट बाद फिर कोशिश करें।"
 
-#: apps/web/views.py:201
+#: apps/web/views.py:199
 msgid "The email or password is incorrect."
 msgstr "ईमेल या पासवर्ड गलत है।"
 
-#: apps/web/views.py:240
+#: apps/web/views.py:238
 msgid "Your password was changed. Please log in."
 msgstr "आपका पासवर्ड बदल गया है। कृपया लॉग इन करें।"
 
-#: apps/web/views.py:288
+#: apps/web/views.py:286
 msgid "We could not store the file right now. Please try again."
 msgstr "अभी हम फ़ाइल सेव नहीं कर पाए। कृपया फिर कोशिश करें।"
 
-#: apps/web/views.py:308
+#: apps/web/views.py:306
 msgid "The file could not be fetched."
 msgstr "फ़ाइल नहीं मिल सकी।"
 
-#: apps/web/views.py:352 apps/web/views.py:423
+#: apps/web/views.py:350 apps/web/views.py:421
 #, python-format
 msgid "You already have a person called %(name)s."
 msgstr "आपके पास %(name)s नाम का व्यक्ति पहले से है।"
 
-#: apps/web/views.py:359
+#: apps/web/views.py:357
 #, python-format
 msgid "%(name)s has a LenDen Saathi account, so it is now linked. They can see their own balance."
 msgstr "%(name)s का LenDen Saathi खाता है, इसलिए वह जोड़ दिया गया है। वे अपना बकाया देख सकते हैं।"
 
-#: apps/web/views.py:428
+#: apps/web/views.py:426
 msgid "Details saved."
 msgstr "जानकारी सहेज ली गई।"
 
-#: apps/web/views.py:457
+#: apps/web/views.py:455
 msgid "The customer account was found and linked."
 msgstr "ग्राहक का खाता मिल गया और जोड़ दिया गया।"
 
-#: apps/web/views.py:459
+#: apps/web/views.py:457
 msgid "No matching customer account was found yet. Linking happens automatically when they sign up."
 msgstr "अभी कोई मेल खाता ग्राहक खाता नहीं मिला। जब वे साइन अप करेंगे, खाता अपने-आप जुड़ जाएगा।"
 
-#: apps/web/views.py:110
+#: apps/web/views.py:108
 msgid "Thank you. Your message was received and we will reply by email."
 msgstr "धन्यवाद। आपका संदेश हमें मिल गया है और हम ईमेल से जवाब देंगे।"
 
-#: apps/web/views.py:137
+#: apps/web/views.py:135
 #, python-format
 msgid "We sent a 6-digit code to %(email)s."
 msgstr "हमने %(email)s पर 6 अंकों का कोड भेजा है।"
 
-#: apps/web/views.py:165
+#: apps/web/views.py:163
 msgid "Your email is verified. Welcome to LenDen Saathi!"
 msgstr "आपका ईमेल सत्यापित हो गया। LenDen Saathi में आपका स्वागत है!"
 
-#: apps/web/views.py:164
+#: apps/web/views.py:162
 msgid "there"
 msgstr "आप"
 
-#: apps/web/views.py:196
+#: apps/web/views.py:194
 msgid "Please verify your email first. We sent you a new code."
 msgstr "कृपया पहले अपना ईमेल सत्यापित करें। हमने आपको नया कोड भेजा है।"
 
@@ -477,113 +517,80 @@ msgstr "कृपया कुछ मिनट बाद फिर कोशि�
 msgid "LenDen Saathi is a digital khata and sales tracking app for small shops in India. Works offline. Free to start."
 msgstr "LenDen Saathi छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब रखने वाला ऐप है। बिना इंटरनेट भी चलता है। शुरू करना मुफ़्त है।"
 
-#: templates/base.html:12
-msgid "Record udhaar, track sales and keep honest accounts with your customers. Offline-first Android app."
-msgstr "उधार लिखें, बिक्री का हिसाब रखें और अपने ग्राहकों के साथ सच्चा हिसाब रखें। बिना इंटरनेट चलने वाला Android ऐप।"
+#: templates/base.html:26 templates/base.html:33
+msgid "LenDen Saathi: digital khata and udhaar ledger app for shopkeepers"
+msgstr "LenDen Saathi: दुकानदारों के लिए डिजिटल खाता और उधार बही ऐप"
 
-#: templates/base.html:21
+#: templates/base.html:44
 msgid "Skip to main content"
 msgstr "मुख्य सामग्री पर जाएँ"
 
-#: templates/base.html:27
+#: templates/base.html:50
 msgid "Open menu"
 msgstr "मेन्यू खोलें"
 
-#: templates/base.html:27
+#: templates/base.html:50
 msgid "Close menu"
 msgstr "मेन्यू बंद करें"
 
-#: templates/base.html:28
+#: templates/base.html:51
 msgid "Main"
 msgstr "मुख्य"
 
-#: templates/base.html:29 templates/base.html:63 templates/web/features.html:5
-msgid "Features"
-msgstr "विशेषताएँ"
-
-#: templates/base.html:30 templates/base.html:63 templates/web/home.html:50 templates/web/how_it_works.html:5
-msgid "How it works"
-msgstr "यह कैसे काम करता है"
-
-#: templates/base.html:31 templates/base.html:64 templates/web/home.html:91 templates/web/pricing.html:5
-msgid "Pricing"
-msgstr "कीमत"
-
-#: templates/base.html:32 templates/base.html:64 templates/web/_privacy_body.html:42 templates/web/home.html:109
-msgid "Security"
-msgstr "सुरक्षा"
-
-#: templates/base.html:33 templates/base.html:66 templates/web/faq.html:5 templates/web/home.html:120
-msgid "FAQ"
-msgstr "सवाल-जवाब"
-
-#: templates/base.html:34 templates/base.html:66 templates/base.html:70 templates/web/_privacy_body.html:45
-msgid "Contact"
-msgstr "संपर्क"
-
-#: templates/base.html:38
+#: templates/base.html:61
 msgid "Dashboard"
 msgstr "डैशबोर्ड"
 
-#: templates/base.html:39
+#: templates/base.html:62
 msgid "Log out"
 msgstr "लॉग आउट"
 
-#: templates/base.html:41 templates/base.html:67 templates/web/auth/login.html:14
+#: templates/base.html:64 templates/base.html:92 templates/web/auth/login.html:14
 msgid "Log in"
 msgstr "लॉग इन"
 
-#: templates/base.html:42 templates/base.html:67 templates/partials/cta.html:4 templates/web/home.html:12
+#: templates/base.html:65 templates/base.html:92 templates/partials/cta.html:4 templates/web/about.html:37
 msgid "Start free"
 msgstr "मुफ़्त शुरू करें"
 
-#: templates/base.html:50
+#: templates/base.html:73
 msgid "Notifications"
 msgstr "सूचनाएँ"
 
-#: templates/base.html:51
+#: templates/base.html:74
 msgid "Dismiss message"
 msgstr "संदेश बंद करें"
 
-#: templates/base.html:60
+#: templates/base.html:78
+msgid "Breadcrumb"
+msgstr "पेज का रास्ता"
+
+#: templates/base.html:85
 msgid "A digital khata and sales tracker for small shops in India. Not a bank, lender or debt-collection agency."
 msgstr "छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब। यह बैंक, साहूकार या वसूली करने वाली एजेंसी नहीं है।"
 
-#: templates/base.html:62
+#: templates/base.html:87
 msgid "Product"
 msgstr "उत्पाद"
 
-#: templates/base.html:65
+#: templates/base.html:90
 msgid "Company"
 msgstr "कंपनी"
 
-#: templates/base.html:68
+#: templates/base.html:93
 msgid "Legal"
 msgstr "कानूनी"
 
-#: templates/base.html:69
-msgid "Terms"
-msgstr "नियम व शर्तें"
-
-#: templates/base.html:69
-msgid "Privacy"
-msgstr "गोपनीयता"
-
-#: templates/base.html:71 templates/partials/lang_switch.html:1
+#: templates/base.html:96 templates/partials/lang_switch.html:1
 msgid "Language"
 msgstr "भाषा"
 
-#: templates/base.html:11
-#, python-format
-msgid "%(site_name)s: digital khata for small shops"
-msgstr "%(site_name)s: छोटी दुकानों के लिए डिजिटल खाता"
-
-#: templates/base.html:22
+#: templates/base.html:45
 #, python-format
 msgid "%(app_env)s environment: not the live site"
 msgstr "%(app_env)s वातावरण: यह असली साइट नहीं है"
 
-#: templates/base.html:73
+#: templates/base.html:98
 #, python-format
 msgid "&copy; %(year)s %(site_name)s. Confirmations in the app are an acknowledgement and evidence trail, not guaranteed legal proof."
 msgstr "&copy; %(year)s %(site_name)s। ऐप में की गई पुष्टि एक स्वीकृति और सबूत की कड़ी है, कानूनी सबूत होने की गारंटी नहीं।"
@@ -1096,6 +1103,99 @@ msgstr "आप किसी भी समय %(site_name)s इस्तेमा
 msgid "Questions about these terms: <a href=\"mailto:%(support_email)s\">%(support_email)s</a>. See also our <a href=\"%(url_privacy)s\">Privacy notice</a>."
 msgstr "इन शर्तों के बारे में सवाल: <a href=\"mailto:%(support_email)s\">%(support_email)s</a>। हमारी <a href=\"%(url_privacy)s\">गोपनीयता सूचना</a> भी देखें।"
 
+#: templates/web/about.html:2
+msgid "About LenDen Saathi: digital khata for Indian shopkeepers"
+msgstr "LenDen Saathi के बारे में: भारतीय दुकानदारों के लिए डिजिटल खाता"
+
+#: templates/web/about.html:3
+msgid "About LenDen Saathi (Lenden Saathi, Len Den Saathi): what it is, what the name means, who it is for, how it works and what it costs."
+msgstr "LenDen Saathi (Lenden Saathi, Len Den Saathi) के बारे में: यह क्या है, नाम का मतलब, किसके लिए है, कैसे काम करता है और कितने का है।"
+
+#: templates/web/about.html:6 templates/web/home.html:37
+msgid "About LenDen Saathi"
+msgstr "LenDen Saathi के बारे में"
+
+#: templates/web/about.html:7
+msgid "LenDen Saathi helps small shops in India keep honest accounts of udhaar (credit): what was sold, what was paid and what is still due."
+msgstr "LenDen Saathi भारत की छोटी दुकानों को उधार का ईमानदार हिसाब रखने में मदद करता है: क्या बिका, क्या चुकाया गया और कितना बाकी है।"
+
+#: templates/web/about.html:9 templates/web/home.html:35
+msgid "What is LenDen Saathi?"
+msgstr "LenDen Saathi क्या है?"
+
+#: templates/web/about.html:12
+msgid "What does the name mean?"
+msgstr "इस नाम का क्या मतलब है?"
+
+#: templates/web/about.html:15
+msgid "Who is it for?"
+msgstr "यह किसके लिए है?"
+
+#: templates/web/about.html:17
+msgid "Kirana and general stores that sell on credit."
+msgstr "उधार पर सामान बेचने वाली किराना और जनरल स्टोर की दुकानें।"
+
+#: templates/web/about.html:18
+msgid "Medical, hardware, cloth and other small shops with regular customers."
+msgstr "मेडिकल, हार्डवेयर, कपड़े और दूसरी छोटी दुकानें जिनके नियमित ग्राहक हैं।"
+
+#: templates/web/about.html:19
+msgid "Customers who want to see, in one place, what they owe each shop and what they have already paid."
+msgstr "वे ग्राहक जो एक ही जगह देखना चाहते हैं कि उन पर हर दुकान का कितना बकाया है और उन्होंने कितना चुका दिया है।"
+
+#: templates/web/about.html:22
+msgid "What it is not"
+msgstr "यह क्या नहीं है"
+
+#: templates/web/about.html:23
+msgid "LenDen Saathi is a record-keeping tool. It is not a bank, a lender or a debt-collection agency, and it does not give or collect loans."
+msgstr "LenDen Saathi हिसाब रखने का औज़ार है। यह बैंक, कर्ज़ देने वाला या कर्ज़ वसूली एजेंसी नहीं है, और यह लोन देता या वसूलता नहीं है।"
+
+#: templates/web/about.html:25
+msgid "What does it cost?"
+msgstr "इसकी कीमत क्या है?"
+
+#: templates/web/about.html:27 templates/web/home.html:37 templates/web/home.html:102
+msgid "See pricing"
+msgstr "कीमत देखें"
+
+#: templates/web/about.html:29
+msgid "Learn more about LenDen Saathi"
+msgstr "LenDen Saathi के बारे में और जानें"
+
+#: templates/web/about.html:31 templates/web/home.html:37
+msgid "Features of the digital khata"
+msgstr "डिजिटल खाते की सुविधाएँ"
+
+#: templates/web/about.html:32
+msgid "How it works for shopkeepers and customers"
+msgstr "दुकानदारों और ग्राहकों के लिए यह कैसे काम करता है"
+
+#: templates/web/about.html:33
+msgid "How your records are protected"
+msgstr "आपका रिकॉर्ड कैसे सुरक्षित रहता है"
+
+#: templates/web/about.html:34 templates/web/home.html:37
+msgid "Frequently asked questions"
+msgstr "अक्सर पूछे जाने वाले सवाल"
+
+#: templates/web/about.html:35
+msgid "Contact the LenDen Saathi team"
+msgstr "LenDen Saathi टीम से संपर्क करें"
+
+#: templates/web/about.html:10
+msgid "<strong>LenDen Saathi</strong> (लेनदेन साथी), also written <em>Lenden Saathi</em> or <em>Len Den Saathi</em>, is a digital khata and sales tracker. A shopkeeper records udhaar and payments on an Android phone, even without internet, and the customer can see and confirm the same entry."
+msgstr "<strong>LenDen Saathi</strong> (लेनदेन साथी), जिसे <em>Lenden Saathi</em> या <em>Len Den Saathi</em> भी लिखा जाता है, एक डिजिटल खाता और बिक्री ट्रैकर है। दुकानदार Android फ़ोन पर, बिना इंटरनेट के भी, उधार और भुगतान दर्ज करता है, और ग्राहक वही एंट्री देख और पुष्टि कर सकता है।"
+
+#: templates/web/about.html:13
+msgid "LenDen (लेन-देन) is the Hindi word for give and take: the money that goes out and comes back. Saathi (साथी) means companion. LenDen Saathi is the companion for every give-and-take in your shop."
+msgstr "LenDen (लेन-देन) हिंदी में लेने और देने को कहते हैं: वह पैसा जो बाहर जाता है और लौटकर आता है। साथी का मतलब है साथ देने वाला। LenDen Saathi आपकी दुकान के हर लेन-देन का साथी है।"
+
+#: templates/web/about.html:26
+#, python-format
+msgid "Registration is free and every shop gets %(trial_months)s months free. After that there is one plan at Rs %(amount)s a month."
+msgstr "रजिस्ट्रेशन मुफ़्त है और हर दुकान को %(trial_months)s महीने मुफ़्त मिलते हैं। उसके बाद एक ही प्लान है, Rs %(amount)s प्रति माह।"
+
 #: templates/web/auth/forgot_password.html:7 templates/web/auth/login.html:16
 msgid "Forgot your password?"
 msgstr "पासवर्ड भूल गए?"
@@ -1569,19 +1669,17 @@ msgstr "%(trial_months)s महीने मुफ़्त, फिर Rs %(amou
 msgid "<strong>Drop a file here</strong> or tap to choose"
 msgstr "<strong>फ़ाइल यहाँ छोड़ें</strong> या चुनने के लिए दबाएँ"
 
+#: templates/web/faq.html:2
+msgid "LenDen Saathi FAQ: khata, udhaar, pricing and security"
+msgstr "LenDen Saathi FAQ: खाता, उधार, कीमत और सुरक्षा"
+
+#: templates/web/faq.html:3
+msgid "Answers about LenDen Saathi (Lenden Saathi, Len Den Saathi): what it is, how the digital khata works, offline use, pricing, security and customer confirmation."
+msgstr "LenDen Saathi (Lenden Saathi, Len Den Saathi) के बारे में जवाब: यह क्या है, डिजिटल खाता कैसे काम करता है, बिना इंटरनेट इस्तेमाल, कीमत, सुरक्षा और ग्राहक की पुष्टि।"
+
 #: templates/web/faq.html:5
 msgid "Questions, answered"
 msgstr "सवालों के जवाब"
-
-#: templates/web/faq.html:2
-#, python-format
-msgid "Frequently asked questions | %(site_name)s"
-msgstr "अक्सर पूछे जाने वाले सवाल | %(site_name)s"
-
-#: templates/web/faq.html:3
-#, python-format
-msgid "Answers to common questions about %(site_name)s: how the khata works, offline use, pricing, security and customer confirmation."
-msgstr "%(site_name)s के बारे में आम सवालों के जवाब: खाता कैसे चलता है, बिना इंटरनेट इस्तेमाल, कीमत, सुरक्षा और ग्राहक की पुष्टि।"
 
 #: templates/web/faq.html:5
 #, python-format
@@ -1748,7 +1846,7 @@ msgstr "बिल और फ़ोटो"
 msgid "Attach a bill photo so you can show proof of what was sold."
 msgstr "बिल की फ़ोटो लगाएँ ताकि आप दिखा सकें कि क्या बेचा गया था।"
 
-#: templates/web/features.html:45 templates/web/home.html:40
+#: templates/web/features.html:45 templates/web/home.html:48
 msgid "Reminders"
 msgstr "रिमाइंडर"
 
@@ -1770,6 +1868,10 @@ msgstr "छोटी दुकानों के लिए डिजिटल �
 #, python-format
 msgid "<strong>What %(site_name)s is not.</strong> It is not a bank, lender, credit bureau or debt-collection agency, and it is not a GST billing or full POS product. Languages: English and Hindi on this website. Punjabi is planned."
 msgstr "<strong>%(site_name)s क्या नहीं है।</strong> यह बैंक, साहूकार, क्रेडिट ब्यूरो या कर्ज़ वसूली एजेंसी नहीं है, और न ही GST बिलिंग या पूरा POS उत्पाद है। भाषाएँ: इस वेबसाइट पर अंग्रेज़ी और हिन्दी। पंजाबी की योजना है।"
+
+#: templates/web/home.html:2
+msgid "LenDen Saathi: digital khata & udhaar app for small shops"
+msgstr "LenDen Saathi: छोटी दुकानों के लिए डिजिटल खाता और उधार ऐप"
 
 #: templates/web/home.html:8
 msgid "Digital khata + sales tracking"
@@ -1807,175 +1909,166 @@ msgstr "जानें आप कहाँ खड़े हैं"
 msgid "See total receivable, each balance and your daily sales."
 msgstr "कुल वसूली, हर ग्राहक का बकाया और रोज़ की बिक्री देखें।"
 
-#: templates/web/home.html:35
+#: templates/web/home.html:43
 msgid "What you get"
 msgstr "आपको क्या मिलता है"
 
-#: templates/web/home.html:35
+#: templates/web/home.html:43
 msgid "Everything a small shop needs, nothing it doesn't"
 msgstr "छोटी दुकान को जो चाहिए वह सब, और कुछ फ़ालतू नहीं"
 
-#: templates/web/home.html:35
+#: templates/web/home.html:43
 msgid "Simple tools for the khata and the counter."
 msgstr "खाते और काउंटर के लिए आसान साधन।"
 
-#: templates/web/home.html:37
+#: templates/web/home.html:45
 msgid "Digital khata"
 msgstr "डिजिटल खाता"
 
-#: templates/web/home.html:37
+#: templates/web/home.html:45
 msgid "Add customers, record goods on credit and payments in full or in part. See each balance at a glance."
 msgstr "ग्राहक जोड़ें, उधार का सामान और पूरे या आंशिक भुगतान लिखें। हर ग्राहक का बकाया एक नज़र में देखें।"
 
-#: templates/web/home.html:38
+#: templates/web/home.html:46
 msgid "Works offline"
 msgstr "ऑफ़लाइन भी चलता है"
 
-#: templates/web/home.html:38
+#: templates/web/home.html:46
 msgid "Entries are saved on your phone first and sent once when the internet comes back."
 msgstr "एंट्री पहले आपके फ़ोन में सेव होती है और इंटरनेट लौटने पर एक बार भेजी जाती है।"
 
-#: templates/web/home.html:39
+#: templates/web/home.html:47
 msgid "Bills and itemised entries"
 msgstr "बिल और सामान-वार एंट्री"
 
-#: templates/web/home.html:39
+#: templates/web/home.html:47
 msgid "Record a total, or list every item. Attach a photo of the bill."
 msgstr "कुल रकम लिखें, या हर सामान की सूची बनाएँ। बिल की फ़ोटो भी लगाएँ।"
 
-#: templates/web/home.html:40
+#: templates/web/home.html:48
 msgid "Send a polite reminder for pending dues when you are online."
 msgstr "बाकी बकाया के लिए ऑनलाइन होने पर विनम्र रिमाइंडर भेजें।"
 
-#: templates/web/home.html:41
+#: templates/web/home.html:49
 msgid "Honest records"
 msgstr "ईमानदार रिकॉर्ड"
 
-#: templates/web/home.html:41
+#: templates/web/home.html:49
 msgid "Corrections are shown as adjustments with a reason. Nothing is silently changed or deleted."
 msgstr "सुधार कारण के साथ एडजस्टमेंट के रूप में दिखते हैं। कुछ भी चुपचाप बदला या मिटाया नहीं जाता।"
 
-#: templates/web/home.html:42
+#: templates/web/home.html:50
 msgid "Sales tracking"
 msgstr "बिक्री का हिसाब"
 
-#: templates/web/home.html:42
+#: templates/web/home.html:50
 msgid "Quick or itemised sales, split payments, returns, and daily or monthly reports."
 msgstr "तेज़ या सामान-वार बिक्री, बँटा हुआ भुगतान, वापसी, और रोज़ाना या मासिक रिपोर्ट।"
 
-#: templates/web/home.html:44
+#: templates/web/home.html:52
 msgid "All features"
 msgstr "सभी विशेषताएँ"
 
-#: templates/web/home.html:50
+#: templates/web/home.html:58
 msgid "Three simple steps"
 msgstr "तीन आसान कदम"
 
-#: templates/web/home.html:53
+#: templates/web/home.html:61
 msgid "Add your customer"
 msgstr "अपना ग्राहक जोड़ें"
 
-#: templates/web/home.html:53
+#: templates/web/home.html:61
 msgid "Enter a name and number. Your customer can link their own account later, only if they approve."
 msgstr "नाम और नंबर लिखें। आपका ग्राहक बाद में अपना खाता जोड़ सकता है, सिर्फ़ तब जब वह मंज़ूर करे।"
 
-#: templates/web/home.html:54
+#: templates/web/home.html:62
 msgid "Record the udhaar"
 msgstr "उधार लिखें"
 
-#: templates/web/home.html:54
+#: templates/web/home.html:62
 msgid "Write what was sold and the amount, or just the total. Add payments as they come."
 msgstr "जो बिका और उसकी रकम लिखें, या सिर्फ़ कुल रकम। भुगतान आते ही जोड़ते जाएँ।"
 
-#: templates/web/home.html:55
+#: templates/web/home.html:63
 msgid "Customer confirms"
 msgstr "ग्राहक पुष्टि करता है"
 
-#: templates/web/home.html:55
+#: templates/web/home.html:63
 msgid "They see the entry and confirm it, or raise a dispute. You both see the same history."
 msgstr "वह एंट्री देखता है और पुष्टि करता है, या आपत्ति दर्ज करता है। आप दोनों को एक ही इतिहास दिखता है।"
 
-#: templates/web/home.html:63 templates/web/how_it_works.html:39
+#: templates/web/home.html:71 templates/web/how_it_works.html:39
 msgid "Offline-first"
 msgstr "पहले ऑफ़लाइन"
 
-#: templates/web/home.html:64
+#: templates/web/home.html:72
 msgid "No signal in the shop? Keep working."
 msgstr "दुकान में नेटवर्क नहीं है? काम चालू रखें।"
 
-#: templates/web/home.html:65
+#: templates/web/home.html:73
 msgid "Every entry is saved on the phone straight away. When internet returns, it is sent to the server exactly once, so nothing is lost and nothing is counted twice."
 msgstr "हर एंट्री तुरंत फ़ोन में सेव हो जाती है। इंटरनेट लौटने पर वह सर्वर पर ठीक एक बार भेजी जाती है, इसलिए कुछ खोता नहीं और कुछ दो बार नहीं गिना जाता।"
 
-#: templates/web/home.html:66
+#: templates/web/home.html:74
 msgid "Sending messages, one-time codes and confirmation links needs internet."
 msgstr "संदेश, एक बार के कोड और पुष्टि के लिंक भेजने के लिए इंटरनेट चाहिए।"
 
-#: templates/web/home.html:75
+#: templates/web/home.html:83
 msgid "Two-sided transparency"
 msgstr "दोनों तरफ़ पारदर्शिता"
 
-#: templates/web/home.html:76
+#: templates/web/home.html:84
 msgid "One entry. Two views. No surprises."
 msgstr "एक एंट्री। दो नज़रिए। कोई हैरानी नहीं।"
 
-#: templates/web/home.html:77
+#: templates/web/home.html:85
 msgid "Your customer has their own verified account and can see their own entries, per shop and combined. A shopkeeper can never mark an entry as confirmed. Only the customer can."
 msgstr "आपके ग्राहक का अपना सत्यापित खाता होता है और वह अपनी एंट्रियाँ, दुकान-वार और कुल मिलाकर, देख सकता है। दुकानदार किसी एंट्री को कभी \"पुष्टि हुई\" नहीं बना सकता। यह सिर्फ़ ग्राहक कर सकता है।"
 
-#: templates/web/home.html:79
+#: templates/web/home.html:87
 msgid "Every entry shows its status: Shopkeeper recorded, Awaiting confirmation, Customer confirmed or Disputed."
 msgstr "हर एंट्री की स्थिति दिखती है: दुकानदार द्वारा दर्ज, पुष्टि की प्रतीक्षा, ग्राहक ने पुष्टि की, या आपत्ति।"
 
-#: templates/web/home.html:80
+#: templates/web/home.html:88
 msgid "Mistakes are fixed with a reversal and a reason. The audit trail stays."
 msgstr "गलतियाँ रिवर्सल और कारण के साथ ठीक होती हैं। ऑडिट रिकॉर्ड बना रहता है।"
 
-#: templates/web/home.html:82
+#: templates/web/home.html:90
 msgid "A confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof."
 msgstr "पुष्टि एक स्वीकृति और सबूत की कड़ी है। यह कानूनी सबूत होने की गारंटी नहीं है।"
 
-#: templates/web/home.html:92 templates/web/pricing.html:5
+#: templates/web/home.html:100 templates/web/pricing.html:5
 msgid "One simple plan"
 msgstr "एक सरल प्लान"
 
-#: templates/web/home.html:94
-msgid "See pricing"
-msgstr "कीमत देखें"
-
-#: templates/web/home.html:110
+#: templates/web/home.html:118
 msgid "Your records, kept private"
 msgstr "आपके रिकॉर्ड, निजी रहते हैं"
 
-#: templates/web/home.html:111
+#: templates/web/home.html:119
 msgid "Passwords are stored hashed. One-time codes expire and work only once. Each shop's data is kept separate, and bills are stored privately."
 msgstr "पासवर्ड हैश करके रखे जाते हैं। एक बार के कोड की समय-सीमा खत्म होती है और वे सिर्फ़ एक बार चलते हैं। हर दुकान का डेटा अलग रखा जाता है, और बिल निजी तौर पर रखे जाते हैं।"
 
-#: templates/web/home.html:112
+#: templates/web/home.html:120
 msgid "How we protect data"
 msgstr "हम डेटा की सुरक्षा कैसे करते हैं"
 
-#: templates/web/home.html:120
+#: templates/web/home.html:128
 msgid "Common questions"
 msgstr "आम सवाल"
 
-#: templates/web/home.html:122
+#: templates/web/home.html:130
 msgid "Read all questions"
 msgstr "सभी सवाल पढ़ें"
 
-#: templates/web/home.html:2
-#, python-format
-msgid "%(site_name)s: digital khata and sales tracking for small shops"
-msgstr "%(site_name)s: छोटी दुकानों के लिए डिजिटल खाता और बिक्री का हिसाब"
-
 #: templates/web/home.html:3
 #, python-format
-msgid "Record udhaar, track sales and keep clear accounts with your customers. Offline-first Android app for small Indian shops. Free to register, %(trial_months)s months free trial."
-msgstr "उधार लिखें, बिक्री का हिसाब रखें और अपने ग्राहकों के साथ साफ़ हिसाब रखें। छोटी भारतीय दुकानों के लिए बिना इंटरनेट चलने वाला Android ऐप। रजिस्ट्रेशन मुफ़्त, %(trial_months)s महीने का मुफ़्त ट्रायल।"
+msgid "LenDen Saathi (Lenden Saathi) is a free digital khata app for Indian shopkeepers: record udhaar, track payments and see who owes you. Works offline. %(trial_months)s months free."
+msgstr "LenDen Saathi (Lenden Saathi) भारतीय दुकानदारों के लिए मुफ़्त डिजिटल खाता ऐप है: उधार दर्ज करें, भुगतान देखें और जानें किस पर कितना बकाया है। बिना इंटरनेट चलता है। %(trial_months)s महीने मुफ़्त।"
 
 #: templates/web/home.html:9
-msgid "Your shop's udhaar, <em>clear and agreed</em> by both sides."
-msgstr "आपकी दुकान का उधार, <em>साफ़ और दोनों की सहमति से</em>।"
+msgid "LenDen Saathi: your shop's udhaar, <em>clear and agreed</em> by both sides."
+msgstr "LenDen Saathi: आपकी दुकान का उधार, <em>साफ़ और दोनों तरफ़ से तय</em>।"
 
 #: templates/web/home.html:16
 #, python-format
@@ -1987,17 +2080,21 @@ msgstr "रजिस्ट्रेशन मुफ़्त है। हर �
 msgid "Then Rs %(amount_rupees)s per month. Cancel any time."
 msgstr "फिर Rs %(amount_rupees)s प्रति माह। जब चाहें बंद करें।"
 
-#: templates/web/home.html:93
+#: templates/web/home.html:36
+msgid "<strong>LenDen Saathi</strong> (लेनदेन साथी), also written <em>Lenden Saathi</em> or <em>Len Den Saathi</em>, is a digital khata for small shops in India. LenDen means give and take, and Saathi means companion: it keeps every udhaar and payment of your shop in one honest record."
+msgstr "<strong>LenDen Saathi</strong> (लेनदेन साथी), जिसे <em>Lenden Saathi</em> या <em>Len Den Saathi</em> भी लिखा जाता है, भारत की छोटी दुकानों के लिए डिजिटल खाता है। LenDen का मतलब है लेना-देना और Saathi का मतलब है साथी: यह आपकी दुकान के हर उधार और भुगतान को एक ईमानदार रिकॉर्ड में रखता है।"
+
+#: templates/web/home.html:101
 #, python-format
 msgid "Free to register. %(trial_months)s months free for your shop. Then Rs %(amount_rupees)s per month. Taxes and gateway charges are shown before you pay."
 msgstr "रजिस्ट्रेशन मुफ़्त। आपकी दुकान के लिए %(trial_months)s महीने मुफ़्त। फिर Rs %(amount_rupees)s प्रति माह। टैक्स और गेटवे शुल्क भुगतान से पहले दिखाए जाते हैं।"
 
-#: templates/web/home.html:99 templates/web/pricing.html:11
+#: templates/web/home.html:107 templates/web/pricing.html:11
 #, python-format
 msgid "<small>Rs</small> %(amount_rupees)s<small> / month</small>"
 msgstr "<small>Rs</small> %(amount_rupees)s<small> / माह</small>"
 
-#: templates/web/home.html:100
+#: templates/web/home.html:108
 #, python-format
 msgid "after %(trial_months)s free months"
 msgstr "%(trial_months)s महीने मुफ़्त के बाद"
@@ -2538,12 +2635,11 @@ msgstr "जब भुगतान शुरू होंगे, तो वे �
 msgid "A customer's confirmation is an acknowledgement and evidence trail. It is not guaranteed legal proof. Found a problem? Write to <a href=\"mailto:%(support_email)s\">%(support_email)s</a>."
 msgstr "ग्राहक की पुष्टि एक स्वीकृति और सबूत की कड़ी है। यह कानूनी सबूत होने की गारंटी नहीं है। कोई समस्या मिली? <a href=\"mailto:%(support_email)s\">%(support_email)s</a> पर लिखें।"
 
+#: templates/web/terms.html:3
+msgid "The draft terms of use for LenDen Saathi in plain language: your account, your records, payments, acceptable use and how to reach us."
+msgstr "LenDen Saathi के उपयोग की शर्तों का मसौदा आसान भाषा में: आपका खाता, आपका रिकॉर्ड, भुगतान, सही इस्तेमाल और हमसे संपर्क कैसे करें।"
+
 #: templates/web/terms.html:2
 #, python-format
 msgid "Terms of use | %(site_name)s"
 msgstr "उपयोग की शर्तें | %(site_name)s"
-
-#: templates/web/terms.html:3
-#, python-format
-msgid "The draft terms for using %(site_name)s, in plain language."
-msgstr "%(site_name)s इस्तेमाल करने की मसौदा शर्तें, सरल भाषा में।"

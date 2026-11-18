@@ -123,6 +123,12 @@ cd mobile
 npm run eas:me -- build --profile preview --platform android
 ```
 
+## Search visibility (SEO)
+
+The site has meta tags, Open Graph cards, structured data, `robots.txt`, `sitemap.xml`, canonical links and breadcrumbs. Only the
+production site is indexable; dev and staging say `noindex`. What is built, what only the owner can do (custom domain, Search
+Console, Play Store and social profiles) and honest expectations: [SEO_GUIDE.md](SEO_GUIDE.md).
+
 ## Scaling
 
 One instance is enough today. To run many identical copies behind a free, open-source load balancer (HAProxy) with a shared

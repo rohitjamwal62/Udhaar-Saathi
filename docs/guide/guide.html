@@ -1,0 +1,317 @@
+<!doctype html>
+<html lang="en"><head><meta charset="utf-8"><title>LenDen Saathi: how it was set up and deployed</title>
+<style>
+@page { size: A4; margin: 18mm 16mm; }
+* { box-sizing: border-box; }
+body { font-family: "Segoe UI", Arial, sans-serif; color: #1c2b24; font-size: 11pt; line-height: 1.5; }
+h1 { font-size: 26pt; color: #0d6e4f; margin: 0 0 4mm; }
+h2 { font-size: 17pt; color: #0d6e4f; border-bottom: 2px solid #0d6e4f; padding-bottom: 2mm; margin-top: 10mm; page-break-after: avoid; }
+h3 { font-size: 12.5pt; margin: 6mm 0 2mm; color: #174d3a; page-break-after: avoid; }
+p, li { margin: 1.6mm 0; }
+code { font-family: Consolas, monospace; background: #eef4f0; padding: 0 3px; border-radius: 3px; font-size: 9.5pt; }
+pre { background: #14231c; color: #e6f3ec; padding: 3mm 4mm; border-radius: 4px; font: 9pt/1.45 Consolas, monospace; white-space: pre-wrap; word-break: break-word; page-break-inside: avoid; }
+table { border-collapse: collapse; width: 100%; margin: 3mm 0; font-size: 10pt; page-break-inside: avoid; }
+th { background: #0d6e4f; color: #fff; text-align: left; }
+th, td { border: 1px solid #b9cfc5; padding: 2mm 2.5mm; vertical-align: top; }
+tr:nth-child(even) td { background: #f4f9f6; }
+.cover { text-align: center; padding-top: 30mm; page-break-after: always; }
+.cover .sub { font-size: 14pt; color: #444; margin-top: 4mm; }
+.cover .meta { margin-top: 22mm; color: #666; font-size: 10.5pt; }
+.box { border-left: 5px solid #e0a100; background: #fff8e1; padding: 2.5mm 4mm; margin: 3mm 0; page-break-inside: avoid; }
+.ok { border-left-color: #0d6e4f; background: #e9f6ef; }
+.warn { border-left-color: #c0392b; background: #fdecea; }
+figure { margin: 4mm 0; text-align: center; page-break-inside: avoid; }
+figure img { max-width: 100%; border: 1px solid #c9d6cf; border-radius: 4px; }
+figcaption { font-size: 9.5pt; color: #555; margin-top: 1.5mm; }
+.flow { display: flex; align-items: center; justify-content: center; gap: 3mm; flex-wrap: wrap; margin: 4mm 0; page-break-inside: avoid; }
+.node { border: 2px solid #0d6e4f; border-radius: 8px; padding: 2.5mm 4mm; text-align: center; font-weight: 600; background: #fff; min-width: 28mm; }
+.node small { display: block; font-weight: 400; color: #555; font-size: 8.5pt; }
+.arrow { font-size: 18pt; color: #e0a100; }
+.step { counter-increment: s; }
+ol.steps { list-style: none; padding-left: 0; counter-reset: s; }
+ol.steps > li { counter-increment: s; position: relative; padding-left: 11mm; margin: 3mm 0; }
+ol.steps > li::before { content: counter(s); position: absolute; left: 0; top: 0; width: 7mm; height: 7mm; border-radius: 50%; background: #0d6e4f; color: #fff; text-align: center; line-height: 7mm; font-weight: 700; font-size: 10pt; }
+.pb { page-break-before: always; }
+</style></head><body>
+
+<div class="cover">
+  <h1>LenDen Saathi</h1>
+  <div class="sub">How it was set up and put on the internet<br>Environments, database, deployment, website visibility and the Android app</div>
+  <div class="sub" style="margin-top:14mm;font-size:12pt">A step-by-step guide in simple language</div>
+  <div class="meta">Written 19 November 2026<br>Code: github.com/rohitjamwal62/Udhaar-Saathi<br>Live site: udhaarsaathi-api.onrender.com</div>
+</div>
+
+<h2 style="margin-top:0">1. What this guide covers</h2>
+<p>LenDen Saathi is a digital khata (udhaar ledger) for shopkeepers. It has a <b>website</b>, a <b>server</b> (the "backend") that also serves the phone app, and an <b>Android app</b>. This guide explains, in plain steps:</p>
+<ul>
+<li>how the code is stored and how it moves from your computer to the live server;</li>
+<li>the <b>three stages</b> (dev, staging, production) and the automatic <b>test</b> stage;</li>
+<li>how the <b>live database</b> was created and connected;</li>
+<li>how every deployment happens, and how to check it worked;</li>
+<li>how the site was made findable on Google, and how the Android app is built;</li>
+<li>what went wrong along the way and how it was fixed.</li>
+</ul>
+<div class="box"><b>About the screenshots.</b> Screenshots of public pages (GitHub, the live website, the health pages, Google Search Console) are real. The Render and Neon dashboards need your private login, so they are not shown; their steps are written out with the exact buttons to click instead.</div>
+
+<h2>2. The big picture</h2>
+<div class="flow">
+  <div class="node">Your computer<small>write code</small></div><div class="arrow">&rarr;</div>
+  <div class="node">GitHub<small>stores code, runs tests</small></div><div class="arrow">&rarr;</div>
+  <div class="node">Render<small>runs the server</small></div><div class="arrow">&rarr;</div>
+  <div class="node">Neon<small>PostgreSQL database</small></div>
+</div>
+<table>
+<tr><th>Service</th><th>What it does</th><th>Cost today</th></tr>
+<tr><td><b>Git + GitHub</b></td><td>Keeps every version of the code. Three branches = three stages. GitHub Actions runs the automatic tests.</td><td>Free</td></tr>
+<tr><td><b>Render</b></td><td>Runs the Django server (website + API + admin) and redeploys when code changes.</td><td>Free plan (sleeps when idle)</td></tr>
+<tr><td><b>Neon</b></td><td>Hosts the PostgreSQL database. One database "branch" per stage.</td><td>Free plan</td></tr>
+<tr><td><b>Gmail API</b></td><td>Sends the verification codes and contact emails (Render blocks normal email ports).</td><td>Free</td></tr>
+<tr><td><b>Expo EAS</b></td><td>Builds the Android app file (APK).</td><td>Free queue</td></tr>
+<tr><td><b>Google Search Console</b></td><td>Tells Google your site exists and shows clicks and impressions.</td><td>Free</td></tr>
+</table>
+
+<h2>3. The stages (environments)</h2>
+<p>An <b>environment</b> is a separate copy of the app. Having several means you can try risky changes without touching real customers.</p>
+<table>
+<tr><th>Stage</th><th>Git branch</th><th>Render service</th><th>Database (Neon branch)</th><th>When it updates</th><th>Who uses it</th></tr>
+<tr><td><b>dev</b></td><td><code>dev</code></td><td>udhaarsaathi-api-dev</td><td>development</td><td>Every push</td><td>You, while building</td></tr>
+<tr><td><b>staging</b></td><td><code>staging</code></td><td>udhaarsaathi-api-staging</td><td>staging</td><td>After tests pass</td><td>Testers, the test APK</td></tr>
+<tr><td><b>production</b></td><td><code>main</code></td><td>udhaarsaathi-api</td><td>production</td><td>After tests pass</td><td>Real customers</td></tr>
+<tr><td><b>test</b></td><td>any push</td><td>GitHub Actions</td><td>throw-away database</td><td>Automatic</td><td>Nobody: it only passes or fails</td></tr>
+</table>
+<div class="box ok"><b>Golden rule:</b> every stage has its <b>own database</b>. A mistake on dev or staging can never damage production data.</div>
+<figure><img src="shots/github_branches.png"><figcaption>The three branches on GitHub: dev, staging and main (main is production).</figcaption></figure>
+
+<h2 class="pb">4. Step by step: create the stages</h2>
+<h3>Step 4.1: Put the code on GitHub with three branches</h3>
+<ol class="steps">
+<li>Create a repository on github.com (here: <code>rohitjamwal62/Udhaar-Saathi</code>).</li>
+<li>On your computer, inside the project folder, connect it and push the first branch:
+<pre>git remote add origin https://github.com/rohitjamwal62/Udhaar-Saathi.git
+git checkout -b dev
+git push -u origin dev</pre></li>
+<li>Create the other two branches from it:
+<pre>git checkout -b staging && git push -u origin staging
+git checkout -b main    && git push -u origin main
+git checkout dev        # go back to working on dev</pre></li>
+</ol>
+<div class="box"><b>Secrets never go in Git.</b> Passwords, database addresses and API keys live in files such as <code>.env</code> and <code>render-secrets.local.txt</code>. They are listed in <code>.gitignore</code>, so Git ignores them. Only the example file (<code>.env.example</code>) is committed.</div>
+
+<h3>Step 4.2: The automatic test stage (GitHub Actions)</h3>
+<p>The file <code>.github/workflows/ci.yml</code> tells GitHub: "on every push or pull request, start a clean Linux machine, start a temporary PostgreSQL, install the project and run all tests". If one test fails, the run turns red and the live servers are <b>not</b> updated.</p>
+<pre>on:
+  push:
+    branches: [main, staging, dev]
+  pull_request:
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      postgres: { image: postgres:16 }     # throw-away database
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+      - run: pip install -r backend/requirements.txt
+      - run: python -m pytest              # about 370 tests</pre>
+<figure><img src="shots/github_actions.png"><figcaption>GitHub &rarr; Actions tab: green ticks mean the tests passed. "keep production awake" and "email health" are two small scheduled helpers.</figcaption></figure>
+
+<h2 class="pb">5. Step by step: the live database (Neon)</h2>
+<p>Neon hosts PostgreSQL. One Neon project holds three <b>branches</b> (like Git branches, but for data). Each Render service connects to its own branch.</p>
+<h3>Step 5.1: Create the database branches</h3>
+<ol class="steps">
+<li>Sign in at <b>console.neon.tech</b> and create a project (for example <code>udhaarsaathi</code>).</li>
+<li>Open <b>Branches</b>. The first branch is your production data. Create two more with <b>Create branch</b>: name them <code>development</code> and <code>staging</code>. (Neon copies the data, so you can experiment safely.)</li>
+<li>For each branch click <b>Connect</b> and copy the <b>connection string</b>. It looks like this (the real one holds a password, keep it private):
+<pre>postgresql://USER:PASSWORD@ep-example-123.ap-southeast-1.aws.neon.tech/neondb?sslmode=require</pre></li>
+<li>Save the three strings in a local file that Git ignores (here <code>render-secrets.local.txt</code>), labelled development / staging / production.</li>
+</ol>
+<h3>Step 5.2: Create the tables</h3>
+<p>The whole schema is one script, <code>database/create_tables.py</code>. It is safe to run twice (it only adds what is missing). Money is stored as whole <b>paise</b> numbers, never decimals, to avoid rounding errors.</p>
+<pre>cd database
+pip install psycopg2-binary
+set DATABASE_URL=postgresql://USER:PASSWORD@HOST/neondb?sslmode=require     # Windows
+python create_tables.py            # creates all tables
+python create_tables.py --check    # confirms every table exists</pre>
+<h3>Step 5.3: Move existing data from a local database (done once)</h3>
+<pre>python copy_data.py          # dry run: shows what would be copied, changes nothing
+python copy_data.py --go     # copies the rows and verifies the counts</pre>
+<p>The source is only ever read, and rows that already exist are skipped, so running it again duplicates nothing.</p>
+<h3>Step 5.4: How the app finds the database</h3>
+<p>The server reads one setting called <code>DATABASE_URL</code>. In Render you paste the matching Neon string into that setting (see the next section). Django then creates or updates tables itself during each deploy with <code>python manage.py migrate</code>.</p>
+<div class="box warn"><b>Never</b> run tests against the production database. Tests use a temporary database, either the throw-away one in GitHub Actions or a local one on your computer.</div>
+
+<h2 class="pb">6. Step by step: deploy to the server (Render)</h2>
+<h3>Step 6.1: Describe the servers in one file</h3>
+<p>The file <code>render.yaml</code> (a "Blueprint") describes all three servers. The important parts, shortened:</p>
+<pre>services:
+  - type: web
+    name: udhaarsaathi-api            # production (dev and staging look the same)
+    runtime: python
+    plan: free
+    region: singapore
+    branch: main                      # which Git branch feeds this server
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt &amp;&amp; python manage.py collectstatic --noinput &amp;&amp; python manage.py migrate --noinput
+    startCommand: gunicorn config.wsgi:application --bind 0.0.0.0:$PORT --workers 1 --threads 4
+    healthCheckPath: /health/ready
+    autoDeployTrigger: checksPass     # only deploy when the GitHub tests pass
+    envVars:
+      - key: APP_ENV          ; value: production
+      - key: DATABASE_URL     ; sync: false   # you paste the secret in the dashboard</pre>
+<table>
+<tr><th>Part</th><th>Plain meaning</th></tr>
+<tr><td><code>branch</code></td><td>Which Git branch this server follows (dev, staging or main).</td></tr>
+<tr><td><code>buildCommand</code></td><td>Runs once per deploy: install libraries, collect the website's CSS and images, update the database tables.</td></tr>
+<tr><td><code>startCommand</code></td><td>Starts the web server (gunicorn).</td></tr>
+<tr><td><code>autoDeployTrigger</code></td><td><code>commit</code> on dev (deploy at once), <code>checksPass</code> on staging and production (deploy only after tests pass).</td></tr>
+<tr><td><code>APP_ENV</code></td><td>Tells the app which stage it is. Only <code>production</code> may be indexed by Google; dev and staging add "noindex".</td></tr>
+</table>
+<h3>Step 6.2: Connect Render to GitHub and create the three servers</h3>
+<ol class="steps">
+<li>Open <b>dashboard.render.com</b>. Choose <b>Sign in with GitHub</b> so the accounts are linked.</li>
+<li>Click <b>New +</b> &rarr; <b>Blueprint</b> &rarr; <b>Connect GitHub</b>, allow access to the <code>Udhaar-Saathi</code> repository and select it.</li>
+<li>Render lists the three services from <code>render.yaml</code>. For each one it asks for the values marked <code>sync: false</code>. Paste the matching Neon connection string into <code>DATABASE_URL</code> (dev &rarr; development, staging &rarr; staging, production &rarr; production).</li>
+<li>Click <b>Apply</b>. The first build takes a few minutes. Afterwards delete the local file that held the secrets.</li>
+</ol>
+<div class="box">An alternative used here too: <code>python deploy/render_deploy.py</code> creates the same services through Render's API (needs an API key from Render &rarr; Account Settings &rarr; API Keys, kept in a git-ignored file).</div>
+<h3>Step 6.3: Settings that are not in the file (environment variables)</h3>
+<table>
+<tr><th>Setting</th><th>Why</th></tr>
+<tr><td><code>DATABASE_URL</code></td><td>The Neon database of this stage.</td></tr>
+<tr><td><code>DJANGO_SECRET_KEY</code></td><td>Generated automatically by Render.</td></tr>
+<tr><td><code>SITE_URL</code> / <code>APP_ENV</code></td><td>The public address and the stage name.</td></tr>
+<tr><td><code>GOOGLE_CLIENT_ID</code>, <code>GOOGLE_CLIENT_SECRET</code>, <code>GOOGLE_REFRESH_TOKEN</code></td><td>Let the server send email through the Gmail API.</td></tr>
+<tr><td><code>OTP_SENDER=email</code></td><td>Verification codes go by email (there is no SMS provider yet).</td></tr>
+<tr><td><code>RAZORPAY_*</code></td><td>Payments: test keys on dev and staging, live keys only on production.</td></tr>
+</table>
+<p>Changing a variable on Render does <b>not</b> redeploy by itself: open the service and click <b>Manual Deploy &rarr; Deploy latest commit</b>, or use <code>python deploy/render_update.py</code> followed by a deploy.</p>
+
+<h2 class="pb">7. The everyday flow: ship a change</h2>
+<div class="flow">
+  <div class="node">Edit code<small>on dev</small></div><div class="arrow">&rarr;</div>
+  <div class="node">git push dev<small>dev server updates</small></div><div class="arrow">&rarr;</div>
+  <div class="node">merge to staging<small>tests, then staging</small></div><div class="arrow">&rarr;</div>
+  <div class="node">merge to main<small>tests, then production</small></div>
+</div>
+<ol class="steps">
+<li><b>Save and test locally.</b>
+<pre>cd backend
+python -m pytest                    # every test must pass</pre></li>
+<li><b>Commit and push to dev.</b>
+<pre>git add -A
+git commit -m "Describe the change in one sentence"
+git push origin dev</pre>
+Open the dev site and try it.</li>
+<li><b>Promote to staging.</b>
+<pre>git checkout staging
+git merge --ff-only dev
+git push origin staging
+git checkout dev</pre>
+GitHub runs the tests; if they pass, Render deploys staging. Try the app there.</li>
+<li><b>Promote to production.</b>
+<pre>git checkout main
+git merge --ff-only staging
+git push origin main
+git checkout dev</pre></li>
+<li><b>Check it worked</b> (next section).</li>
+</ol>
+<div class="box"><b>Example from this project:</b> adding the Google ownership file was one small commit (<code>c254f10</code>). It went dev &rarr; staging &rarr; main in about two minutes of pushing, then Render built it for 3 to 5 minutes before the new address answered.</div>
+
+<h2 class="pb">8. How to check a deployment worked</h2>
+<p>Every stage has health pages. The name in the answer tells you which stage you reached.</p>
+<table>
+<tr><th>Address</th><th>Meaning</th></tr>
+<tr><td><code>/health/live</code></td><td>The server is up (does not touch the database).</td></tr>
+<tr><td><code>/health/ready</code></td><td>The server can reach its database.</td></tr>
+<tr><td><code>/health/mail</code></td><td>The email connection is alive (answers 503 if the Google token expired).</td></tr>
+<tr><td><code>/api/docs/</code></td><td>Interactive page that lists every API call.</td></tr>
+</table>
+<figure><img src="shots/health_production.png"><figcaption>Production: <code>https://udhaarsaathi-api.onrender.com/health/live</code></figcaption></figure>
+<figure><img src="shots/health_staging.png"><figcaption>Staging: <code>https://udhaarsaathi-api-staging.onrender.com/health/live</code> (note <code>"env": "staging"</code>)</figcaption></figure>
+<figure><img src="shots/health_dev.png"><figcaption>Dev: <code>https://udhaarsaathi-api-dev.onrender.com/health/live</code></figcaption></figure>
+<p><b>If the page shows "waking up"</b>, the free server was asleep. Wait up to a minute and refresh.</p>
+<p><b>To see what Render is doing:</b> dashboard &rarr; the service &rarr; <b>Events</b> (each deploy and its status: building, live, failed) and <b>Logs</b> (the server's messages).</p>
+<figure><img src="shots/site_home.png"><figcaption>The live website (English).</figcaption></figure>
+<figure><img src="shots/site_home_hindi.png"><figcaption>The same website in Hindi at its own address, <code>/hi/</code>.</figcaption></figure>
+
+<h2 class="pb">9. Things that keep it running</h2>
+<h3>9.1 Keeping the free server awake</h3>
+<p>Render's free plan stops a server after 15 minutes without visitors. The next visitor then waits about a minute. The workflow <code>.github/workflows/keepalive.yml</code> opens <code>/health/live</code> of production every 5 minutes between 06:30 and 23:25 India time. It is not run all night because Render gives only 750 free hours per month, shared by all three servers. The permanent fix is Render's paid <b>Starter</b> plan for production.</p>
+<h3>9.2 Email (verification codes)</h3>
+<p>Render blocks the normal email ports, so the server sends mail through the <b>Gmail API</b> over HTTPS. This needs a one-time Google sign-in that produces a <i>refresh token</i>, stored in the database table <code>web_googletoken</code> and read before every use.</p>
+<div class="box warn"><b>Important:</b> while the Google consent screen is in "Testing" mode, the token dies after 7 days. In Google Cloud Console &rarr; APIs &amp; Services &rarr; OAuth consent screen, click <b>Publish app</b>. A daily workflow named <i>email health</i> checks <code>/health/mail</code> and GitHub emails you if it fails.</div>
+<h3>9.3 Admin and data</h3>
+<p>The site has an admin area at <code>/admin/</code> where every table can be viewed and edited. Create the admin user once per stage with <code>python manage.py create_site_admin</code>.</p>
+
+<h2 class="pb">10. Making the website visible on Google</h2>
+<h3>10.1 What the code does for you</h3>
+<ul>
+<li>Every page has a title, description, Open Graph and Twitter share tags, and a <b>canonical</b> link.</li>
+<li><code>/robots.txt</code> tells crawlers what to skip (sign-in, ledger and admin areas). <code>/sitemap.xml</code> lists all 20 public pages.</li>
+<li>Structured data (JSON-LD) describes the organisation, the app, the FAQ and breadcrumbs.</li>
+<li><b>Hindi pages have their own addresses</b> (<code>/hi/pricing/</code> next to <code>/pricing/</code>) and <code>hreflang</code> tags that tell Google they are the same page in two languages.</li>
+<li>Only <b>production</b> allows indexing; dev and staging say <code>noindex</code> so test copies never appear in Google.</li>
+</ul>
+<figure><img src="shots/site_pricing.png"><figcaption>An English public page, <code>/pricing/</code>.</figcaption></figure>
+<h3>10.2 Add the site to Google Search Console</h3>
+<ol class="steps">
+<li>Open <b>search.google.com/search-console</b> and sign in with your Google account.</li>
+<li>Click <b>Add property</b> &rarr; choose <b>URL prefix</b> &rarr; enter <code>https://udhaarsaathi-api.onrender.com/</code>. (The "Domain" option needs DNS access, which you do not have on a <code>onrender.com</code> address.)</li>
+<li>Choose the <b>HTML file</b> method. Google gives a file name such as <code>googlea5ba097df5b18d2f.html</code>.
+<figure><img src="shots/search_console_html_file.png"><figcaption>Search Console asks you to put this file on the site.</figcaption></figure></li>
+<li>The site serves that file at its root address (added to <code>backend/apps/web/seo_urls.py</code>), then deploy to production.</li>
+<li>When the file answers 200, click <b>Verify</b>.
+<figure><img src="shots/search_console_verified.png"><figcaption>"Ownership verified". Do not remove the file afterwards.</figcaption></figure></li>
+<li>Open <b>Sitemaps</b>, type only <code>sitemap.xml</code> in the box (the address is already filled in) and click <b>Submit</b>.</li>
+<li>Open <b>URL inspection</b>, paste a page address, click <b>Test live URL</b> and then <b>Request indexing</b>. Start with the home page, About, Pricing, <code>/hi/</code> and <code>/hi/about/</code>.</li>
+<li>After 2 to 3 days open <b>Performance</b> to see clicks and impressions.</li>
+</ol>
+<div class="box">A "Couldn't fetch" status right after the first sitemap submission is common and usually clears within a day or two. The sitemap itself was checked and is valid.</div>
+<div class="box warn"><b>Honest expectations.</b> Nobody can guarantee a Google ranking. The name "LenDen" is shared with a large lending company, and the site sits on a free <code>onrender.com</code> address. The biggest step you can take is to <b>buy your own domain</b> (for example lendensaathi.in), attach it in Render &rarr; service &rarr; <b>Settings &rarr; Custom Domains</b>, set <code>SITE_URL</code> to it, and add it as a new Search Console property.</div>
+
+<h2 class="pb">11. Building the Android app</h2>
+<p>The app is an Expo (React Native) project in the <code>mobile/</code> folder. Expo's cloud service <b>EAS Build</b> builds the installable file; no Android Studio is needed.</p>
+<table>
+<tr><th>Profile</th><th>Output</th><th>Talks to</th><th>Use for</th></tr>
+<tr><td><code>preview</code></td><td>APK (installable file)</td><td>Staging server</td><td>Testing on phones</td></tr>
+<tr><td><code>production</code></td><td>AAB (Play Store bundle)</td><td>Production server</td><td>Publishing</td></tr>
+</table>
+<ol class="steps">
+<li>Open a terminal in the <code>mobile</code> folder.</li>
+<li>Start the test build:
+<pre>cd mobile
+npm run eas:me -- build --profile preview --platform android</pre></li>
+<li>The command prints a link such as <code>https://expo.dev/accounts/rohit62/projects/udhaarsaathi/builds/...</code>. Open it to watch progress (10 to 20 minutes).</li>
+<li>When it finishes, download the APK from that page, or scan its QR code with the phone to install.</li>
+</ol>
+
+<h2 class="pb">12. Problems met on the way, and the fixes</h2>
+<table>
+<tr><th>What happened</th><th>Cause</th><th>Fix</th></tr>
+<tr><td>Production and staging stayed on the old version for hours</td><td>GitHub tests were failing (red), so Render's "deploy after tests pass" never fired. A test needed the <b>Pillow</b> image library, which was not installed on GitHub's machine.</td><td>Added <code>pip install pillow</code> to the test setup only (<code>ci.yml</code>), then pushed again.</td></tr>
+<tr><td>Render still did not pick up the new commit</td><td>The automatic trigger did not fire for that commit.</td><td>Started the deploys through Render's API (a POST to <code>/v1/services/&lt;id&gt;/deploys</code>), or click <b>Manual Deploy</b> in the dashboard.</td></tr>
+<tr><td>Google Search Console "Verify" failed the first time</td><td>The click came before the deploy finished, so the file still returned 404.</td><td>Waited until the file answered 200, then verified.</td></tr>
+<tr><td>Sitemap "Couldn't fetch"</td><td>Normal for a brand-new property. Also, four page addresses had been submitted as sitemaps by mistake.</td><td>Remove those four, keep only <code>sitemap.xml</code>, wait a day.</td></tr>
+<tr><td>Tests passed on the PC but failed on GitHub</td><td>Differences between the PC and GitHub's clean machine (missing library).</td><td>Run the tests with your <code>.env</code> file moved away to imitate GitHub, and check <code>requirements.txt</code>.</td></tr>
+<tr><td>Verification code emails stop</td><td>Google refresh token expired (Testing mode, 7 days).</td><td>Publish the consent screen, reconnect once, redeploy.</td></tr>
+</table>
+
+<h2>13. Quick checklist</h2>
+<table>
+<tr><th>Task</th><th>Where</th><th>Done?</th></tr>
+<tr><td>Three branches on GitHub</td><td>GitHub &rarr; Branches</td><td>Yes</td></tr>
+<tr><td>Tests run automatically</td><td>GitHub &rarr; Actions</td><td>Yes</td></tr>
+<tr><td>Three Neon database branches with tables</td><td>Neon &rarr; Branches</td><td>Yes</td></tr>
+<tr><td>Three Render servers from <code>render.yaml</code></td><td>Render &rarr; Dashboard</td><td>Yes</td></tr>
+<tr><td>Health pages answer on all three</td><td><code>/health/live</code></td><td>Yes</td></tr>
+<tr><td>Hindi pages, sitemap, robots, structured data</td><td>The website</td><td>Yes</td></tr>
+<tr><td>Search Console ownership verified</td><td>Search Console</td><td>Yes</td></tr>
+<tr><td>Sitemap shows "Success"</td><td>Search Console &rarr; Sitemaps</td><td>Waiting for Google</td></tr>
+<tr><td>Custom domain</td><td>Domain seller + Render</td><td>You: not done</td></tr>
+<tr><td>Native Hindi reader checks the Hindi text</td><td>A person</td><td>You: not done</td></tr>
+<tr><td>Publish the Google consent screen ("In production")</td><td>Google Cloud Console</td><td>Check yours</td></tr>
+<tr><td>Paid Render plan or keep-alive for production</td><td>Render &rarr; Settings</td><td>Keep-alive is running</td></tr>
+<tr><td>Play Store listing</td><td>Play Console</td><td>You: not done</td></tr>
+</table>
+<p style="margin-top:8mm;color:#666;font-size:9.5pt">All secret values (database passwords, API keys, tokens) are intentionally left out of this document. Keep them only in the Render dashboard and in git-ignored local files.</p>
+</body></html>

@@ -389,3 +389,9 @@ def test_every_internal_link_on_public_pages_works_and_the_home_page_links_to_th
         assert reverse(target) in home_links, f"the home page should link to {target}"
     for name in PUBLIC[1:]:
         assert "/" in get(name)[1].hrefs                                                      # every inner page links back home
+
+
+def test_search_console_ownership_file_is_served_exactly():
+    r = Client().get("/googlea5ba097df5b18d2f.html")
+    assert r.status_code == 200 and r.content.decode() == "google-site-verification: googlea5ba097df5b18d2f.html"
+    assert Client().get("/hi/googlea5ba097df5b18d2f.html").status_code == 404

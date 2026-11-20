@@ -362,7 +362,7 @@ def test_the_seo_images_exist_with_the_right_sizes():
 @PROD
 def test_favicon_and_manifest():
     r = Client().get("/favicon.ico")
-    assert r.status_code == 301 and r["Location"].endswith("/static/img/favicon.ico")
+    assert r.status_code == 200 and r["Content-Type"] == "image/x-icon" and r.content[:4] == bytes([0, 0, 1, 0])
     m = Client().get("/site.webmanifest")
     data = json.loads(m.content)
     assert m["Content-Type"].startswith("application/manifest+json")

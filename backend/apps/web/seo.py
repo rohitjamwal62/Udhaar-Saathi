@@ -18,12 +18,14 @@ from django.utils.translation import get_language, gettext as _
 
 BRAND = "LenDen Saathi"
 # The spellings people actually type. Used in the structured data and in the visible text of the About page and FAQ.
-NAME_VARIANTS = ["Lenden Saathi", "Len Den Saathi", "LenDenSaathi", "लेनदेन साथी"]
-KEYWORDS = ("LenDen Saathi, Lenden Saathi, Len Den Saathi, LenDenSaathi, लेनदेन साथी, digital khata app, udhaar khata app, "
+NAME_VARIANTS = ["Lenden Saathi", "Len Den Saathi", "LenDenSaathi", "Lenden Sathi", "Len Den Sathi", "LenDen Sathi",
+                 "Udhaar Saathi", "Udhar Saathi", "Udhaar Sathi", "Udhar Sathi", "UdhaarSaathi", "लेनदेन साथी", "उधार साथी"]
+KEYWORDS = ("LenDen Saathi, Lenden Saathi, Len Den Saathi, LenDenSaathi, Lenden Sathi, Len Den Sathi, LenDen Sathi, "
+            "Udhaar Saathi, Udhar Saathi, Udhaar Sathi, Udhar Sathi, UdhaarSaathi, लेनदेन साथी, उधार साथी, digital khata app, udhaar khata app, "
             "udhar khata, khata book for shopkeepers, credit ledger app India, baki hisab app, digital bahi khata, "
             "offline khata app, shop credit tracking")
 
-KEYWORDS_HI = ("लेनदेन साथी, LenDen Saathi, Lenden Saathi, Len Den Saathi, डिजिटल खाता ऐप, उधार खाता, उधार बही, दुकान का हिसाब, "
+KEYWORDS_HI = ("लेनदेन साथी, लेन देन साथी, उधार साथी, उधार साथी ऐप, LenDen Saathi, Lenden Saathi, Len Den Saathi, Lenden Sathi, Udhaar Saathi, Udhar Sathi, डिजिटल खाता ऐप, उधार खाता, उधार बही, दुकान का हिसाब, "
                "बही खाता ऐप, दुकानदारों के लिए उधार ऐप, उधार का हिसाब, बिना इंटरनेट खाता ऐप")
 HINDI_PREFIX = "/hi"
 

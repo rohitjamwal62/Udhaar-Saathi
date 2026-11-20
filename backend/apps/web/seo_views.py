@@ -59,4 +59,10 @@ def web_manifest(request):
 @require_GET
 def favicon_ico(request):
     """Browsers and crawlers ask for /favicon.ico by default."""
-    return HttpResponsePermanentRedirect(static("img/favicon.ico"))
+    # Served directly (not a redirect): Google's icon crawler is most reliable with a plain 200 at /favicon.ico.
+    from django.contrib.staticfiles import finders
+    path = finders.find("img/favicon.ico")
+    with open(path, "rb") as fh:
+        resp = HttpResponse(fh.read(), content_type="image/x-icon")
+    resp["Cache-Control"] = "public, max-age=86400"
+    return resp

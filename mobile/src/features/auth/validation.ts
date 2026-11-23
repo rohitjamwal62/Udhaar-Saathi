@@ -19,6 +19,13 @@ export function emailProblem(input: string): string | null {
   return null;
 }
 
+/** What the login box accepts: a mobile number or an email address. Returns the value to send, or null when it is neither. */
+export function loginIdentifier(input: string): string | null {
+  const t = input.trim();
+  if (t.includes('@')) return emailProblem(t) ? null : normalizeEmail(t);
+  return normalizeMobile(t);
+}
+
 export function passwordProblem(pw: string): string | null {
   if (pw.length < 8) return 'Use at least 8 characters';
   if (!/[A-Za-z]/.test(pw) || !/\d/.test(pw)) return 'Include both letters and numbers';

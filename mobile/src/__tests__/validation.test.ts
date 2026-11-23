@@ -1,6 +1,7 @@
 import assert from 'node:assert/strict';
 import { test } from 'node:test';
-import { emailProblem, normalizeEmail, normalizeMobile, passwordProblem } from '../features/auth/validation';
+import { refreshOutcome } from '../core/api/refreshOutcome';
+import { emailProblem, loginIdentifier, normalizeEmail, normalizeMobile, passwordProblem } from '../features/auth/validation';
 
 test('email: empty and malformed addresses are refused with a clear message', () => {
   assert.match(emailProblem('') ?? '', /Enter your email/);
@@ -26,4 +27,21 @@ test('mobile and password rules are unchanged', () => {
   assert.equal(passwordProblem('short1'), 'Use at least 8 characters');
   assert.equal(passwordProblem('longenough'), 'Include both letters and numbers');
   assert.equal(passwordProblem('longenough1'), null);
+});
+
+test('login box: a mobile number in any common format, or an email in any case, is accepted', () => {
+  assert.equal(loginIdentifier('98765 43210'), '+919876543210');
+  assert.equal(loginIdentifier('+91 98765-43210'), '+919876543210');
+  assert.equal(loginIdentifier('  Asha.Verma@Example.COM '), 'asha.verma@example.com');
+});
+
+test('login box: anything that is neither a valid mobile nor a valid email is refused', () => {
+  for (const bad of ['', '   ', 'abc', '12345', '5876543210', 'a@b', '@c.com', 'a b@c.com']) {
+    assert.equal(loginIdentifier(bad), null, bad);
+  }
+});
+
+test('offline safety: only an explicit refusal signs the user out; network and server trouble never does', () => {
+  for (const s of [400, 401, 403]) assert.equal(refreshOutcome(s), 'rejected', String(s));
+  for (const s of [0, 408, 429, 500, 502, 503, 504]) assert.equal(refreshOutcome(s), 'unreachable', String(s));
 });

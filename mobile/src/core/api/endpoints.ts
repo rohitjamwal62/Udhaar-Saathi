@@ -23,7 +23,7 @@ export const authApi = {
     api<CodeSent>('/auth/otp/request', { method: 'POST', body: b, auth: false }),
   verifyOtp: (b: { mobile: string; challenge_id: string; otp: string }) =>
     api<AuthSession>('/auth/otp/verify', { method: 'POST', body: b, auth: false }),
-  login: (b: { mobile: string; password: string; device_id: string }) =>
+  login: (b: { identifier: string; password: string; device_id: string }) =>   // identifier: mobile number or email
     api<AuthSession>('/auth/login', { method: 'POST', body: b, auth: false }),
   logout: () => api<void>('/auth/logout', { method: 'POST' }),
   forgotPassword: (b: { mobile: string }) =>

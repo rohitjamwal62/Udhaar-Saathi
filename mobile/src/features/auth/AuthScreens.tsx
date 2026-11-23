@@ -11,7 +11,7 @@ import { authApi } from '../../core/api/endpoints';
 import { ApiError } from '../../core/api/client';
 import { config } from '../../core/config';
 import { useAction } from '../../shared/hooks';
-import { emailProblem, normalizeEmail, normalizeMobile, passwordProblem, TERMS_VERSION } from './validation';
+import { emailProblem, loginIdentifier, normalizeEmail, normalizeMobile, passwordProblem, TERMS_VERSION } from './validation';
 
 type P<K extends keyof RootStackParamList> = NativeStackScreenProps<RootStackParamList, K>;
 
@@ -30,20 +30,20 @@ const friendly = (e: unknown, fallback: string) =>
 // ───────────────────────── Login ─────────────────────────
 export function LoginScreen({ navigation, route }: P<'Login'>) {
   const { login, signInDemo } = useAuth();
-  const [mobile, setMobile] = useState('');
+  const [who, setWho] = useState('');
   const [password, setPassword] = useState('');
-  const [mobileErr, setMobileErr] = useState<string | null>(null);
+  const [whoErr, setWhoErr] = useState<string | null>(null);
 
   const submit = useAction(async () => {
-    const m = normalizeMobile(mobile);
-    if (!m) { setMobileErr('Enter a valid 10-digit mobile number'); return; }
-    setMobileErr(null);
+    const id = loginIdentifier(who);
+    if (!id) { setWhoErr('Enter a valid 10-digit mobile number or email address'); return; }
+    setWhoErr(null);
     if (!password) throw new Error('Enter your password');
     try {
-      await login(m, password);
+      await login(id, password);
     } catch (e) {
       // Generic message so the screen never reveals which accounts exist.
-      throw new Error(friendly(e, 'Mobile number or password is incorrect'));
+      throw new Error(friendly(e, 'Mobile number, email or password is incorrect'));
     }
   });
 
@@ -51,8 +51,8 @@ export function LoginScreen({ navigation, route }: P<'Login'>) {
     <Screen>
       <Header title="LenDen Saathi" subtitle="Digital khata for your shop" />
       {route.params?.notice ? <Banner tone="success">{route.params.notice}</Banner> : null}
-      <TextField label="Mobile number" prefix="+91" keyboardType="phone-pad" autoComplete="tel" value={mobile}
-        onChangeText={setMobile} error={mobileErr} maxLength={13} />
+      <TextField label="Mobile number or email" keyboardType="email-address" autoCapitalize="none" autoCorrect={false}
+        autoComplete="username" value={who} onChangeText={setWho} error={whoErr} maxLength={254} />
       <TextField label="Password" secureTextEntry autoComplete="password" value={password} onChangeText={setPassword} />
       {submit.error ? <Banner tone="danger">{submit.error}</Banner> : null}
       {submit.busy ? <AppText variant="caption" color={colors.textMuted}>Connecting to the server. The first request after a quiet period can take up to a minute.</AppText> : null}

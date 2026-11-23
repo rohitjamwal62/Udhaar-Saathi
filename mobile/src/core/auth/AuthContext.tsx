@@ -12,7 +12,7 @@ interface AuthValue {
   status: Status;
   user: StoredUser | null;
   signIn(session: AuthSession): Promise<void>;
-  login(mobile: string, password: string): Promise<void>;
+  login(identifier: string, password: string): Promise<void>;
   signOut(): Promise<void>;
   signInDemo(): Promise<void>;
 }
@@ -30,8 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     setStatus('signedIn');
   }, []);
 
-  const login = useCallback(async (mobile: string, password: string) => {
-    const s = await authApi.login({ mobile, password, device_id: await tokenStore.deviceId() });
+  const login = useCallback(async (identifier: string, password: string) => {
+    const s = await authApi.login({ identifier, password, device_id: await tokenStore.deviceId() });
     await signIn(s);
   }, [signIn]);
 

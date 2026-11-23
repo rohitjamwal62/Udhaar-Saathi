@@ -116,3 +116,70 @@ def test_health_config_and_schema():
     cfg = c.get(f"{API}/app/config")
     assert cfg.status_code == 200 and cfg.data["latest_version"]
     assert c.get("/api/schema/").status_code == 200
+
+
+# ───────────── log in with a mobile number OR an email address ─────────────
+def _login(identifier: str, password: str = PASSWORD, key: str = "identifier"):
+    return new_client().post(f"{API}/auth/login", {key: identifier, "password": password, "device_id": str(uuid.uuid4())})
+
+
+def _set_email(mobile: str, email: str) -> None:
+    from apps.common.db import x
+    x("UPDATE users SET email = %s WHERE mobile_e164 = %s", [email, mobile])
+
+
+def test_login_with_mobile_in_any_format_and_with_the_old_field_name():
+    register("9876543220")
+    for ident in ("9876543220", "+91 98765 43220", "919876543220"):
+        assert _login(ident).status_code == 200, ident
+    assert _login("9876543220", key="mobile").status_code == 200          # app versions that send "mobile"
+
+
+def test_login_with_email_is_case_insensitive_and_returns_the_same_account():
+    _, session = register("9876543221")
+    _set_email("+919876543221", "Asha.Shop@Example.com")
+    for ident in ("asha.shop@example.com", "  ASHA.SHOP@EXAMPLE.COM "):
+        r = _login(ident)
+        assert r.status_code == 200 and r.data["user"]["id"] == session["user"]["id"], ident
+    assert _login("asha.shop@example.com", key="mobile").status_code == 200
+
+
+def test_email_login_errors_are_generic_and_a_pending_account_cannot_log_in():
+    register("9876543222")
+    _set_email("+919876543222", "bina@example.com")
+    unknown, wrong = _login("nobody@example.com"), _login("bina@example.com", "WrongPass1")
+    assert unknown.status_code == wrong.status_code == 401 and unknown.data["detail"] == wrong.data["detail"]
+    from apps.common.db import x
+    x("UPDATE users SET status='pending' WHERE mobile_e164 = %s", ["+919876543222"])
+    assert _login("bina@example.com").status_code == 401
+
+
+def test_two_accounts_sharing_an_email_are_told_apart_by_password_only():
+    register("9876543223")
+    c2 = new_client()
+    r = c2.post(f"{API}/auth/signup", {"mobile": "9876543224", "name": "B", "password": "Other1234pass", "role": "shopkeeper",
+                                       "language": "en", "accepted_terms_version": "v1"})
+    c2.post(f"{API}/auth/otp/verify", {"mobile": "9876543224", "challenge_id": r.data["challenge_id"],
+                                       "otp": otp.MEMORY_OUTBOX[-1][1], "device_id": str(uuid.uuid4())})
+    _set_email("+919876543223", "shared@example.com")
+    _set_email("+919876543224", "shared@example.com")
+    first, second = _login("shared@example.com"), _login("shared@example.com", "Other1234pass")
+    assert first.status_code == second.status_code == 200
+    assert first.data["user"]["mobile"] == "+919876543223" and second.data["user"]["mobile"] == "+919876543224"
+    from apps.common.db import x
+    x("UPDATE users SET password_hash=(SELECT password_hash FROM users WHERE mobile_e164='+919876543223') WHERE mobile_e164='+919876543224'")
+    assert _login("shared@example.com").status_code == 401                # same password: cannot tell them apart; use the mobile
+    assert _login("9876543223").status_code == 200                        # the mobile number always works
+
+
+def test_login_identifier_must_look_like_a_mobile_or_an_email():
+    for bad in ("", "abc", "12345", "a@b", "@example.com"):
+        assert _login(bad).status_code == 400, bad
+
+
+def test_email_login_is_rate_limited():
+    register("9876543225")
+    _set_email("+919876543225", "limit@example.com")
+    codes = [_login("limit@example.com", "WrongPass1").status_code for _ in range(12)]
+    assert codes[0] == 401 and 429 in codes
+    assert _login("limit@example.com").status_code == 429               # even the right password is refused for a while

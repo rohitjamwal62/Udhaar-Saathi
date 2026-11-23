@@ -104,11 +104,24 @@ class LoginView(_Public):
         s = LoginSerializer(data=request.data)
         s.is_valid(raise_exception=True)
         d = s.validated_data
-        check(f"login:{d['mobile']}", 10, 900, "Too many login attempts. Try again in a few minutes.")
-        user = q1("SELECT id, name, mobile_e164, password_hash, status FROM users WHERE mobile_e164 = %s", [d["mobile"]])
-        good = check_password(d["password"], user["password_hash"] if user else _DUMMY_HASH)
-        if not (user and good and user["status"] == "active"):
-            raise ApiProblem("Mobile number or password is incorrect.", "invalid_credentials", 401)
+        wrong = ApiProblem("Mobile number, email or password is incorrect.", "invalid_credentials", 401)
+        if d.get("email"):
+            check(f"login:{d['email']}", 10, 900, "Too many login attempts. Try again in a few minutes.")
+            # An email is not unique in the database, so every ACTIVE account with it is tried and the password must pick
+            # exactly one. Two accounts with the same email AND the same password cannot be told apart: use the mobile number.
+            rows = q("SELECT id, name, mobile_e164, password_hash, status FROM users WHERE email = %s AND status = 'active'", [d["email"]])
+            matches = [r for r in rows if check_password(d["password"], r["password_hash"])]
+            if not rows:
+                check_password(d["password"], _DUMMY_HASH)          # same work as a real attempt: no timing oracle
+            user = matches[0] if len(matches) == 1 else None
+            if not user:
+                raise wrong
+        else:
+            check(f"login:{d['mobile']}", 10, 900, "Too many login attempts. Try again in a few minutes.")
+            user = q1("SELECT id, name, mobile_e164, password_hash, status FROM users WHERE mobile_e164 = %s", [d["mobile"]])
+            good = check_password(d["password"], user["password_hash"] if user else _DUMMY_HASH)
+            if not (user and good and user["status"] == "active"):
+                raise wrong
         session = tokens.issue_session(user["id"], str(d["device_id"]))
         return Response({**session, "user": _user_payload(user)})
 

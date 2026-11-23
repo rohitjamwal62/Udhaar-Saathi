@@ -28,7 +28,7 @@ The free Render plan sleeps after about 15 minutes idle, so the first request af
 
 **Backend API** (`/api/v1/`, Swagger at `/api/docs/`): phone-OTP login with JWT, shops, customers, ledger sync with idempotent push/pull, subscription and payments. Append-only ledger tables are protected by database triggers.
 
-**Phone app**: sign-in (the verification code is **emailed**), shops, customers, ledger, offline outbox with background sync. See [mobile/README.md](mobile/README.md).
+**Phone app**: sign in with your **mobile number or email address** plus password (sign-up codes are **emailed**; `POST /api/v1/auth/login` takes `identifier`, and still accepts the older `mobile` field), shops, customers, ledger, offline outbox with background sync. See [mobile/README.md](mobile/README.md).
 
 ## Not built yet
 

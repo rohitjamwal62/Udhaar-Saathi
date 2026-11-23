@@ -1,6 +1,7 @@
 import { config } from '../config';
 import { newId } from '../ids';
 import { tokenStore } from '../auth/tokenStore';
+import { refreshOutcome, type RefreshResult } from './refreshOutcome';
 
 export class ApiError extends Error {
   constructor(public status: number, message: string, public code?: string, public details?: unknown) {
@@ -39,23 +40,25 @@ async function rawFetch(path: string, init: RequestInit, token?: string | null):
   }
 }
 
-let refreshing: Promise<boolean> | null = null;
-async function refreshTokens(): Promise<boolean> {
+let refreshing: Promise<RefreshResult> | null = null;
+async function refreshTokens(): Promise<RefreshResult> {
   if (!refreshing) {
-    refreshing = (async () => {
+    refreshing = (async (): Promise<RefreshResult> => {
       const refresh = await tokenStore.getRefresh();
-      if (!refresh) return false;
+      if (!refresh) return 'rejected';
       try {
         const res = await rawFetch('/auth/token/refresh', {
           method: 'POST',
           body: JSON.stringify({ refresh }),
         });
-        if (!res.ok) return false;
-        const data = (await res.json()) as { access: string; refresh: string };
-        await tokenStore.setTokens(data.access, data.refresh); // refresh tokens rotate
-        return true;
+        if (res.ok) {
+          const data = (await res.json()) as { access: string; refresh: string };
+          await tokenStore.setTokens(data.access, data.refresh); // refresh tokens rotate
+          return 'ok';
+        }
+        return refreshOutcome(res.status);
       } catch {
-        return false;
+        return 'unreachable';
       }
     })().finally(() => { refreshing = null; });
   }
@@ -84,10 +87,13 @@ export async function api<T>(
   const init: RequestInit = { method, body: body === undefined ? undefined : JSON.stringify(body) };
   let res = await rawFetch(path, init, auth ? await tokenStore.getAccess() : null);
   if (res.status === 401 && auth) {
-    if (await refreshTokens()) {
+    const outcome = await refreshTokens();
+    if (outcome === 'ok') {
       res = await rawFetch(path, init, await tokenStore.getAccess());
-    } else {
+    } else if (outcome === 'rejected') {
       onSessionExpired?.();
+    } else {
+      throw new ApiError(0, 'Cannot reach the server. Check your internet connection.');   // stay signed in, work offline
     }
   }
   return parse<T>(res);

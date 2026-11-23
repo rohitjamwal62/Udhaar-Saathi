@@ -68,9 +68,26 @@ class OtpVerifySerializer(serializers.Serializer):
 
 
 class LoginSerializer(serializers.Serializer):
-    mobile = MobileField()
+    """Log in with a mobile number OR an email address (`identifier`). Older app versions send `mobile`; still accepted."""
+    identifier = serializers.CharField(required=False, allow_blank=True, max_length=254)
+    mobile = serializers.CharField(required=False, allow_blank=True, max_length=254)
     password = serializers.CharField(trim_whitespace=False)
     device_id = serializers.UUIDField()
+
+    def validate(self, attrs):
+        raw = (attrs.pop("identifier", "") or attrs.pop("mobile", "") or "").strip()
+        attrs.pop("mobile", None)
+        if "@" in raw:
+            try:
+                attrs["email"] = serializers.EmailField().run_validation(raw).strip().lower()
+            except serializers.ValidationError:
+                raise serializers.ValidationError({"identifier": "Enter a valid mobile number or email address."})
+        else:
+            mobile = normalize_mobile(raw)
+            if not mobile:
+                raise serializers.ValidationError({"identifier": "Enter a valid mobile number or email address."})
+            attrs["mobile"] = mobile
+        return attrs
 
 
 class RefreshSerializer(serializers.Serializer):

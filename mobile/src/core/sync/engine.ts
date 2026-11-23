@@ -106,6 +106,16 @@ export function runSync(): Promise<void> {
   return inFlight;
 }
 
+/** The phone just got its connection back (or the app came to the front): the waiting time built up while offline no longer
+ *  applies, so queued entries are retried now instead of after up to 15 minutes. */
+export async function syncNow(): Promise<void> {
+  try {
+    const db = await getDb();
+    await db.runAsync(`UPDATE outbox SET next_attempt_at = 0 WHERE status = 'pending'`);
+  } catch { /* the normal timer still retries */ }
+  return runSync();
+}
+
 /** Put failed items back in the queue after the user reviewed them. */
 export async function retryFailed(): Promise<void> {
   const db = await getDb();

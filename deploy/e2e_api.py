@@ -99,6 +99,17 @@ def main(env: str) -> int:
     a = signup(api, owner, service, mob1, "E2E API Owner", f"rohitjamwal62+api{stamp}a@gmail.com")
     if not check(a is not None, "signup and OTP verification work"):
         return finish()
+    # Sign in again, the way a returning user does: with the mobile number OR the email address
+    em = f"rohitjamwal62+api{stamp}a@gmail.com"
+    for label, ident in (("the mobile number", mob1), ("the mobile number without +91", mob1[3:]), ("the email address", em), ("the email in capitals", em.upper())):
+        r = requests.post(f"{api}/auth/login", json={"identifier": ident, "password": PW, "device_id": uid()}, timeout=180)
+        check(r.status_code == 200 and r.json()["user"]["mobile"] == mob1, f"login works with {label}")
+    old = requests.post(f"{api}/auth/login", json={"mobile": mob1, "password": PW, "device_id": uid()}, timeout=180)
+    check(old.status_code == 200, "older app versions (field named mobile) can still log in")
+    bad = requests.post(f"{api}/auth/login", json={"identifier": em, "password": "Wrong-Pass-1", "device_id": uid()}, timeout=180)
+    check(bad.status_code == 401, "a wrong password is refused, with the same message for email and mobile")
+    rf = requests.post(f"{api}/auth/token/refresh", json={"refresh": old.json()["refresh"]}, timeout=180)
+    check(rf.status_code == 200 and rf.json()["refresh"] != old.json()["refresh"], "the session renews itself (refresh token rotates)")
     sid, cid = uid(), uid()
     res = sync(a, api, [item("shop", "create", {"id": sid, "name": f"E2E API {stamp}", "category": "Kirana", "address": "-", "language": "en"}),
                         item("customer", "create", {"id": cid, "name": "E2E Customer", "mobile": None, "notes": None})])

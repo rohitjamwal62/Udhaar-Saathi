@@ -27,6 +27,17 @@
       "channel": "production",
       "android": {
         "buildType": "app-bundle"
+      },
+      "env": {
+        "EXPO_PUBLIC_API_URL": "https://udhaarsaathi-api.onrender.com/api/v1",
+        "EXPO_PUBLIC_DEMO_MODE": "false"
+      }
+    },
+    "production-apk": {
+      "extends": "production",
+      "distribution": "internal",
+      "android": {
+        "buildType": "apk"
       }
     }
   }

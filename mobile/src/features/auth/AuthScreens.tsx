@@ -74,6 +74,7 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
   const [password, setPassword] = useState('');
   const [confirm, setConfirm] = useState('');
   const [language, setLanguage] = useState<'en' | 'hi'>('en');
+  const [role, setRole] = useState<'shopkeeper' | 'customer'>('shopkeeper');
   const [accepted, setAccepted] = useState(false);
   const [errs, setErrs] = useState<Record<string, string>>({});
 
@@ -92,7 +93,7 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
     if (Object.keys(e).length || !m) return;
     try {
       const res = await authApi.signup({
-        mobile: m, email: normalizeEmail(email), name: name.trim(), password, role: 'shopkeeper', language,
+        mobile: m, email: normalizeEmail(email), name: name.trim(), password, role, language,
         accepted_terms_version: TERMS_VERSION,
       });
       navigation.navigate('Otp', { mobile: m, challengeId: res.challenge_id, delivery: res.delivery, sentTo: res.sent_to });
@@ -103,7 +104,17 @@ export function SignupScreen({ navigation }: P<'Signup'>) {
 
   return (
     <Screen>
-      <Header title="Create account" subtitle="Registration is free. Your first 3 months are free too." />
+      <Header title="Create account" subtitle={role === 'shopkeeper' ? 'Registration is free. Your first 3 months are free too.' : 'Registration is free for customers.'} />
+      <View style={{ gap: spacing.sm }}>
+        <AppText variant="label">I am a</AppText>
+        <View style={{ flexDirection: 'row', gap: spacing.sm }}>
+          <Chip label="Shopkeeper" selected={role === 'shopkeeper'} onPress={() => setRole('shopkeeper')} />
+          <Chip label="Customer" selected={role === 'customer'} onPress={() => setRole('customer')} />
+        </View>
+        <AppText variant="caption" color={colors.textMuted}>
+          {role === 'shopkeeper' ? 'Run your shop khata, sales and reports.' : 'See what you owe each shop and your payment history.'}
+        </AppText>
+      </View>
       <TextField label="Your name" value={name} onChangeText={setName} error={errs.name} autoComplete="name" />
       <TextField label="Mobile number" prefix="+91" keyboardType="phone-pad" value={mobile} onChangeText={setMobile}
         error={errs.mobile} maxLength={13} helper="This is your login. Customers and your shop use it." />

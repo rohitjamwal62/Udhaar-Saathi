@@ -6,6 +6,8 @@ export type TabParamList = {
   Sales: undefined;
   Reports: undefined;
   Settings: undefined;
+  MyDues: undefined;
+  Account: undefined;
 };
 
 export type RootStackParamList = {
@@ -28,6 +30,8 @@ export type RootStackParamList = {
   Subscription: undefined;
   PaymentHistory: undefined;
   SyncStatus: undefined;
+  MyDueDetail: { customerId: string };
+  CustomerMain: undefined;
 };
 
 declare global {

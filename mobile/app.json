@@ -3,7 +3,7 @@
     "name": "LenDen Saathi",
     "slug": "udhaarsaathi",
     "scheme": "udhaarsaathi",
-    "version": "1.0.1",
+    "version": "1.0.2",
     "orientation": "default",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",
@@ -12,7 +12,7 @@
     ],
     "android": {
       "package": "com.udhaarsaathi.app",
-      "versionCode": 2,
+      "versionCode": 3,
       "adaptiveIcon": {
         "backgroundColor": "#001A7D",
         "foregroundImage": "./assets/android-icon-foreground.png",

@@ -3,6 +3,9 @@ from django.urls import path
 from . import views
 
 urlpatterns = [
+    path("restore", views.RestoreView.as_view()),
+    path("me/khata", views.MyKhataView.as_view()),
+    path("me/khata/<uuid:customer_id>", views.MyKhataDetailView.as_view()),
     path("shops", views.ShopsView.as_view()),
     path("shops/<uuid:shop_id>", views.ShopDetailView.as_view()),
     path("shops/<uuid:shop_id>/customers", views.CustomersView.as_view()),

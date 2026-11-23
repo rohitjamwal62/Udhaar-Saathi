@@ -3,7 +3,7 @@ from django.utils.html import format_html
 
 from .models import FAQ, ContactMessage, Document, EmailOTP, Profile
 
-admin.site.site_header = "LenDen Saathi administration"
+admin.site.site_header = "LenDen Saathi data manager"
 admin.site.site_title = "LenDen Saathi admin"
 admin.site.index_title = "Manage the website, users, documents and the app database"
 
